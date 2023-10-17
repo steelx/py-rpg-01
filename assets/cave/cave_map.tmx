@@ -153,7 +153,7 @@
  </layer>
  <objectgroup id="5" name="Objects">
   <object id="1" name="AppleTree" type="Tree" gid="338" x="211" y="320" width="64" height="64"/>
-  <object id="4" name="Castle" type="Cave" gid="337" x="254.5" y="259" width="128" height="128"/>
+  <object id="4" name="Castle" type="Room" gid="337" x="254.5" y="259" width="128" height="128"/>
   <object id="5" name="TallTree" type="Tree" gid="339" x="382" y="325" width="128" height="128"/>
   <object id="6" name="CaveGold" type="Shape" x="115.5" y="197" width="91" height="57"/>
   <object id="7" name="CheatIceland" type="Shape" x="59" y="110" width="25" height="24.5"/>

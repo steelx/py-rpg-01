@@ -3,7 +3,7 @@ from pygame.sprite import Group
 from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
-from tile import Tile
+from sprite_objects import Tile, Circle, Rectangle
 
 
 def load_tmx_map(map_file) -> TiledMap:
@@ -11,8 +11,7 @@ def load_tmx_map(map_file) -> TiledMap:
     return tmx
 
 
-def build_tiled_map(tmx_map: TiledMap, map_group: Group, screen: pygame.Surface = None):
-    screen_ = pygame.display.get_surface() if screen is None else screen
+def build_tiled_map(tmx_map: TiledMap, map_group: Group, shapes_group: Group = None):
     # all layers
     for layer in tmx_map.visible_layers:
         if hasattr(layer, "data"):
@@ -21,15 +20,14 @@ def build_tiled_map(tmx_map: TiledMap, map_group: Group, screen: pygame.Surface 
 
     # objects
     for obj in tmx_map.objects:
-        if obj.image:
+        if obj.image and obj.type in ['Tree', 'Room']:
             Tile((obj.x, obj.y), obj.image, map_group)
         if obj.type == 'Marker':
             spawn = (obj.x, obj.y)
-            pygame.draw.circle(screen_, "red", spawn, 5)
+            Circle(spawn, 4, 'yellow', shapes_group)
         if obj.type == 'Shape':
             # TODO: shapes are not visible
-            rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-            pygame.draw.rect(screen_, (255, 0, 0), rect)
+            Rectangle((obj.x, obj.y), obj.width, obj.height, 'red', shapes_group)
 
 
 def point_to_tile(
