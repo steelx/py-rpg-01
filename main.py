@@ -1,76 +1,44 @@
-# This is a sample Python script.
-import math
 import os
 import sys
 
 import pygame
+import buildtiledmap as tmx
 
 PATH = os.path.abspath('.') + '/assets/'
 
-gMap = [
-    0, 0, 0, 0, 4, 5, 6, 0,
-    0, 0, 0, 0, 4, 5, 6, 0,
-    0, 0, 0, 0, 4, 5, 6, 0,
-    2, 2, 2, 2, 10, 5, 6, 0,
-    8, 8, 8, 8, 8, 8, 9, 0,
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 2,
-]
-gMapWidth = 8
-gMapHeight = 7
-
-
-def get_tile(tile_map: list[int], row_size: int, x: int, y: int):
-    return tile_map[x + y * row_size]
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     if __name__ == '__main__':
-
         pygame.init()
         pygame.display.set_caption("jRPG Game")
-        screen_width = 800
-        screen_height = 600
+        screen_width = 320
+        screen_height = 240
         screen = pygame.display.set_mode((screen_width, screen_height))
         clock = pygame.time.Clock()
-        g_center = screen.get_rect().center
 
-        grass_tile = pygame.image.load(PATH + 'grass_tile.png').convert_alpha()
-        # grass_tile = pygame.transform.scale(grass_tile, (32, 32))
-        g_tiles_per_row = math.ceil(pygame.display.get_surface().get_width() / grass_tile.get_width())
-        g_tiles_per_col = math.ceil(pygame.display.get_surface().get_height() / grass_tile.get_height())
+        tmx_map = tmx.load_tmx_map(PATH + 'cave/cave_map.tmx')
 
-        print(f"Tiles per row: {g_tiles_per_row}")
-        print(f"Tiles per col: {g_tiles_per_col}")
+        gTop = (screen_height / 2) - (tmx_map.tileheight * tmx_map.height / 2)
+        gLeft = (screen_width / 2) - (tmx_map.tilewidth * tmx_map.width / 2)
 
-        gTextures = pygame.sprite.Group()
-        for i in range(11):
-            image = pygame.image.load(PATH + f"grass_tiles/tiles_{i:02d}.png").convert_alpha()
-            sprite = pygame.sprite.Sprite()
-            sprite.image = image
-            sprite.rect = image.get_rect()
-            gTextures.add(sprite)
+        cave_map_group = pygame.sprite.Group()
+
+        tmx.build_tiled_map(tmx_map, cave_map_group)
 
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-            # Game Update
-            for x in range(g_tiles_per_row):
-                for y in range(g_tiles_per_col):
-                    (pygame.display.get_surface()
-                     .blit(grass_tile,(x * grass_tile.get_width(), y * grass_tile.get_height())))
 
-            for j in range(gMapHeight):
-                for i in range(gMapWidth):
-                    tile = get_tile(gMap, gMapWidth, i, j)
-                    sprite = gTextures.sprites()[tile]
-                    rect = sprite.rect
-                    w = rect.width
-                    h = rect.height
-                    pygame.display.get_surface().blit(sprite.image, (i * w, j * h))
+            # get mouse position
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            # get tile position
+            tile_x, tile_y = tmx.point_to_tile(mouse_x, mouse_y, tmx_map.tilewidth, tmx_map.width, tmx_map.height)
+            print(f"Tile: {tile_x}, {tile_y} | Mouse: {mouse_x}, {mouse_y}")
+
+            # Game Render
+            cave_map_group.draw(screen)
 
             pygame.display.flip()
             clock.tick(60)
