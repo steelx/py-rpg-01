@@ -108,11 +108,10 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.y = cam_y
 
         # Sort sprites by their vertical position
-        # TODO: for sprite in sorted(self.sprites(), key=sort_sprite):
-        def sort_sprite(sprite):
-            return sprite.rect.centery
+        def sort_sprite(s: pygame.sprite.Sprite):
+            return s.rect.bottomright
 
-        for sprite in self.sprites():
+        for sprite in sorted(self.sprites(), key=sort_sprite):
             offset_rect = sprite.rect.copy()
             offset_rect.center -= self.offset
             self.display_surface.blit(sprite.image, offset_rect)
