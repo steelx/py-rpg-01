@@ -4,7 +4,7 @@ from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT
-from sprite_objects import Tile, Circle, Rectangle
+from sprite_objects import Tile, Circle, Rectangle, Entity
 
 
 class Game:
@@ -13,6 +13,7 @@ class Game:
     shapes_group: Group = None
     cam_x: float
     cam_y: float
+    follow: Entity = None
 
     def __init__(self, map_file: str, debug=False):
         self.tmx_map = load_pygame(map_file)
@@ -50,6 +51,10 @@ class Game:
     def render(self):
         if hasattr(self.map_group, 'custom_draw'):
             self.map_group.custom_draw(self.cam_x, self.cam_y)
+
+    @classmethod
+    def get_follow_position(cls):
+        return cls.follow.rect.center
 
     def go_to(self, x: int, y: int):
         self.cam_x = x - SCREEN_WIDTH // 2
