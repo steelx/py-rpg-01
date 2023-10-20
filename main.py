@@ -1,30 +1,12 @@
 import os
 import pygame
 import sys
+
+from entity import Entity, CharacterDefinition
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT
 from game import Game
 
 PATH = os.path.abspath('.') + '/assets/'
-
-
-def load_sprite_sheet(sprite_sheet_path: str, frame_width: int, frame_height: int, rows: int, columns: int):
-    # Load the sprite sheet
-    sprite_sheet = pygame.image.load(sprite_sheet_path)
-
-    # Calculate the total number of frames
-    total_frames = rows * columns
-
-    # Create a list of frames
-    frames = []
-
-    # Split the sprite sheet into frames
-    for row in range(rows):
-        for col in range(columns):
-            frame = pygame.Rect(col * frame_width, row * frame_height, frame_width, frame_height)
-            frames.append(sprite_sheet.subsurface(frame))
-
-    return frames
-
 
 if __name__ == '__main__':
     if __name__ == '__main__':
@@ -38,16 +20,18 @@ if __name__ == '__main__':
         cave_map.setup()
         cave_map.go_to_tile(6, 5)
 
-        hero_height = 24
-        hero_width = 16
-        hero_sprites = load_sprite_sheet(PATH + 'walk_cycle.png', hero_width, hero_height, 9, 16)
-        hero_pos = cave_map.get_tile_foot(10, 2, 4)
-        print(f"without modifier: {cave_map.get_tile_foot(10, 2)}")
-        print(f"with modifier: {cave_map.get_tile_foot(10, 2, 4)}")
-        hero = pygame.sprite.Sprite(cave_map.map_group)
-        hero.image = hero_sprites[8]
-        hero.rect = hero.image.get_rect(center=hero_pos)
+        hero = Entity.create(CharacterDefinition(
+            tile_x=10,
+            tile_y=2,
+            start_frame=8,
+            height=24,
+            width=16,
+            texture_path=PATH + 'walk_cycle.png'
+        ), cave_map)
 
+        # simulate just pressed
+        movement_keys = {pygame.K_LEFT: (-1, 0), pygame.K_RIGHT: (1, 0), pygame.K_UP: (0, -1), pygame.K_DOWN: (0, 1)}
+        movement = (0, 0)
 
         while True:
             for event in pygame.event.get():
@@ -55,17 +39,18 @@ if __name__ == '__main__':
                     pygame.quit()
                     sys.exit()
 
-            # Input
-            # Handle user input
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:
-                cave_map.cam_x -= 5
-            if keys[pygame.K_RIGHT]:
-                cave_map.cam_x += 5
-            if keys[pygame.K_UP]:
-                cave_map.cam_y -= 5
-            if keys[pygame.K_DOWN]:
-                cave_map.cam_y += 5
+                if event.type == pygame.KEYDOWN:
+                    if event.key in movement_keys:
+                        movement = movement_keys[event.key]
+
+                if event.type == pygame.KEYUP:
+                    if event.key in movement_keys:
+                        movement = (0, 0)
+
+            # Handle hero movement
+            hero.tile_x += movement[0]
+            hero.tile_y += movement[1]
+            hero.teleport()
 
             # Game Render
             cave_map.render()

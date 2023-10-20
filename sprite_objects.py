@@ -25,14 +25,3 @@ class Rectangle(Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
 
-class Entity(Sprite):
-    def __init__(self, pos: tuple[float, float], image: Surface, group: Group):
-        super().__init__(group)
-        self.image = image
-        self.rect = self.image.get_rect(topleft=pos)
-
-    def update(self, *args, **kwargs):
-        pass
-
-    def render(self, *args, **kwargs):
-        pass

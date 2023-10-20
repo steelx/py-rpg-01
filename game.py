@@ -4,7 +4,7 @@ from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT
-from sprite_objects import Tile, Circle, Rectangle, Entity
+from sprite_objects import Tile, Circle, Rectangle
 
 
 class Game:
@@ -13,7 +13,7 @@ class Game:
     shapes_group: Group = None
     cam_x: float
     cam_y: float
-    follow: Entity = None
+    follow: 'Entity' = None
 
     def __init__(self, map_file: str, debug=False):
         self.tmx_map = load_pygame(map_file)
