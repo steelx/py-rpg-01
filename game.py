@@ -19,7 +19,7 @@ class Game:
         self.tmx_map = load_pygame(map_file)
         self.width_pixel = self.tmx_map.width * self.tmx_map.tilewidth
         self.height_pixel = self.tmx_map.height * self.tmx_map.tileheight
-        # Top left corner of the map in pixels
+        # Top left corner of the Camera in pixels
         self.cam_x = 0
         self.cam_y = 0
 
@@ -37,7 +37,7 @@ class Game:
 
         # Process objects
         for obj in self.tmx_map.objects:
-            if obj.image and obj.type in ['Tree', 'Room']:
+            if obj.image and obj.type in ['Tree', 'Items']:
                 Tile((obj.x, obj.y), obj.image, self.map_group)
             if obj.type == 'Marker' and self.show_shapes:
                 spawn = (obj.x, obj.y)
@@ -61,11 +61,15 @@ class Game:
         self.cam_y = y - SCREEN_HEIGHT // 2
         print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
 
-    def go_to_tile(self, tile_x: int, tile_y: int):
-        self.go_to(
+    def _get_tile_pixel_cords(self, tile_x: int, tile_y: int):
+        return (
             tile_x * self.tmx_map.tilewidth + self.tmx_map.tilewidth / 2,
             tile_y * self.tmx_map.tileheight + self.tmx_map.tileheight / 2
         )
+
+    def go_to_tile(self, tile_x: int, tile_y: int):
+        x, y = self._get_tile_pixel_cords(tile_x, tile_y)
+        self.go_to(x, y)
 
     def point_to_tile(
             self, x: int, y: int
@@ -101,6 +105,10 @@ class Game:
     def get_tile(self, x: int, y: int, layer=0):
         return self.tmx_map.get_tile_image(x, y, layer)
 
+    def get_tile_foot(self, tile_x: int, tile_y: int, height_modifier: int = 0):
+        x, y = self._get_tile_pixel_cords(tile_x, tile_y)
+        return x, y - height_modifier
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -109,6 +117,7 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
     def custom_draw(self, cam_x, cam_y):
+        self.display_surface.fill((0, 0, 0))
         self.offset.x = cam_x
         self.offset.y = cam_y
 
