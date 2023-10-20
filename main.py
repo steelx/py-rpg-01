@@ -1,10 +1,10 @@
 import os
 import pygame
-import sys
 
 from entity import Entity, CharacterDefinition
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT
 from game import Game
+from keyboard import TileMovementHandler
 
 PATH = os.path.abspath('.') + '/assets/'
 
@@ -16,7 +16,6 @@ if __name__ == '__main__':
         clock = pygame.time.Clock()
 
         cave_map = Game(PATH + 'small_room.tmx')
-
         cave_map.setup()
         cave_map.go_to_tile(6, 5)
 
@@ -29,28 +28,11 @@ if __name__ == '__main__':
             texture_path=PATH + 'walk_cycle.png'
         ), cave_map)
 
-        # simulate just pressed
-        movement_keys = {pygame.K_LEFT: (-1, 0), pygame.K_RIGHT: (1, 0), pygame.K_UP: (0, -1), pygame.K_DOWN: (0, 1)}
-        movement = (0, 0)
+        input_handler = TileMovementHandler()
 
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key in movement_keys:
-                        movement = movement_keys[event.key]
-
-                if event.type == pygame.KEYUP:
-                    if event.key in movement_keys:
-                        movement = (0, 0)
-
-            # Handle hero movement
-            hero.tile_x += movement[0]
-            hero.tile_y += movement[1]
-            hero.teleport()
+            # Input
+            input_handler.handle_input(lambda dx, dy: hero.teleport(dx, dy))
 
             # Game Render
             cave_map.render()
