@@ -1,10 +1,14 @@
 import os
+from typing import Dict, Any
+
 import pygame
 
 from entity import Entity, CharacterDefinition
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT
 from game import Game
-from keyboard import TileMovementHandler
+from move_state import MoveState
+from statemachine import StateMachine
+from wait_state import WaitState
 
 PATH = os.path.abspath('.') + '/assets/'
 
@@ -19,29 +23,30 @@ if __name__ == '__main__':
         cave_map.setup()
         cave_map.go_to_tile(6, 5)
 
-        hero = Entity.create(CharacterDefinition(
-            tile_x=10,
-            tile_y=2,
-            start_frame=8,
-            height=24,
-            width=16,
-            texture_path=PATH + 'walk_cycle.png'
-        ), cave_map)
+        hero_controller = StateMachine({
+            "wait": lambda: WaitState(hero, cave_map),
+            "walk": lambda: MoveState(hero, cave_map)
+        })
 
-        input_handler = TileMovementHandler()
+        hero: Dict[str, Any] = {
+            "entity": Entity.create(CharacterDefinition(
+                tile_x=10,
+                tile_y=2,
+                start_frame=8,
+                height=24,
+                width=16,
+                texture_path=PATH + 'walk_cycle.png'
+            ), cave_map),
+            "controller": hero_controller
+        }
+
+        hero["controller"].change("wait")
 
         while True:
-            # Input
-            input_handler.handle_input(lambda dx, dy: hero.teleport(dx, dy))
-
             # Game Render
             cave_map.render()
             cave_map.update()
-
-            # get tile position
-            # mouse_x, mouse_y = pygame.mouse.get_pos()
-            # tile_x, tile_y = cave_map.point_to_tile(mouse_x, mouse_y)
-            # print(f"Tile {tile_x}, {tile_y}")
+            hero["controller"].update()
 
             pygame.display.update()
             clock.tick(60)

@@ -121,11 +121,12 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = cam_x
         self.offset.y = cam_y
 
-        # Sort sprites by their vertical position
+        # no sorted for now since it's causing a bug with the player in tweening
+        # sorted(self.sprites(), key=sort_sprite)
         def sort_sprite(s: pygame.sprite.Sprite):
-            return s.rect.bottomright
+            return s.rect.bottom
 
-        for sprite in sorted(self.sprites(), key=sort_sprite):
+        for sprite in self.sprites():
             offset_rect = sprite.rect.copy()
             offset_rect.center -= self.offset
             self.display_surface.blit(sprite.image, offset_rect)

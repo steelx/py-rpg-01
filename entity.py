@@ -24,11 +24,9 @@ class Entity(pygame.sprite.Sprite):
     texture: pygame.Surface
     spritesheet: list[pygame.Surface]
     start_frame: int
-    game: Game
 
     @classmethod
     def create(cls, character_def: CharacterDefinition, game: Game):
-        cls.game = game
         cls.tile_x = character_def.tile_x
         cls.tile_y = character_def.tile_y
         cls.start_frame = character_def.start_frame
@@ -50,7 +48,10 @@ class Entity(pygame.sprite.Sprite):
     def render(self, *args, **kwargs):
         pass
 
-    def teleport(self, move_x: int, move_y: int):
+    def teleport(self, move_x: int, move_y: int, game: Game):
         self.tile_x += move_x
         self.tile_y += move_y
-        self.rect.center = self.game.get_tile_foot(self.tile_x, self.tile_y, self.height_mod)
+        self.rect.center = game.get_tile_foot(self.tile_x, self.tile_y, self.height_mod)
+
+    def set_frame(self, start_frame):
+        self.start_frame = start_frame
