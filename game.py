@@ -1,5 +1,5 @@
 import pygame.display
-from pygame.sprite import Group
+from pygame.sprite import Group, Sprite
 from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
@@ -13,7 +13,7 @@ class Game:
     shapes_group: Group = None
     cam_x: float
     cam_y: float
-    follow: 'Entity' = None
+    follow: Sprite = None
 
     def __init__(self, map_file: str, debug=False):
         self.tmx_map = load_pygame(map_file)
@@ -46,6 +46,8 @@ class Game:
                 Rectangle((obj.x, obj.y), obj.width, obj.height, 'red', self.map_group)
 
     def update(self):
+        if self.follow is not None:
+            self.follow_entity()
         self.map_group.update()
 
     def render(self):
@@ -59,7 +61,7 @@ class Game:
     def go_to(self, x: int, y: int):
         self.cam_x = x - SCREEN_WIDTH // 2
         self.cam_y = y - SCREEN_HEIGHT // 2
-        print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
+        # print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
 
     def _get_tile_pixel_cords(self, tile_x: int, tile_y: int):
         return (
@@ -101,6 +103,10 @@ class Game:
         tile_y = min(tile_y, map_height - 1)
 
         return tile_x, tile_y
+
+    def follow_entity(self):
+        pos = self.follow.rect.center
+        self.go_to(pos[0], pos[1])
 
     def get_tile(self, x: int, y: int, layer=0):
         return self.tmx_map.get_tile_image(x, y, layer)
