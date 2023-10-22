@@ -14,6 +14,7 @@ class Game:
     cam_x: float
     cam_y: float
     follow: Sprite = None
+    fps: float = 0
 
     def __init__(self, map_file: str, debug=False):
         self.tmx_map = load_pygame(map_file)

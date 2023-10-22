@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import Dict, Any
 
 import pygame
@@ -25,7 +26,7 @@ if __name__ == '__main__':
 
         hero_controller = StateMachine({
             "wait": lambda: WaitState(hero, cave_map),
-            "walk": lambda: MoveState(hero, cave_map)
+            "move": lambda: MoveState(hero, cave_map)
         })
         hero_def = CharacterDefinition(
             tile_x=10,
@@ -51,10 +52,16 @@ if __name__ == '__main__':
         cave_map.follow = hero["entity"]
 
         while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
             # Game Render
             cave_map.render()
             cave_map.update()
             hero["controller"].update()
 
             pygame.display.update()
-            clock.tick(60)
+            clock.tick(60) / 1000
+            cave_map.fps = (cave_map.fps + 1) % 8

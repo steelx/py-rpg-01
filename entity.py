@@ -43,7 +43,7 @@ class Entity(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
 
     def update(self, *args, **kwargs):
-        pass
+        self.image = self.spritesheet[self.start_frame]
 
     def render(self, *args, **kwargs):
         pass
@@ -53,5 +53,5 @@ class Entity(pygame.sprite.Sprite):
         self.tile_y += move_y
         self.rect.center = game.get_tile_foot(self.tile_x, self.tile_y, self.height_mod)
 
-    def set_frame(self, start_frame):
+    def set_frame(self, start_frame: int):
         self.start_frame = start_frame

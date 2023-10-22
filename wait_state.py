@@ -4,27 +4,25 @@ import pygame
 
 from entity import Entity
 from game import Game
-from keyboard import TileMovementHandler
 from statemachine import StateMachine
 
 
 class WaitState:
     entity: Entity
     controller: StateMachine
-    game_map: Game
+    game: Game
 
-    def __init__(self, character: Dict[str, Any], game_map: Game):
+    def __init__(self, character: Dict[str, Any], game: Game):
         self.character = character
-        self.game_map = game_map
+        self.game = game
         self.entity = character["entity"]
         self.controller = character["controller"]
-        self.frame_reset_speed = 0.05
-        self.frame_count = 0
-        self.keyboard = TileMovementHandler(800)
+        self.frame_reset_speed = 17  # 17ms
+        self.last_frame_time = 0
 
     def enter(self, **kwargs):
         # reset to default frame
-        self.frame_count = 0
+        self.last_frame_time = pygame.time.get_ticks()
         self.entity.set_frame(self.entity.start_frame)
 
     def exit(self):
@@ -34,13 +32,29 @@ class WaitState:
         pass
 
     def update(self):
-        if self.frame_count != -1:
-            self.frame_count += pygame.time.get_ticks()
-            if self.frame_count >= self.frame_reset_speed:
-                self.frame_count = -1
-                self.entity.set_frame(self.entity.start_frame)
+        self.reset_frame()
 
-        def change_state(dx, dy):
-            if self.controller:
-                self.controller.change("walk", dx=dx, dy=dy)
-        self.keyboard.handle_input(change_state)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.change_state(-1, 0)
+        elif keys[pygame.K_RIGHT]:
+            self.change_state(1, 0)
+        elif keys[pygame.K_UP]:
+            self.change_state(0, -1)
+        elif keys[pygame.K_DOWN]:
+            self.change_state(0, 1)
+
+    def change_state(self, dx, dy):
+        if self.controller:
+            self.controller.change("move", dx=dx, dy=dy)
+
+    def reset_frame(self):
+        """
+        If we're in the wait state for a few frames, reset the frame to the default
+        :return:
+        """
+        if self.last_frame_time != 0:
+            current = pygame.time.get_ticks()
+            if current - self.last_frame_time >= self.frame_reset_speed:
+                self.last_frame_time = current
+                self.entity.set_frame(self.entity.start_frame)
