@@ -27,6 +27,7 @@ class Entity(pygame.sprite.Sprite):
 
     @classmethod
     def create(cls, character_def: CharacterDefinition, game: Game):
+        cls.definition = character_def
         cls.tile_x = character_def.tile_x
         cls.tile_y = character_def.tile_y
         cls.start_frame = character_def.start_frame

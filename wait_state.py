@@ -18,11 +18,11 @@ class WaitState:
         self.entity = character["entity"]
         self.controller = character["controller"]
         self.frame_reset_speed = 17  # 17ms
-        self.last_frame_time = 0
+        self.next_frame_time = 0
 
     def enter(self, **kwargs):
         # reset to default frame
-        self.last_frame_time = pygame.time.get_ticks()
+        self.next_frame_time = pygame.time.get_ticks() + 80
         self.entity.set_frame(self.entity.start_frame)
 
     def exit(self):
@@ -53,8 +53,9 @@ class WaitState:
         If we're in the wait state for a few frames, reset the frame to the default
         :return:
         """
-        if self.last_frame_time != 0:
-            current = pygame.time.get_ticks()
-            if current - self.last_frame_time >= self.frame_reset_speed:
-                self.last_frame_time = current
-                self.entity.set_frame(self.entity.start_frame)
+        if self.entity.start_frame == self.entity.definition.start_frame:
+            return
+        current = pygame.time.get_ticks()
+        if current > self.next_frame_time:
+            self.next_frame_time = current + 80
+            self.entity.set_frame(self.entity.definition.start_frame)

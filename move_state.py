@@ -25,7 +25,7 @@ class MoveState:
         self.move_y = 0
         self.pixel_x = 0
         self.pixel_y = 0
-        self.move_speed = 0.4 * 1000  # 0.3 seconds
+        self.move_speed = 0.5 * 1000  # 0.3 seconds
         self.tween = Tween(0, 0, 1)
         self.anim = Animation([self.entity.start_frame])
 
