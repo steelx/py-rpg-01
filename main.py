@@ -5,7 +5,7 @@ from typing import Dict, Any
 import pygame
 
 from entity import Entity, CharacterDefinition
-from globals import SCREEN_WIDTH, SCREEN_HEIGHT
+from globals import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 from game import Game
 from move_state import MoveState
 from statemachine import StateMachine
@@ -63,5 +63,4 @@ if __name__ == '__main__':
             hero["controller"].update()
 
             pygame.display.update()
-            clock.tick(60) / 1000
-            cave_map.fps = (cave_map.fps + 1) % 8
+            clock.tick(FPS)

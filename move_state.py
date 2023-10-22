@@ -25,7 +25,7 @@ class MoveState:
         self.move_y = 0
         self.pixel_x = 0
         self.pixel_y = 0
-        self.move_speed = 0.3 * 1000  # 0.3 seconds
+        self.move_speed = 0.4 * 1000  # 0.3 seconds
         self.tween = Tween(0, 0, 1)
         self.anim = Animation([self.entity.start_frame])
 
@@ -55,7 +55,7 @@ class MoveState:
         pass
 
     def update(self):
-        self.anim.update(self.game.fps)
+        self.anim.update()
         self.tween.update()
         self.entity.set_frame(self.anim.frame())
         value = self.tween.value

@@ -4,6 +4,7 @@ from pygame.math import Vector2
 SCREEN_WIDTH = 320
 SCREEN_HEIGHT = 240
 TILE_SIZE = 16
+FPS = 30
 
 # overlay positions 
 OVERLAY_POSITIONS = {

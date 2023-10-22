@@ -5,19 +5,18 @@ import pygame
 
 
 class Animation:
-    def __init__(self, frames: List[int], spf: int = 8, loop=False):
+    def __init__(self, frames: List[int], spf: int = 0.08, loop=False):
         self.frames = frames
         self.index = 0
-        self.fps_rate = spf-1
-        self.last_frame_time = pygame.time.get_ticks()
+        self.spf = spf*1000
         self.loop = loop
+        self.next_frame = pygame.time.get_ticks()
 
-    def update(self, fps):
-        print(f"FPS: {fps} index {self.index}")
-        current = pygame.time.get_ticks()
-        if current > self.last_frame_time and self.fps_rate == fps:
-            self.index += 1
-            self.last_frame_time = current
+    def update(self):
+        print(f"Frame no {self.index}")
+        if pygame.time.get_ticks() > self.next_frame:
+            self.next_frame += self.spf
+            self.index = (self.index + 1) % len(self.frames)
 
             if self.is_last_frame():
                 if self.loop:
@@ -39,4 +38,4 @@ class Animation:
         return True if self.index >= len(self.frames) - 1 else False
 
     def is_finished(self):
-        return self.is_last_frame()
+        return self.is_last_frame() or not self.loop
