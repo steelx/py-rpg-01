@@ -23,7 +23,7 @@ class WaitState:
     def enter(self, **kwargs):
         # reset to default frame
         self.next_frame_time = pygame.time.get_ticks() + 80
-        self.entity.set_frame(self.entity.start_frame)
+        self.entity.set_frame(self.entity.definition.start_frame)
 
     def exit(self):
         pass

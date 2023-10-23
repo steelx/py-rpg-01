@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="3">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="14" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="4">
  <tileset firstgid="1" name="rpg_indoor" tilewidth="16" tileheight="16" tilecount="132" columns="11">
   <image source="rpg_indoor.png" width="176" height="192"/>
  </tileset>
  <tileset firstgid="133" source="cave/objects/forest.tsx"/>
- <layer id="1" name="Floor" width="12" height="12" locked="1">
+ <tileset firstgid="138" name="collisions" tilewidth="16" tileheight="16" tilecount="4" columns="2">
+  <image source="collision_graphic.png" width="32" height="32"/>
+ </tileset>
+ <layer id="1" name="Floor" width="14" height="15">
   <data encoding="base64" compression="zlib">
-   eJy9zzsOglAQheGLIgWgYiFWFixARPANglKYULIB9r8MfpIpbkFxDYnFl5xJTiYzllJqhjlsyfq8gAMXHnwsscJasj4H2GCLEB0aQ98f++1I30IiPIP9O+xFZNA/aPtvE+//R3+4N8ZRbj4hRYYzLrhKHv6544EnchR4oUSFNz6Sa/RZ5CBY
+   eJxjYKA/YARiJiBmBmIWKBuZzwrEbEDMBcTcSPp4gJgXiPmAmB/KRuYLALEgEIsCsRiSvjgg9iQSu5GpLxCPPpB/DaCYmwT7xIFYFooVSdCni2SfOZX8N5D6yAUWQGwJxFZAbA3ENkBsC8R2QGwPxA5A7AhlO1FoFwB6MR3+
+  </data>
+ </layer>
+ <layer id="4" name="Foreground" width="14" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2BwA10g1gNifSA2AGJDIDYCYmMgNgFiUyA2A2JzKB4IAABQxwJe
+  </data>
+ </layer>
+ <layer id="5" name="Collisions" width="14" height="15">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBicoAsJo/MJYWz6ybGbWvqwuY9YfdjYtLKPEBhq+sjB5AIAXCkfRQ==
   </data>
  </layer>
  <objectgroup id="2" name="Objects">
-  <object id="1" type="Tree" gid="134" x="58.9639" y="103.613" width="64" height="64"/>
-  <object id="2" type="Items" gid="137" x="159.705" y="77.298" width="16" height="16"/>
+  <object id="1" type="ForegroundItems" gid="134" x="74.9639" y="135.613" width="64" height="64"/>
+  <object id="2" type="FloorItems" gid="137" x="175.705" y="109.298" width="16" height="16"/>
  </objectgroup>
 </map>

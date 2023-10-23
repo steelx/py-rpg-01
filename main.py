@@ -22,15 +22,14 @@ if __name__ == '__main__':
 
         cave_map = Game(PATH + 'small_room.tmx')
         cave_map.setup()
-        cave_map.go_to_tile(6, 5)
 
         hero_controller = StateMachine({
             "wait": lambda: WaitState(hero, cave_map),
             "move": lambda: MoveState(hero, cave_map)
         })
         hero_def = CharacterDefinition(
-            tile_x=10,
-            tile_y=2,
+            tile_x=9,
+            tile_y=5,
             start_frame=8,
             height=24,
             width=16,
@@ -58,6 +57,7 @@ if __name__ == '__main__':
                     sys.exit()
 
             # Game Render
+            screen.fill((0, 0, 0))
             cave_map.render()
             cave_map.update()
             hero["controller"].update()

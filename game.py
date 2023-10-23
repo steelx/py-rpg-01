@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pygame.display
 from pygame.sprite import Group, Sprite
 from pytmx import TiledMap
@@ -10,7 +12,11 @@ from sprite_objects import Tile, Circle, Rectangle
 class Game:
     tmx_map: TiledMap
     map_group: Group
-    shapes_group: Group = None
+    entity_group: Group
+    collision_group: Group
+    foreground_group: Group
+    foreground_objects: Group
+    floor_objects: Group
     cam_x: float
     cam_y: float
     follow: Sprite = None
@@ -25,20 +31,34 @@ class Game:
 
         self.display_surface = pygame.display.get_surface()
         self.map_group = CameraGroup()
+        self.entity_group = CameraGroup()
+        self.collision_group = CameraGroup()
+        self.foreground_group = CameraGroup()
+        self.foreground_objects = CameraGroup()
+        self.floor_objects = CameraGroup()
         self.show_shapes = debug
         self.offset = pygame.math.Vector2()
 
     def setup(self):
-        # Process all layers
-        for layer in self.tmx_map.visible_layers:
-            if hasattr(layer, "data"):
-                for x, y, image in layer.tiles():
-                    Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.map_group)
+        layer = self.tmx_map.get_layer_by_name('Floor')
+        for x, y, image in layer.tiles():
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.map_group)
+
+        layer = self.tmx_map.get_layer_by_name('Foreground')
+        for x, y, image in layer.tiles():
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.foreground_group)
+
+        # Collisions
+        layer = self.tmx_map.get_layer_by_name('Collisions')
+        for x, y, image in layer.tiles():
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.collision_group, 50)
 
         # Process objects
         for obj in self.tmx_map.objects:
-            if obj.image and obj.type in ['Tree', 'Items']:
-                Tile((obj.x, obj.y), obj.image, self.map_group)
+            if obj.image and obj.type == 'ForegroundItems':
+                Tile((obj.x, obj.y), obj.image, self.foreground_objects)
+            if obj.image and obj.type == 'FloorItems':
+                Tile((obj.x, obj.y), obj.image, self.floor_objects)
             if obj.type == 'Marker' and self.show_shapes:
                 spawn = (obj.x, obj.y)
                 Circle(spawn, 4, 'yellow', self.map_group)
@@ -49,10 +69,24 @@ class Game:
         if self.follow is not None:
             self.follow_entity()
         self.map_group.update()
+        self.entity_group.update()
+        self.foreground_group.update()
 
     def render(self):
+        # Note that the order of rendering is important
+
         if hasattr(self.map_group, 'custom_draw'):
             self.map_group.custom_draw(self.cam_x, self.cam_y)
+        if hasattr(self.floor_objects, 'custom_draw'):
+            self.floor_objects.custom_draw(self.cam_x, self.cam_y)
+        if hasattr(self.entity_group, 'custom_draw'):
+            self.entity_group.custom_draw(self.cam_x, self.cam_y)
+        if hasattr(self.foreground_group, 'custom_draw'):
+            self.foreground_group.custom_draw(self.cam_x, self.cam_y)
+        if hasattr(self.foreground_objects, 'custom_draw'):
+            self.foreground_objects.custom_draw(self.cam_x, self.cam_y)
+        if hasattr(self.collision_group, 'custom_draw'):
+            self.collision_group.custom_draw(self.cam_x, self.cam_y)
 
     @classmethod
     def get_follow_position(cls):
@@ -72,6 +106,17 @@ class Game:
     def go_to_tile(self, tile_x: int, tile_y: int):
         x, y = self._get_tile_pixel_cords(tile_x, tile_y)
         self.go_to(x, y)
+
+    def pixel_to_tile(self, x: float, y: float) -> tuple[int, int]:
+        """
+        Convert absolute pixel coordinates to tile coordinates.
+        :param x: x position in pixels
+        :param y: y position in pixels
+        :return: tilemap coordinates from a given x,y position
+        """
+        tile_x = x // self.tmx_map.tilewidth
+        tile_y = (y // self.tmx_map.tileheight) - 1
+        return tile_x, tile_y
 
     def point_to_tile(
             self, x: int, y: int
@@ -115,6 +160,19 @@ class Game:
         x, y = self._get_tile_pixel_cords(tile_x, tile_y)
         return x, y - height_modifier
 
+    def get_blocking_tile(self, x: int, y: int) -> Optional[Tile]:
+        """
+        Get the Tile from the 'Collisions' layer that would block movement at the given tile coordinates.
+        :param x: Tile X coordinate
+        :param y: Tile Y coordinate
+        :return: The blocking Tile, or None if there is no blocking Tile.
+        """
+        collisions_layer = self.tmx_map.get_layer_by_name('Collisions')
+        for tile in collisions_layer.tiles():
+            if tile[0] == x and tile[1] == y:
+                return tile
+        return None
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -123,16 +181,15 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
     def custom_draw(self, cam_x, cam_y):
-        self.display_surface.fill((0, 0, 0))
         self.offset.x = cam_x
         self.offset.y = cam_y
 
         # no sorted for now since it's causing a bug with the player in tweening
-        # sorted(self.sprites(), key=sort_sprite)
-        def sort_sprite(s: pygame.sprite.Sprite):
-            return s.rect.bottom
+        # Sort sprites by their bottom position
+        # sorted_sprites = sorted(self.sprites(), key=lambda s: s.rect.bottomright[1])
 
         for sprite in self.sprites():
             offset_rect = sprite.rect.copy()
             offset_rect.center -= self.offset
             self.display_surface.blit(sprite.image, offset_rect)
+

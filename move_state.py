@@ -26,7 +26,7 @@ class MoveState:
         self.pixel_x = 0
         self.pixel_y = 0
         self.move_speed = 0.5 * 1000  # 0.3 seconds
-        self.tween = Tween(0, 0, 1)
+        self.tween = None
         self.anim = Animation([self.entity.start_frame])
 
     def enter(self, **kwargs):
@@ -48,8 +48,14 @@ class MoveState:
             frames = self.character["anim"]["down"]
         self.anim.set_frames(frames)
 
+        if self.game.get_blocking_tile(self.entity.tile_x + self.move_x, self.entity.tile_y + self.move_y):
+            self.move_x = 0
+            self.move_y = 0
+            self.controller.change("wait")
+            return
+
     def exit(self):
-        self.entity.teleport(self.move_x, self.move_y, self.game)
+        pass
 
     def render(self, **kwargs):
         pass
@@ -64,5 +70,6 @@ class MoveState:
         x = math.floor(x)
         y = math.floor(y)
         self.entity.rect.center = (x, y)
+
         if not self.tween.animating and self.anim.is_finished():
             self.controller.change("wait")
