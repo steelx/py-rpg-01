@@ -37,7 +37,7 @@ class Entity(pygame.sprite.Sprite):
         pos = game.get_tile_foot(cls.tile_x, cls.tile_y, character_def.height_mod)
         # TODO: fix sprite rows columns
         sprite_sheet = load_sprite_sheet(character_def.texture_path, character_def.width, character_def.height, 9, 16)
-        return cls(pos, sprite_sheet, game.map_group)
+        return cls(pos, sprite_sheet, game.entity_group)
 
     def __init__(self, pos: tuple[float, float], spritesheet: list[pygame.Surface], group: pygame.sprite.Group):
         super().__init__(group)
