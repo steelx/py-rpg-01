@@ -59,3 +59,4 @@ class WaitState:
         if current > self.next_frame_time:
             self.next_frame_time = current + 80
             self.entity.set_frame(self.entity.definition.start_frame)
+            self.character["facing"] = "down"

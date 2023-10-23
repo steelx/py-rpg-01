@@ -16,6 +16,6 @@ class Trigger:
         pass
 
     def __init__(self, definition: ActionDef):
-        self.onEnter = definition.on_enter or self.empty_function
-        self.onExit = definition.on_exit or self.empty_function
-        self.onUse = definition.on_use or self.empty_function
+        self.on_enter = definition.on_enter or self.empty_function
+        self.on_exit = definition.on_exit or self.empty_function
+        self.on_use = definition.on_use or self.empty_function

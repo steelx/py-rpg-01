@@ -40,13 +40,23 @@ class MoveState:
         frames = []
         if self.move_x == -1:
             frames = self.character["anim"]["left"]
+            self.character["facing"] = "left"
         elif self.move_x == 1:
             frames = self.character["anim"]["right"]
+            self.character["facing"] = "right"
         elif self.move_y == -1:
             frames = self.character["anim"]["up"]
+            self.character["facing"] = "up"
         elif self.move_y == 1:
             frames = self.character["anim"]["down"]
+            self.character["facing"] = "down"
         self.anim.set_frames(frames)
+
+        if self.move_x != 0 or self.move_y != 0:
+            trigger = self.game.get_trigger_at_tile(self.entity.tile_x, self.entity.tile_y)
+            if trigger is not None:
+                trigger.on_exit(None, self.entity)
+                return
 
         if self.game.get_blocking_tile(self.entity.tile_x + self.move_x, self.entity.tile_y + self.move_y):
             self.move_x = 0
@@ -59,7 +69,7 @@ class MoveState:
         # the character exits the MoveState
         trigger = self.game.get_trigger_at_tile(self.entity.tile_x, self.entity.tile_y)
         if trigger is not None:
-            trigger.onEnter(None, self.entity)
+            trigger.on_enter(None, self.entity)
 
     def render(self, **kwargs):
         pass

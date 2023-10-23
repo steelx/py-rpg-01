@@ -11,6 +11,7 @@ from game import Game
 from move_state import MoveState
 from statemachine import StateMachine
 from trigger import Trigger, ActionDef
+from utils import get_faced_tile
 from wait_state import WaitState
 
 PATH = os.path.abspath('.') + '/assets/'
@@ -38,6 +39,7 @@ if __name__ == '__main__':
             texture_path=PATH + 'walk_cycle.png'
         )
         hero: Dict[str, Any] = {
+            "facing": "down",
             "anim": {
                 "up": (0, 1, 2, 3),
                 "right": (4, 5, 6, 7),
@@ -52,13 +54,17 @@ if __name__ == '__main__':
 
         cave_map.follow = hero["entity"]
 
-        teleport_from_top_door = teleport(cave_map, 10, 12)
-        trigger_up_door = Trigger(ActionDef(
-            on_enter=teleport_from_top_door
+        teleport_to_bottom_door = teleport(cave_map, 10, 12)
+        trigger_at_up_door = Trigger(ActionDef(
+            on_enter=teleport_to_bottom_door
+        ))
+        trigger_at_snake = Trigger(ActionDef(
+            on_use=teleport_to_bottom_door
         ))
 
         cave_map.triggers = {
-            '11,3': trigger_up_door
+            '11,3': trigger_at_up_door,
+            '11,6': trigger_at_snake,
         }
 
         while True:
@@ -69,7 +75,10 @@ if __name__ == '__main__':
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        up_door_teleport(None, hero["entity"])
+                        tile_x, tile_y = get_faced_tile(hero)
+                        trigger = cave_map.get_trigger_at_tile(tile_x, tile_y)
+                        if trigger is not None:
+                            trigger.on_use(None, hero["entity"])
 
             # Game Render
             screen.fill((0, 0, 0))
