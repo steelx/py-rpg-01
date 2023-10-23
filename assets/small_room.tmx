@@ -9,25 +9,25 @@
  </tileset>
  <layer id="1" name="Floor" width="14" height="15">
   <data encoding="base64" compression="zlib">
-   eJy9z7sOgkAQheH1goWrIAVYUfAAJHZyR+jsef9n8SeZYkqQ7E7yJWeKk8kY438OOOKEs2S9B7jgCqt6N9wRIpKs9wdiJEhVb8Z3pdlBb/n3JeyG3hOZyDf0CnXv7eE/171/p0SFGg1adOgx4INR8rTz1g+E8R4T
+   eJy9zzsOglAQheGriIW8pFArChdAYqfylo7+tux/G/zFFFOCwJ3kS84UJ5Mxxv0ccISHk2S9+zjjgkD1QkSIkUjW+xUpbrirnsUwk924N8q/LxEsuPdAJp4Lerm69975Pxe9f+eDLwqUqFCjQYsOP8n9ylsTqxEeJw==
   </data>
  </layer>
  <layer id="4" name="Foreground" width="14" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBg6QJwEtYqj+miurwSIS4G4jER99UDcAMSNROrTBWI9INYHYgMgNgRiIyA2BmITIDYFYjMgNofigQAAKh0HNQ==
+   eJxjYBg6QJwEtYo49LmTqS+ITH2EwFDWVwLEpUBcRqK+eiBuAOJGIvXpArEeEOsDsQEQGwKxERAbA7EJEJsCsRkQm0PxQAAAftQHzg==
   </data>
  </layer>
  <layer id="7" name="Background" width="14" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBg+oAKIK8nQ1wzELVR2yygYWQAAqigB+Q==
+   eJxjYBhYoECAjwtoY+FXAHElGW5oBuIWMvSNglEAAwAz9gKP
   </data>
  </layer>
- <layer id="5" name="Collisions" width="14" height="15" visible="0">
+ <layer id="5" name="Collisions" width="14" height="15">
   <properties>
    <property name="blocking" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBicoAsJo/MJYWz6ibELF59UN+MSJySPTRwbm1b2EQK4womQWQOljxxMLgAAvMslMw==
+   eJxjYBicoAsJo/MJYWz6ibELF59UN2MTw+cefOLY2MToI8c+QgBXOBEya6D0kYPJBQDD6iW9
   </data>
  </layer>
  <objectgroup id="2" name="Objects">

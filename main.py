@@ -4,11 +4,13 @@ from typing import Dict, Any
 
 import pygame
 
+from actions import teleport
 from entity import Entity, CharacterDefinition
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 from game import Game
 from move_state import MoveState
 from statemachine import StateMachine
+from trigger import Trigger, ActionDef
 from wait_state import WaitState
 
 PATH = os.path.abspath('.') + '/assets/'
@@ -21,7 +23,7 @@ if __name__ == '__main__':
         clock = pygame.time.Clock()
 
         cave_map = Game(PATH + 'small_room.tmx')
-        cave_map.setup()
+        cave_map.build_map()
 
         hero_controller = StateMachine({
             "wait": lambda: WaitState(hero, cave_map),
@@ -50,11 +52,24 @@ if __name__ == '__main__':
 
         cave_map.follow = hero["entity"]
 
+        teleport_from_top_door = teleport(cave_map, 10, 12)
+        trigger_up_door = Trigger(ActionDef(
+            on_enter=teleport_from_top_door
+        ))
+
+        cave_map.triggers = {
+            '11,3': trigger_up_door
+        }
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        up_door_teleport(None, hero["entity"])
 
             # Game Render
             screen.fill((0, 0, 0))

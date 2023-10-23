@@ -7,6 +7,7 @@ from pytmx.util_pygame import load_pygame
 
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT
 from sprite_objects import Tile, Circle, Rectangle
+from trigger import Trigger
 
 
 class Game:
@@ -22,10 +23,17 @@ class Game:
     cam_y: float
     follow: Sprite = None
 
-    def __init__(self, map_file: str, debug=False):
+    def __init__(self, map_file: str, triggers: dict[str, Trigger] = None, debug=False):
+        """
+        :type triggers: dict[str, Trigger] e.g. {'11,3': Trigger(ActionDef(on_enter=up_door_teleport))}
+        :param map_file:
+        :param triggers:
+        :param debug:
+        """
         self.tmx_map = load_pygame(map_file)
         self.width_pixel = self.tmx_map.width * self.tmx_map.tilewidth
         self.height_pixel = self.tmx_map.height * self.tmx_map.tileheight
+        self.triggers = triggers
         # Top left corner of the Camera in pixels
         self.cam_x = 0
         self.cam_y = 0
@@ -41,7 +49,7 @@ class Game:
         self.show_shapes = debug
         self.offset = pygame.math.Vector2()
 
-    def setup(self):
+    def build_map(self):
         layer = self.tmx_map.get_layer_by_name('Floor')
         for x, y, image in layer.tiles():
             Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.map_group)
@@ -75,7 +83,7 @@ class Game:
         if self.follow is not None:
             self.follow_entity()
         self.map_group.update()
-        self.entity_group.update()
+        self.entity_group.update(game=self)
         self.foreground_group.update()
 
     def render(self):
@@ -161,8 +169,18 @@ class Game:
         pos = self.follow.rect.center
         self.go_to(pos[0], pos[1])
 
-    def get_tile(self, x: int, y: int, layer=0):
-        return self.tmx_map.get_tile_image(x, y, layer)
+    def get_trigger_at_tile(self, tile_x: int, tile_y: int, layer="Floor"):
+        """
+        Get the Trigger at the given tile coordinates.
+        :param tile_x: Tile X coordinate
+        :param tile_y: Tile Y coordinate
+        :param layer: Layer name to search for Triggers
+        :return: The Trigger, or None if there is no Trigger at the given tile coordinates.
+        """
+        if self.triggers is None:
+            return None
+        key = f"{tile_x},{tile_y}"
+        return self.triggers.get(key)
 
     def get_tile_foot(self, tile_x: int, tile_y: int, height_modifier: int = 0):
         x, y = self._get_tile_pixel_cords(tile_x, tile_y)

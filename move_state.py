@@ -55,7 +55,11 @@ class MoveState:
             return
 
     def exit(self):
-        pass
+        # character finishes entering a tile. This occurs when
+        # the character exits the MoveState
+        trigger = self.game.get_trigger_at_tile(self.entity.tile_x, self.entity.tile_y)
+        if trigger is not None:
+            trigger.onEnter(None, self.entity)
 
     def render(self, **kwargs):
         pass
