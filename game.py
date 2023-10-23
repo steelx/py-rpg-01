@@ -51,7 +51,7 @@ class Game:
         # Collisions
         layer = self.tmx_map.get_layer_by_name('Collisions')
         for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.collision_group, 50)
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.collision_group, 0)
 
         # Process objects
         for obj in self.tmx_map.objects:
