@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="14" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="4">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="14" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="4">
  <tileset firstgid="1" name="rpg_indoor" tilewidth="16" tileheight="16" tilecount="132" columns="11">
   <image source="rpg_indoor.png" width="176" height="192"/>
  </tileset>
@@ -9,24 +9,29 @@
  </tileset>
  <layer id="1" name="Floor" width="14" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYKA/YARiJiBmBmIWKBuZzwrEbEDMBcTcSPp4gJgXiPmAmB/KRuYLALEgEIsCsRiSvjgg9iQSu5GpLxCPPpB/DaCYmwT7xIFYFooVSdCni2SfOZX8N5D6yAUWQGwJxFZAbA3ENkBsC8R2QGwPxA5A7AhlO1FoFwB6MR3+
+   eJy9z7sOgkAQheH1goWrIAVYUfAAJHZyR+jsef9n8SeZYkqQ7E7yJWeKk8kY438OOOKEs2S9B7jgCqt6N9wRIpKs9wdiJEhVb8Z3pdlBb/n3JeyG3hOZyDf0CnXv7eE/171/p0SFGg1adOgx4INR8rTz1g+E8R4T
   </data>
  </layer>
  <layer id="4" name="Foreground" width="14" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2BwA10g1gNifSA2AGJDIDYCYmMgNgFiUyA2A2JzKB4IAABQxwJe
+   eJxjYBg6QJwEtYqj+miurwSIS4G4jER99UDcAMSNROrTBWI9INYHYgMgNgRiIyA2BmITIDYFYjMgNofigQAAKh0HNQ==
   </data>
  </layer>
- <layer id="5" name="Collisions" width="14" height="15">
+ <layer id="7" name="Background" width="14" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBg+oAKIK8nQ1wzELVR2yygYWQAAqigB+Q==
+  </data>
+ </layer>
+ <layer id="5" name="Collisions" width="14" height="15" visible="0">
   <properties>
    <property name="blocking" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBicoAsJo/MJYWz6ybGbWvqwuY9YfdjYtLKPEBhq+sjB5AIAXCkfRQ==
+   eJxjYBicoAsJo/MJYWz6ibELF59UN+MSJySPTRwbm1b2EQK4womQWQOljxxMLgAAvMslMw==
   </data>
  </layer>
  <objectgroup id="2" name="Objects">
   <object id="1" type="ForegroundItems" gid="134" x="74.9639" y="135.613" width="64" height="64"/>
-  <object id="2" type="FloorItems" gid="137" x="175.705" y="109.298" width="16" height="16"/>
+  <object id="2" type="FloorItems" gid="137" x="176.038" y="111.965" width="16" height="16"/>
  </objectgroup>
 </map>

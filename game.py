@@ -15,6 +15,7 @@ class Game:
     entity_group: Group
     collision_group: Group
     foreground_group: Group
+    background_group: Group
     foreground_objects: Group
     floor_objects: Group
     cam_x: float
@@ -34,6 +35,7 @@ class Game:
         self.entity_group = CameraGroup()
         self.collision_group = CameraGroup()
         self.foreground_group = CameraGroup()
+        self.background_group = CameraGroup()
         self.foreground_objects = CameraGroup()
         self.floor_objects = CameraGroup()
         self.show_shapes = debug
@@ -47,6 +49,10 @@ class Game:
         layer = self.tmx_map.get_layer_by_name('Foreground')
         for x, y, image in layer.tiles():
             Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.foreground_group)
+
+        layer = self.tmx_map.get_layer_by_name('Background')
+        for x, y, image in layer.tiles():
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.background_group)
 
         # Collisions
         layer = self.tmx_map.get_layer_by_name('Collisions')
@@ -79,6 +85,8 @@ class Game:
             self.map_group.custom_draw(self.cam_x, self.cam_y)
         if hasattr(self.floor_objects, 'custom_draw'):
             self.floor_objects.custom_draw(self.cam_x, self.cam_y)
+        if hasattr(self.background_group, 'custom_draw'):
+            self.background_group.custom_draw(self.cam_x, self.cam_y)
         if hasattr(self.entity_group, 'custom_draw'):
             self.entity_group.custom_draw(self.cam_x, self.cam_y)
         if hasattr(self.foreground_group, 'custom_draw'):
