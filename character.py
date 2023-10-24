@@ -4,7 +4,7 @@
 from entity import Entity
 from character_definitions import CharacterDefData, entities
 from game import Game
-from state_factory import create_state
+from states.state_factory import create_state
 from statemachine import StateMachine
 
 

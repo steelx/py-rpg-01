@@ -5,7 +5,7 @@ import pygame
 
 from character import Character
 from character_definitions import characters
-from wait_state import WaitState
+from states.wait_state import WaitState
 
 
 class TestCharacter(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestCharacter(unittest.TestCase):
         mock_pygame_init.assert_called_once()
 
     @patch('state_factory.create_state')
-    @patch('entity_definitions.entities')
+    @patch('character_definitions.entities')
     @patch('entity.Entity.create')
     def test_character_initialization(self, mock_entity_create, mock_create_state, mock_entities):
         mock_entities.return_value = {'hero': Mock()}
