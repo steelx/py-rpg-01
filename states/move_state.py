@@ -1,10 +1,11 @@
 import math
 
+from tweener import Tween
+
 from animations import Animation
 from entity import Entity
 from game import Game
 from statemachine import StateMachine
-from tweener import Tween
 
 
 class MoveState:
@@ -58,8 +59,8 @@ class MoveState:
             if trigger is not None:
                 trigger.on_exit(None, self.entity)
                 return
-
-        if self.game.get_blocking_tile(self.entity.tile_x + self.move_x, self.entity.tile_y + self.move_y):
+        target_x, target_y = (self.entity.tile_x + self.move_x, self.entity.tile_y + self.move_y)
+        if self.game.get_blocking_tile(target_x, target_y) or self.game.get_blocking_entity_tile(target_x, target_y):
             self.move_x = 0
             self.move_y = 0
             self.controller.change(self.character.default_state)

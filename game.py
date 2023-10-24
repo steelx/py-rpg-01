@@ -191,18 +191,31 @@ class Game:
         x, y = self._get_tile_pixel_cords(tile_x, tile_y)
         return x, y - height_modifier
 
-    def get_blocking_tile(self, x: int, y: int) -> Optional[Tile]:
+    def get_blocking_tile(self, tile_x: int, tile_y: int) -> Optional[Tile]:
         """
         Get the Tile from the 'Collisions' layer that would block movement at the given tile coordinates.
-        :param x: Tile X coordinate
-        :param y: Tile Y coordinate
+        :param tile_x: Tile X coordinate
+        :param tile_y: Tile Y coordinate
         :return: The blocking Tile, or None if there is no blocking Tile.
         """
         collisions_layer = self.tmx_map.get_layer_by_name('Collisions')
         for tile in collisions_layer.tiles():
-            if tile[0] == x and tile[1] == y:
+            if tile[0] == tile_x and tile[1] == tile_y:
                 return tile
         return None
+
+    def get_blocking_entity_tile(self, tile_x: int, tile_y: int) -> Optional[Tile]:
+        """
+        Get the Entity from the 'entity_group' group that would block movement at the given tile coordinates.
+        :param tile_x: x position on the screen resolution
+        :param tile_y: y position on the screen resolution
+        :return: The blocking Tile, or None if there is no blocking Tile.
+        """
+        for entity in self.entity_group.sprites():
+            if entity.tile_x == tile_x and entity.tile_y == tile_y:
+                return entity
+        return None
+
 
 
 class CameraGroup(pygame.sprite.Group):
