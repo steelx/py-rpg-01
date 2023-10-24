@@ -22,7 +22,7 @@ class TestCharacter(unittest.TestCase):
         pygame.init()
         mock_pygame_init.assert_called_once()
 
-    @patch('state_factory.create_state')
+    @patch('states.state_factory.create_state')
     @patch('character_definitions.entities')
     @patch('entity.Entity.create')
     def test_character_initialization(self, mock_entity_create, mock_create_state, mock_entities):
