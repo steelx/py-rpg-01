@@ -32,9 +32,11 @@ class Entity(pygame.sprite.Sprite):
         cls.tile_y = character_def.tile_y
         cls.start_frame = character_def.start_frame
         cls.height_mod = character_def.height_mod
-        pos = game.get_tile_foot(cls.tile_x, cls.tile_y, character_def.height_mod)
+        pos = game.get_tile_foot(
+            cls.tile_x, cls.tile_y, character_def.height_mod)
         # TODO: fix sprite rows columns
-        sprite_sheet = load_sprite_sheet(character_def.texture_path, character_def.width, character_def.height, 9, 16)
+        sprite_sheet = load_sprite_sheet(
+            character_def.texture_path, character_def.width, character_def.height, 9, 16)
         return cls(pos, sprite_sheet, game.entity_group)
 
     def __init__(self, pos: tuple[float, float], spritesheet: list[pygame.Surface], group: pygame.sprite.Group):
@@ -44,7 +46,8 @@ class Entity(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
 
     def update(self, game: Game):
-        self.tile_x, self.tile_y = game.pixel_to_tile(self.rect.midbottom[0], self.rect.midbottom[1])
+        self.tile_x, self.tile_y = game.pixel_to_tile(
+            self.rect.midbottom[0], self.rect.midbottom[1])
         self.image = self.spritesheet[self.start_frame]
 
     def render(self, *args, **kwargs):
@@ -53,8 +56,10 @@ class Entity(pygame.sprite.Sprite):
     def teleport(self, move_x: int, move_y: int, game: Game):
         self.tile_x = move_x
         self.tile_y = move_y
-        print(f"Teleporting to {game.get_tile_foot(self.tile_x, self.tile_y, self.height_mod)}")
-        self.rect.center = game.get_tile_foot(self.tile_x, self.tile_y, self.height_mod)
+        print(
+            f"Teleporting to {game.get_tile_foot(self.tile_x, self.tile_y, self.height_mod)}")
+        self.rect.center = game.get_tile_foot(
+            self.tile_x, self.tile_y, self.height_mod)
 
     def set_frame(self, start_frame: int):
         self.start_frame = start_frame

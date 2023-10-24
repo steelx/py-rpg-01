@@ -52,20 +52,24 @@ class Game:
     def build_map(self):
         layer = self.tmx_map.get_layer_by_name('Floor')
         for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.map_group)
+            Tile((x * self.tmx_map.tilewidth, y *
+                 self.tmx_map.tileheight), image, self.map_group)
 
         layer = self.tmx_map.get_layer_by_name('Foreground')
         for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.foreground_group)
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight),
+                 image, self.foreground_group)
 
         layer = self.tmx_map.get_layer_by_name('Background')
         for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.background_group)
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight),
+                 image, self.background_group)
 
         # Collisions
         layer = self.tmx_map.get_layer_by_name('Collisions')
         for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight), image, self.collision_group, 0)
+            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight),
+                 image, self.collision_group, 0)
 
         # Process objects
         for obj in self.tmx_map.objects:
@@ -77,7 +81,8 @@ class Game:
                 spawn = (obj.x, obj.y)
                 Circle(spawn, 4, 'yellow', self.map_group)
             if obj.type == 'Shape' and self.show_shapes:
-                Rectangle((obj.x, obj.y), obj.width, obj.height, 'red', self.map_group)
+                Rectangle((obj.x, obj.y), obj.width,
+                          obj.height, 'red', self.map_group)
 
     def update(self):
         if self.follow is not None:
@@ -218,4 +223,3 @@ class CameraGroup(pygame.sprite.Group):
             offset_rect = sprite.rect.copy()
             offset_rect.center -= self.offset
             self.display_surface.blit(sprite.image, offset_rect)
-

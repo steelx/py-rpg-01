@@ -18,7 +18,8 @@ class TileMovementHandler:
             pygame.K_DOWN: (0, 1)
         }
         self.key_pressed = {key: False for key in self.movement_keys}
-        self.key_last_press_time: dict[int, float] = {key: 0 for key in self.movement_keys}
+        self.key_last_press_time: dict[int, float] = {
+            key: 0 for key in self.movement_keys}
 
     def reset_key_pressed(self):
         for k in self.key_pressed:

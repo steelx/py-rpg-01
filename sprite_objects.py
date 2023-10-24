@@ -24,5 +24,3 @@ class Rectangle(Sprite):
         self.image = Surface((width, height), SRCALPHA)
         self.image.fill(color)
         self.rect = self.image.get_rect(topleft=pos)
-
-

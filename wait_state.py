@@ -7,6 +7,8 @@ from entity import Entity
 from game import Game
 from statemachine import StateMachine
 
+WAIT_TIME_MS = 400
+
 
 class WaitState:
     entity: Entity
@@ -23,7 +25,7 @@ class WaitState:
 
     def enter(self, **kwargs):
         # reset to default frame
-        self.next_frame_time = pygame.time.get_ticks() + 80
+        self.next_frame_time = pygame.time.get_ticks() + WAIT_TIME_MS
         self.entity.set_frame(self.entity.start_frame)
 
     def exit(self):
@@ -58,6 +60,6 @@ class WaitState:
             return
         current = pygame.time.get_ticks()
         if current > self.next_frame_time:
-            self.next_frame_time = current + 80
+            self.next_frame_time = current + WAIT_TIME_MS
             self.entity.set_frame(self.entity.definition.start_frame)
             self.character.facing = "down"

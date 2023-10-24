@@ -14,7 +14,8 @@ class MoveState:
 
     def __init__(self, character, game: Game):
         from character import Character
-        assert isinstance(character, Character), "Expected character to be an instance of Character"
+        assert isinstance(
+            character, Character), "Expected character to be an instance of Character"
         self.character = character
         self.game = game
         self.entity = character.entity
@@ -52,7 +53,8 @@ class MoveState:
         self.anim.set_frames(frames)
 
         if self.move_x != 0 or self.move_y != 0:
-            trigger = self.game.get_trigger_at_tile(self.entity.tile_x, self.entity.tile_y)
+            trigger = self.game.get_trigger_at_tile(
+                self.entity.tile_x, self.entity.tile_y)
             if trigger is not None:
                 trigger.on_exit(None, self.entity)
                 return
@@ -66,7 +68,8 @@ class MoveState:
     def exit(self):
         # character finishes entering a tile. This occurs when
         # the character exits the MoveState
-        trigger = self.game.get_trigger_at_tile(self.entity.tile_x, self.entity.tile_y)
+        trigger = self.game.get_trigger_at_tile(
+            self.entity.tile_x, self.entity.tile_y)
         if trigger is not None:
             trigger.on_enter(None, self.entity)
 
