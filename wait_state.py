@@ -2,6 +2,7 @@ from typing import Dict, Any
 
 import pygame
 
+from character import Character
 from entity import Entity
 from game import Game
 from statemachine import StateMachine
@@ -12,11 +13,11 @@ class WaitState:
     controller: StateMachine
     game: Game
 
-    def __init__(self, character: Dict[str, Any], game: Game):
+    def __init__(self, character: Character, game: Game):
         self.character = character
         self.game = game
-        self.entity = character["entity"]
-        self.controller = character["controller"]
+        self.entity = character.entity
+        self.controller = character.controller
         self.frame_reset_speed = 17  # 17ms
         self.next_frame_time = 0
 
@@ -59,4 +60,4 @@ class WaitState:
         if current > self.next_frame_time:
             self.next_frame_time = current + 80
             self.entity.set_frame(self.entity.definition.start_frame)
-            self.character["facing"] = "down"
+            self.character.facing = "down"

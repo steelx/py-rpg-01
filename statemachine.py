@@ -15,6 +15,9 @@ class StateMachine:
     def create(states: dict[str, State]):
         return StateMachine(states)
 
+    def add(self, state_name, state: State):
+        self.states_initiated[state_name] = state
+
     def change(self, state_name, **kwargs):
         if self.current is not None:
             self.current.exit()

@@ -7,7 +7,7 @@ from spritesheet import load_sprite_sheet
 
 
 @dataclass
-class CharacterDefinition:
+class EntityDefinition:
     tile_x: int
     tile_y: int
     start_frame: int
@@ -26,7 +26,7 @@ class Entity(pygame.sprite.Sprite):
     start_frame: int
 
     @classmethod
-    def create(cls, character_def: CharacterDefinition, game: Game):
+    def create(cls, character_def: EntityDefinition, game: Game):
         cls.definition = character_def
         cls.tile_x = character_def.tile_x
         cls.tile_y = character_def.tile_y

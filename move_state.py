@@ -1,7 +1,4 @@
 import math
-from typing import Dict, Any
-
-import pygame
 
 from animations import Animation
 from entity import Entity
@@ -15,11 +12,13 @@ class MoveState:
     controller: StateMachine
     game: Game
 
-    def __init__(self, character: Dict[str, Any], game: Game):
+    def __init__(self, character, game: Game):
+        from character import Character
+        assert isinstance(character, Character), "Expected character to be an instance of Character"
         self.character = character
         self.game = game
-        self.entity = character["entity"]
-        self.controller = character["controller"]
+        self.entity = character.entity
+        self.controller = character.controller
         self.tile_width = game.tmx_map.tilewidth
         self.move_x = 0
         self.move_y = 0
@@ -39,17 +38,17 @@ class MoveState:
         self.tween.start()
         frames = []
         if self.move_x == -1:
-            frames = self.character["anim"]["left"]
-            self.character["facing"] = "left"
+            frames = self.character.anim.left
+            self.character.facing = "left"
         elif self.move_x == 1:
-            frames = self.character["anim"]["right"]
-            self.character["facing"] = "right"
+            frames = self.character.anim.right
+            self.character.facing = "right"
         elif self.move_y == -1:
-            frames = self.character["anim"]["up"]
-            self.character["facing"] = "up"
+            frames = self.character.anim.up
+            self.character.facing = "up"
         elif self.move_y == 1:
-            frames = self.character["anim"]["down"]
-            self.character["facing"] = "down"
+            frames = self.character.anim.down
+            self.character.facing = "down"
         self.anim.set_frames(frames)
 
         if self.move_x != 0 or self.move_y != 0:
