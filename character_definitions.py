@@ -4,7 +4,6 @@ from typing import Dict, Tuple
 
 from entity import EntityDefinition
 
-
 PATH = os.path.abspath('.') + '/assets/'
 
 
@@ -20,7 +19,7 @@ class AnimationData:
 class CharacterDefData:
     entity: str
     facing: str
-    anim: AnimationData
+    anim: AnimationData | None
     controller: Tuple[str, ...]
     state: str
 
@@ -52,5 +51,24 @@ characters: Dict[str, CharacterDefData] = {
         ),
         controller=("wait", "move"),
         state="wait"
+    ),
+    "strolling_npc": CharacterDefData(
+        entity="hero",
+        facing="down",
+        anim=AnimationData(
+            up=(0, 1, 2, 3),
+            right=(4, 5, 6, 7),
+            down=(8, 9, 10, 11),
+            left=(12, 13, 14, 15)
+        ),
+        controller=("plan_stroll", "move"),
+        state="plan_stroll"
+    ),
+    "standing_npc": CharacterDefData(
+        entity="hero",
+        facing="down",
+        anim=None,
+        controller=("npc_stand",),
+        state="npc_stand"
     )
 }

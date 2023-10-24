@@ -1,56 +1,41 @@
-from typing import Dict, Any
+import random
 
 import pygame
 
-from entity import Entity
 from game import Game
-from statemachine import StateMachine
 from utils import CountdownTimer
 
-WAIT_TIME_SECONDS = 0.3
+WAIT_TIME_SECONDS = 1
 
 
-class WaitState:
-    entity: Entity
-    controller: StateMachine
-    game: Game
-
+class PlanStrollState:
     def __init__(self, character, game: Game):
         from character import Character
         assert isinstance(
             character, Character), "Expected character to be an instance of Character"
+
         self.character = character
         self.game = game
         self.entity = character.entity
         self.controller = character.controller
         self.next_frame_timer = CountdownTimer(WAIT_TIME_SECONDS)
+        self.count_down = random.randint(2, 4)
+        self.count_down_timer = CountdownTimer(self.count_down)
 
-    def enter(self, **kwargs):
+    def enter(self, **kwargs) -> None:
         self.next_frame_timer = CountdownTimer(WAIT_TIME_SECONDS)
-        self.entity.set_frame(self.entity.start_frame)
+        self.count_down = random.randint(2, 4)
+        self.count_down_timer = CountdownTimer(self.count_down)
 
-    def exit(self):
+    def exit(self) -> None:
         pass
 
-    def render(self, **kwargs):
+    def render(self, **kwargs) -> None:
         pass
 
-    def update(self):
+    def update(self) -> None:
+        self.change_direction()
         self.reset_frame()
-
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.change_state(-1, 0)
-        elif keys[pygame.K_RIGHT]:
-            self.change_state(1, 0)
-        elif keys[pygame.K_UP]:
-            self.change_state(0, -1)
-        elif keys[pygame.K_DOWN]:
-            self.change_state(0, 1)
-
-    def change_state(self, dx, dy):
-        if self.controller:
-            self.controller.change("move", dx=dx, dy=dy)
 
     def reset_frame(self):
         """
@@ -59,6 +44,19 @@ class WaitState:
         """
         if self.entity.start_frame == self.entity.definition.start_frame:
             return
+
         if self.next_frame_timer.has_elapsed():
             self.entity.set_frame(self.entity.definition.start_frame)
             self.character.facing = "down"
+
+    def change_direction(self):
+        if self.count_down_timer.has_elapsed():
+            choice = random.randint(0, 4)
+            if choice == 0:
+                self.controller.change("move", dx=-1, dy=0)
+            elif choice == 1:
+                self.controller.change("move", dx=1, dy=0)
+            elif choice == 2:
+                self.controller.change("move", dx=0, dy=-1)
+            elif choice == 3:
+                self.controller.change("move", dx=0, dy=1)

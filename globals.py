@@ -1,8 +1,8 @@
 from pygame.math import Vector2
 
 # screen
-SCREEN_WIDTH = 320
-SCREEN_HEIGHT = 240
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 480
 TILE_SIZE = 16
 FPS = 16
 

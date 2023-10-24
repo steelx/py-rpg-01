@@ -1,8 +1,8 @@
 # This class
-# creates characters based on the definition files in entity_definitions.py
+# creates characters based on the definition files in character_definitions.py
 
 from entity import Entity
-from entity_definitions import CharacterDefData, entities
+from character_definitions import CharacterDefData, entities
 from game import Game
 from state_factory import create_state
 from statemachine import StateMachine
@@ -16,6 +16,7 @@ class Character:
         self.entity = Entity.create(entity_def, game)
         self.anim = character_def.anim
         self.facing = character_def.facing
+        self.default_state = character_def.state
 
         state_classes = {}  # This will store state classes, not instances.
         for state_name in character_def.controller:

@@ -62,7 +62,7 @@ class MoveState:
         if self.game.get_blocking_tile(self.entity.tile_x + self.move_x, self.entity.tile_y + self.move_y):
             self.move_x = 0
             self.move_y = 0
-            self.controller.change("wait")
+            self.controller.change(self.character.default_state)
             return
 
     def exit(self):
@@ -88,4 +88,4 @@ class MoveState:
         self.entity.rect.center = (x, y)
 
         if not self.tween.animating and self.anim.is_finished():
-            self.controller.change("wait")
+            self.controller.change(self.character.default_state)

@@ -5,7 +5,7 @@ import pygame
 
 from actions import teleport
 from character import Character
-from entity_definitions import characters
+from character_definitions import characters
 from game import Game
 from globals import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 from trigger import Trigger, ActionDef
@@ -24,6 +24,10 @@ if __name__ == '__main__':
         cave_map.build_map()
 
         hero = Character(characters["hero"], cave_map)
+        standing_npc = Character(characters["standing_npc"], cave_map)
+        teleport(cave_map, 2, 6)(None, standing_npc.entity)
+
+        strolling_npc = Character(characters["strolling_npc"], cave_map)
 
         cave_map.follow = hero.entity
 
@@ -58,6 +62,8 @@ if __name__ == '__main__':
             cave_map.render()
             cave_map.update()
             hero.controller.update()
+            standing_npc.controller.update()
+            strolling_npc.controller.update()
 
             pygame.display.update()
             clock.tick(FPS)

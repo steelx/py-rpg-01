@@ -4,7 +4,7 @@ from unittest.mock import patch, Mock
 import pygame
 
 from character import Character
-from entity_definitions import characters
+from character_definitions import characters
 from wait_state import WaitState
 
 
