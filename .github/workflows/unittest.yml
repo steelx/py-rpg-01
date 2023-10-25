@@ -23,7 +23,7 @@ jobs:
       run: |
         pip install ruff
         ruff --output-format=github .
-      continue-on-error: true
+      continue-on-error: false
     - name: Testing the code with unittest
       run: |
         python -m unittest discover -s tests
