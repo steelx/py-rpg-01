@@ -5,7 +5,7 @@ from pygame.sprite import Group, Sprite
 from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
-from globals import SCREEN_WIDTH, SCREEN_HEIGHT
+from globals import SCREEN_WIDTH, SCREEN_HEIGHT, DISPLAY_SIZE
 from sprite_objects import Tile, Circle, Rectangle
 from trigger import Trigger
 
@@ -23,7 +23,7 @@ class Game:
     cam_y: float
     follow: Sprite = None
 
-    def __init__(self, map_file: str, triggers: dict[str, Trigger] = None, debug=False):
+    def __init__(self, map_file: str, triggers: dict[str, Trigger] = None, display: pygame.Surface = None, debug=False):
         """
         :type triggers: dict[str, Trigger] e.g. {'11,3': Trigger(ActionDef(on_enter=up_door_teleport))}
         :param map_file:
@@ -38,14 +38,14 @@ class Game:
         self.cam_x = 0
         self.cam_y = 0
 
-        self.display_surface = pygame.display.get_surface()
-        self.map_group = CameraGroup()
-        self.entity_group = CameraGroup()
-        self.collision_group = CameraGroup()
-        self.foreground_group = CameraGroup()
-        self.background_group = CameraGroup()
-        self.foreground_objects = CameraGroup()
-        self.floor_objects = CameraGroup()
+        self.display_surface = display if display is not None else pygame.display.get_surface()
+        self.map_group = CameraGroup(display)
+        self.entity_group = CameraGroup(display)
+        self.collision_group = CameraGroup(display)
+        self.foreground_group = CameraGroup(display)
+        self.background_group = CameraGroup(display)
+        self.foreground_objects = CameraGroup(display)
+        self.floor_objects = CameraGroup(display)
         self.show_shapes = debug
         self.offset = pygame.math.Vector2()
 
@@ -53,7 +53,7 @@ class Game:
         layer = self.tmx_map.get_layer_by_name('Floor')
         for x, y, image in layer.tiles():
             Tile((x * self.tmx_map.tilewidth, y *
-                 self.tmx_map.tileheight), image, self.map_group)
+                  self.tmx_map.tileheight), image, self.map_group)
 
         layer = self.tmx_map.get_layer_by_name('Foreground')
         for x, y, image in layer.tiles():
@@ -114,9 +114,15 @@ class Game:
         return cls.follow.rect.center
 
     def go_to(self, x: int, y: int):
-        self.cam_x = x - SCREEN_WIDTH // 2
-        self.cam_y = y - SCREEN_HEIGHT // 2
-        # print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
+        self.cam_x = x - DISPLAY_SIZE[0] // 2
+        self.cam_y = y - DISPLAY_SIZE[1] // 2
+
+        # Ensure the camera doesn't move beyond the map edges
+        self.cam_x = max(self.cam_x, 0)
+        self.cam_y = max(self.cam_y, 0)
+        self.cam_x = min(self.cam_x, self.width_pixel - DISPLAY_SIZE[0])
+        self.cam_y = min(self.cam_y, self.height_pixel - DISPLAY_SIZE[1])
+        print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
 
     def _get_tile_pixel_cords(self, tile_x: int, tile_y: int):
         return (
@@ -171,8 +177,22 @@ class Game:
         return tile_x, tile_y
 
     def follow_entity(self):
-        pos = self.follow.rect.center
-        self.go_to(pos[0], pos[1])
+        target_x, target_y = self.follow.rect.center
+        lerp_factor = 0.1  # Adjust this value for smoother or quicker camera movement
+
+        self.cam_x += (target_x - self.cam_x) * lerp_factor
+        self.cam_y += (target_y - self.cam_y) * lerp_factor
+        self._clamp_camera()
+
+    def _clamp_camera(self):
+        # Ensure the camera doesn't move beyond the left edge
+        self.cam_x = max(self.cam_x, 0)
+        # Ensure the camera doesn't move beyond the top edge
+        self.cam_y = max(self.cam_y, 0)
+        # Ensure the camera doesn't move beyond the right edge
+        self.cam_x = min(self.cam_x, self.width_pixel - SCREEN_WIDTH)
+        # Ensure the camera doesn't move beyond the bottom edge
+        self.cam_y = min(self.cam_y, self.height_pixel - SCREEN_HEIGHT)
 
     def get_trigger_at_tile(self, tile_x: int, tile_y: int, layer="Floor"):
         """
@@ -217,11 +237,10 @@ class Game:
         return None
 
 
-
 class CameraGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self, display: pygame.Surface = None):
         super().__init__()
-        self.display_surface = pygame.display.get_surface()
+        self.display_surface = display if display is not None else pygame.display.get_surface()
         self.offset = pygame.math.Vector2()
 
     def custom_draw(self, cam_x, cam_y):
