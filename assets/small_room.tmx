@@ -22,7 +22,7 @@
    eJxjYBhYoECAjwtoY+FXAHElGW5oBuIWMvSNglEAAwAz9gKP
   </data>
  </layer>
- <layer id="5" name="Collisions" width="14" height="15">
+ <layer id="5" name="Collisions" width="14" height="15" visible="0">
   <properties>
    <property name="blocking" type="bool" value="true"/>
   </properties>

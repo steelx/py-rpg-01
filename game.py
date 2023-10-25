@@ -50,33 +50,28 @@ class Game:
         self.offset = pygame.math.Vector2()
 
     def build_map(self):
-        layer = self.tmx_map.get_layer_by_name('Floor')
-        for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y *
-                  self.tmx_map.tileheight), image, self.map_group)
+        layer_map = {
+            'Floor': self.map_group,
+            'Foreground': self.foreground_group,
+            'Background': self.background_group,
+            'Collisions': self.collision_group
+        }
 
-        layer = self.tmx_map.get_layer_by_name('Foreground')
-        for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight),
-                 image, self.foreground_group)
-
-        layer = self.tmx_map.get_layer_by_name('Background')
-        for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight),
-                 image, self.background_group)
-
-        # Collisions
-        layer = self.tmx_map.get_layer_by_name('Collisions')
-        for x, y, image in layer.tiles():
-            Tile((x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight),
-                 image, self.collision_group, 0)
+        # Iterate over layers and create tiles
+        for layer_name, group in layer_map.items():
+            layer = self.tmx_map.get_layer_by_name(layer_name)
+            for x, y, image in layer.tiles():
+                pos = (x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight)
+                Tile(pos, image, group, 0 if layer_name == 'Collisions' else 255)
 
         # Process objects
         for obj in self.tmx_map.objects:
-            if obj.image and obj.type == 'ForegroundItems':
-                Tile((obj.x, obj.y), obj.image, self.foreground_objects)
-            if obj.image and obj.type == 'FloorItems':
-                Tile((obj.x, obj.y), obj.image, self.floor_objects)
+            if obj.image:
+                if obj.type == 'ForegroundItems':
+                    Tile((obj.x, obj.y), obj.image, self.foreground_objects)
+                elif obj.type == 'FloorItems':
+                    Tile((obj.x, obj.y), obj.image, self.floor_objects)
+
             if obj.type == 'Marker' and self.show_shapes:
                 spawn = (obj.x, obj.y)
                 Circle(spawn, 4, 'yellow', self.map_group)
