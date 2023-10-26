@@ -1,4 +1,3 @@
-import time as t
 from typing import List
 
 import pygame

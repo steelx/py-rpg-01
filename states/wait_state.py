@@ -1,11 +1,9 @@
-from typing import Dict, Any
-
 import pygame
 
 from entity import Entity
 from game import Game
 from statemachine import StateMachine
-from utils import CountdownTimer
+from utils.count_down_timer import CountdownTimer
 
 WAIT_TIME_SECONDS = 0.3
 

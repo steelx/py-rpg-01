@@ -5,7 +5,7 @@ from pygame.sprite import Group, Sprite
 from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
-from globals import SCREEN_WIDTH, SCREEN_HEIGHT, DISPLAY_SIZE
+from globals import DISPLAY_SIZE
 from sprite_objects import Tile, Circle, Rectangle
 from trigger import Trigger
 

@@ -1,9 +1,7 @@
 import random
 
-import pygame
-
 from game import Game
-from utils import CountdownTimer
+from utils.count_down_timer import CountdownTimer
 
 WAIT_TIME_SECONDS = 1
 
