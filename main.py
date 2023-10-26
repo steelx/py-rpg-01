@@ -15,7 +15,7 @@ PATH = os.path.abspath('.') + '/assets/'
 
 if __name__ == '__main__':
     if __name__ == '__main__':
-        
+
         pygame.init()
         pygame.display.set_caption("jRPG Game")
         screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -43,6 +43,8 @@ if __name__ == '__main__':
             '11,3': trigger_at_up_door,
             '11,6': trigger_at_snake,
         }
+
+        game.follow = hero.entity
 
         while True:
             for event in pygame.event.get():

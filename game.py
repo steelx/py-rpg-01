@@ -62,7 +62,7 @@ class Game:
             layer = self.tmx_map.get_layer_by_name(layer_name)
             for x, y, image in layer.tiles():
                 pos = (x * self.tmx_map.tilewidth, y * self.tmx_map.tileheight)
-                Tile(pos, image, group, 0 if layer_name == 'Collisions' else 255)
+                Tile(pos, image, group, 0 if layer_name == 'Collisions' else None)
 
         # Process objects
         for obj in self.tmx_map.objects:
@@ -111,13 +111,15 @@ class Game:
     def go_to(self, x: int, y: int):
         self.cam_x = x - DISPLAY_SIZE[0] // 2
         self.cam_y = y - DISPLAY_SIZE[1] // 2
+        self._clamp_camera()
+        # print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
 
+    def _clamp_camera(self):
         # Ensure the camera doesn't move beyond the map edges
         self.cam_x = max(self.cam_x, 0)
         self.cam_y = max(self.cam_y, 0)
         self.cam_x = min(self.cam_x, self.width_pixel - DISPLAY_SIZE[0])
         self.cam_y = min(self.cam_y, self.height_pixel - DISPLAY_SIZE[1])
-        print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
 
     def _get_tile_pixel_cords(self, tile_x: int, tile_y: int):
         return (
@@ -173,21 +175,7 @@ class Game:
 
     def follow_entity(self):
         target_x, target_y = self.follow.rect.center
-        lerp_factor = 0.1  # Adjust this value for smoother or quicker camera movement
-
-        self.cam_x += (target_x - self.cam_x) * lerp_factor
-        self.cam_y += (target_y - self.cam_y) * lerp_factor
-        self._clamp_camera()
-
-    def _clamp_camera(self):
-        # Ensure the camera doesn't move beyond the left edge
-        self.cam_x = max(self.cam_x, 0)
-        # Ensure the camera doesn't move beyond the top edge
-        self.cam_y = max(self.cam_y, 0)
-        # Ensure the camera doesn't move beyond the right edge
-        self.cam_x = min(self.cam_x, self.width_pixel - SCREEN_WIDTH)
-        # Ensure the camera doesn't move beyond the bottom edge
-        self.cam_y = min(self.cam_y, self.height_pixel - SCREEN_HEIGHT)
+        self.go_to(target_x, target_y)
 
     def get_trigger_at_tile(self, tile_x: int, tile_y: int, layer="Floor"):
         """
