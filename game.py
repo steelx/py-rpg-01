@@ -88,7 +88,6 @@ class Game:
 
     def render(self):
         # Note that the order of rendering is important
-
         if hasattr(self.map_group, 'custom_draw'):
             self.map_group.custom_draw(self.cam_x, self.cam_y)
         if hasattr(self.floor_objects, 'custom_draw'):
@@ -96,7 +95,7 @@ class Game:
         if hasattr(self.background_group, 'custom_draw'):
             self.background_group.custom_draw(self.cam_x, self.cam_y)
         if hasattr(self.entity_group, 'custom_draw'):
-            self.entity_group.custom_draw(self.cam_x, self.cam_y)
+            self.entity_group.custom_draw(self.cam_x, self.cam_y, sort=True)
         if hasattr(self.foreground_group, 'custom_draw'):
             self.foreground_group.custom_draw(self.cam_x, self.cam_y)
         if hasattr(self.foreground_objects, 'custom_draw'):
@@ -226,15 +225,15 @@ class CameraGroup(pygame.sprite.Group):
         self.display_surface = display if display is not None else pygame.display.get_surface()
         self.offset = pygame.math.Vector2()
 
-    def custom_draw(self, cam_x, cam_y):
+    def custom_draw(self, cam_x, cam_y, sort=False):
         self.offset.x = cam_x
         self.offset.y = cam_y
 
         # no sorted for now since it's causing a bug with the player in tweening
         # Sort sprites by their bottom position
-        # sorted_sprites = sorted(self.sprites(), key=lambda s: s.rect.bottomright[1])
+        sorted_sprites = sorted(self.sprites(), key=lambda s: s.rect.bottomright[1])
 
-        for sprite in self.sprites():
+        for sprite in sorted_sprites if sort else self.sprites():
             offset_rect = sprite.rect.copy()
             offset_rect.center -= self.offset
             self.display_surface.blit(sprite.image, offset_rect)

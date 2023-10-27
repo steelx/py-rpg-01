@@ -53,6 +53,13 @@ class Entity(pygame.sprite.Sprite):
     def render(self, *args, **kwargs):
         pass
 
+
+    def set_tile_pos(self, tile_x: int, tile_y: int, game: Game):
+        self.tile_x = tile_x
+        self.tile_y = tile_y
+        self.rect.center = game.get_tile_foot(
+            self.tile_x, self.tile_y, self.height_mod)
+
     def teleport(self, move_x: int, move_y: int, game: Game):
         self.tile_x = move_x
         self.tile_y = move_y
