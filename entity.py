@@ -59,14 +59,7 @@ class Entity(pygame.sprite.Sprite):
         self.tile_y = tile_y
         self.rect.center = game.get_tile_foot(
             self.tile_x, self.tile_y, self.height_mod)
-
-    def teleport(self, move_x: int, move_y: int, game: Game):
-        self.tile_x = move_x
-        self.tile_y = move_y
-        print(
-            f"Teleporting to {game.get_tile_foot(self.tile_x, self.tile_y, self.height_mod)}")
-        self.rect.center = game.get_tile_foot(
-            self.tile_x, self.tile_y, self.height_mod)
+        game.add_entity(self)
 
     def set_frame(self, start_frame: int):
         self.start_frame = start_frame

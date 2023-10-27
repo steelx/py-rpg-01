@@ -74,6 +74,8 @@ class MoveState:
         if trigger is not None:
             trigger.on_enter(None, self.entity)
 
+        # self.entity.set_tile_pos(self.entity.tile_x, self.entity.tile_y, self.game)
+
     def render(self, **kwargs):
         pass
 

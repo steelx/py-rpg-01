@@ -3,15 +3,23 @@ import sys
 
 import pygame
 
-from actions import teleport
+from actions import teleport, ACTIONS
 from character import Character
 from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
+from map_definitions import MapDefinition, ActionsParams
 from trigger import Trigger, ActionDef
-from utils import get_faced_tile
+from utils.get_faced_tile import get_faced_tile
 
 PATH = os.path.abspath('.') + '/assets/'
+map_definitions = MapDefinition(
+    path=PATH + 'small_room.tmx',
+    on_wake=[
+        ActionsParams(id='add_npc', params={'def': 'strolling_npc', 'x': '11', 'y': '5'}),
+        ActionsParams(id='add_npc', params={'def': 'standing_npc', 'x': '2', 'y': '5'}),
+    ]
+)
 
 if __name__ == '__main__':
     if __name__ == '__main__':
@@ -22,14 +30,10 @@ if __name__ == '__main__':
         display = pygame.surface.Surface(DISPLAY_SIZE)
         clock = pygame.time.Clock()
 
-        game = Game(PATH + 'small_room.tmx', display=display)
-        game.build_map()
+        game = Game(display=display)
+        game.setup(map_definitions, ACTIONS)
 
         hero = Character(characters["hero"], game)
-        standing_npc = Character(characters["standing_npc"], game)
-        teleport(game, 2, 6)(None, standing_npc.entity)
-
-        strolling_npc = Character(characters["strolling_npc"], game)
 
         teleport_to_bottom_door = teleport(game, 10, 12)
         trigger_at_up_door = Trigger(ActionDef(
@@ -65,8 +69,6 @@ if __name__ == '__main__':
             game.render()
             game.update()
             hero.controller.update()
-            standing_npc.controller.update()
-            strolling_npc.controller.update()
 
             # Scale and draw the game_surface onto the screen
             surf = pygame.transform.scale(display, WINDOW_SIZE)

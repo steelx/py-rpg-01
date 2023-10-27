@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict, Callable
 
 import pygame.display
 from pygame.sprite import Group, Sprite
@@ -6,8 +6,8 @@ from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
 from globals import DISPLAY_SIZE
+from map_definitions import MapDefinition
 from sprite_objects import Tile, Circle, Rectangle
-from trigger import Trigger
 
 
 class Game:
@@ -22,18 +22,17 @@ class Game:
     cam_x: float
     cam_y: float
     follow: Sprite = None
+    entities: dict[int, 'Entity']
+    npcs: list['Character']
 
-    def __init__(self, map_file: str, triggers: dict[str, Trigger] = None, display: pygame.Surface = None, debug=False):
+    def __init__(self, display: pygame.Surface = None, debug=False):
         """
         :type triggers: dict[str, Trigger] e.g. {'11,3': Trigger(ActionDef(on_enter=up_door_teleport))}
-        :param map_file:
-        :param triggers:
-        :param debug:
+        :param display: pygame.Surface
+        :param debug: bool
         """
-        self.tmx_map = load_pygame(map_file)
-        self.width_pixel = self.tmx_map.width * self.tmx_map.tilewidth
-        self.height_pixel = self.tmx_map.height * self.tmx_map.tileheight
-        self.triggers = triggers
+        self.tmx_map = None
+        self.triggers = None
         # Top left corner of the Camera in pixels
         self.cam_x = 0
         self.cam_y = 0
@@ -48,8 +47,26 @@ class Game:
         self.floor_objects = CameraGroup(display)
         self.show_shapes = debug
         self.offset = pygame.math.Vector2()
+        self.triggers = None
+        self.npcs = []
+        self.entities = {}
 
-    def build_map(self):
+    def setup(self, map_def: MapDefinition, ACTIONS: Dict[str, Callable] = None):
+        """
+        :type triggers: dict[str, Trigger] e.g. {'11,3': Trigger(ActionDef(on_enter=up_door_teleport))}
+        :param map_file:
+        :param triggers:
+        :return:
+        """
+        self.tmx_map = load_pygame(map_def.path)
+        self.width_pixel = self.tmx_map.width * self.tmx_map.tilewidth
+        self.height_pixel = self.tmx_map.height * self.tmx_map.tileheight
+
+        for v in map_def.on_wake:
+            assert v.id in ACTIONS, f"Action {v.id} not found in ACTIONS"
+            action = ACTIONS[v.id]
+            action(self, **v.params)(None, None)
+
         layer_map = {
             'Floor': self.map_group,
             'Foreground': self.foreground_group,
@@ -85,6 +102,8 @@ class Game:
         self.map_group.update()
         self.entity_group.update(game=self)
         self.foreground_group.update()
+        for npc in self.npcs:
+            npc.controller.update()
 
     def render(self):
         # Note that the order of rendering is important
@@ -217,6 +236,16 @@ class Game:
             if entity.tile_x == tile_x and entity.tile_y == tile_y:
                 return entity
         return None
+
+    def coord_to_index(self, tile_x: int, tile_y: int) -> int:
+        return tile_y * self.tmx_map.height + tile_x
+
+    def get_entity(self, tile_x: int, tile_y: int):
+        return self.entities.get(self.coord_to_index(tile_x, tile_y))
+
+    def add_entity(self, entity: 'Entity'):
+        tile_x, tile_y = entity.tile_x, entity.tile_y
+        self.entities[self.coord_to_index(tile_x, tile_y)] = entity
 
 
 class CameraGroup(pygame.sprite.Group):
