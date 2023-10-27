@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="14" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="4">
+ <tileset firstgid="1" name="rpg_indoor" tilewidth="16" tileheight="16" tilecount="132" columns="11">
+  <image source="rpg_indoor.png" width="176" height="192"/>
+ </tileset>
+ <tileset firstgid="133" source="cave/objects/forest.tsx"/>
+ <tileset firstgid="138" name="collisions" tilewidth="16" tileheight="16" tilecount="4" columns="2">
+  <image source="collision_graphic.png" width="32" height="32"/>
+ </tileset>
+ <layer id="1" name="Floor" width="14" height="15">
+  <data encoding="base64" compression="zlib">
+   eJy9zzsOglAQheGriIW8pFArChdAYqfylo7+tux/G/zFFFOCwJ3kS84UJ5Mxxv0ccISHk2S9+zjjgkD1QkSIkUjW+xUpbrirnsUwk924N8q/LxEsuPdAJp4Lerm69975Pxe9f+eDLwqUqFCjQYsOP8n9ylsTqxEeJw==
+  </data>
+ </layer>
+ <layer id="4" name="Foreground" width="14" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBg6QJwEtYo49LmTqS+ITH2EwFDWVwLEpUBcRqK+eiBuAOJGIvXpArEeEOsDsQEQGwKxERAbA7EJEJsCsRkQm0PxQAAAftQHzg==
+  </data>
+ </layer>
+ <layer id="7" name="Background" width="14" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhYoECAjwtoY+FXAHElGW5oBuIWMvSNglEAAwAz9gKP
+  </data>
+ </layer>
+ <layer id="5" name="Collisions" width="14" height="15" visible="0">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBicoAsJo/MJYWz6ibELF59UN2MTw+cefOLY2MToI8c+QgBXOBEya6D0kYPJBQDD6iW9
+  </data>
+ </layer>
+ <objectgroup id="2" name="Objects">
+  <object id="1" type="ForegroundItems" gid="134" x="74.9639" y="135.613" width="64" height="64"/>
+  <object id="2" type="FloorItems" gid="137" x="176.038" y="111.965" width="16" height="16"/>
+ </objectgroup>
+</map>

@@ -1,10 +1,27 @@
 # py-rpg-01
 jRPG Game in Pygame
 
-![image](https://user-images.githubusercontent.com/3184210/276618977-ef236630-f384-43d0-8fae-1dfb6f60bbfc.png)
+![image](./screenshots/Screenshot_2023-10-23.png)
 
 
+## Install
+```bash
+pip install -r requirements.txt
+```
 
+## Update requirements
+```bash
+pip freeze > requirements.txt
+```
+
+## Tests
+```commandline
+python -m unittest discover -s tests
+```
+### single test
+```commandline
+python -m unittest .\tests\test_map_builder.py
+```
 
 # Learning notes
 [notes](./notes.md)
