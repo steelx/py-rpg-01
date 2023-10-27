@@ -40,7 +40,7 @@ class PlanStrollState:
         If we're in the wait state for a few frames, reset the frame to the default
         :return:
         """
-        if self.entity.start_frame == self.entity.definition.start_frame:
+        if self.entity.frame == self.entity.definition.start_frame:
             return
 
         if self.next_frame_timer.has_elapsed():

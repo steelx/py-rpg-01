@@ -22,8 +22,6 @@ class Game:
     cam_x: float
     cam_y: float
     follow: Sprite = None
-    entities: dict[int, 'Entity']
-    npcs: list['Character']
 
     def __init__(self, display: pygame.Surface = None, debug=False):
         """
@@ -48,8 +46,8 @@ class Game:
         self.show_shapes = debug
         self.offset = pygame.math.Vector2()
         self.triggers = None
-        self.npcs = []
-        self.entities = {}
+        from character import Character
+        self.npcs: list[Character] = []
 
     def setup(self, map_def: MapDefinition, ACTIONS: Dict[str, Callable] = None):
         """
@@ -237,15 +235,6 @@ class Game:
                 return entity
         return None
 
-    def coord_to_index(self, tile_x: int, tile_y: int) -> int:
-        return tile_y * self.tmx_map.height + tile_x
-
-    def get_entity(self, tile_x: int, tile_y: int):
-        return self.entities.get(self.coord_to_index(tile_x, tile_y))
-
-    def add_entity(self, entity: 'Entity'):
-        tile_x, tile_y = entity.tile_x, entity.tile_y
-        self.entities[self.coord_to_index(tile_x, tile_y)] = entity
 
 
 class CameraGroup(pygame.sprite.Group):

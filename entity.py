@@ -23,14 +23,14 @@ class Entity(pygame.sprite.Sprite):
     height_mod: int
     texture: pygame.Surface
     spritesheet: list[pygame.Surface]
-    start_frame: int
+    frame: int
 
     @classmethod
     def create(cls, character_def: EntityDefinition, game: Game):
         cls.definition = character_def
         cls.tile_x = character_def.tile_x
         cls.tile_y = character_def.tile_y
-        cls.start_frame = character_def.start_frame
+        cls.frame = character_def.start_frame
         cls.height_mod = character_def.height_mod
         pos = game.get_tile_foot(
             cls.tile_x, cls.tile_y, character_def.height_mod)
@@ -42,13 +42,13 @@ class Entity(pygame.sprite.Sprite):
     def __init__(self, pos: tuple[float, float], spritesheet: list[pygame.Surface], group: pygame.sprite.Group):
         super().__init__(group)
         self.spritesheet = spritesheet
-        self.image = spritesheet[self.start_frame]
+        self.image = spritesheet[self.frame]
         self.rect = self.image.get_rect(center=pos)
 
     def update(self, game: Game):
         self.tile_x, self.tile_y = game.pixel_to_tile(
             self.rect.midbottom[0], self.rect.midbottom[1])
-        self.image = self.spritesheet[self.start_frame]
+        self.image = self.spritesheet[self.frame]
 
     def render(self, *args, **kwargs):
         pass
@@ -59,7 +59,6 @@ class Entity(pygame.sprite.Sprite):
         self.tile_y = tile_y
         self.rect.center = game.get_tile_foot(
             self.tile_x, self.tile_y, self.height_mod)
-        game.add_entity(self)
 
     def set_frame(self, start_frame: int):
-        self.start_frame = start_frame
+        self.frame = start_frame

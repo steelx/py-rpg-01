@@ -25,7 +25,7 @@ class WaitState:
 
     def enter(self, **kwargs):
         self.next_frame_timer = CountdownTimer(WAIT_TIME_SECONDS)
-        self.entity.set_frame(self.entity.start_frame)
+        self.entity.set_frame(self.entity.frame)
 
     def exit(self):
         pass
@@ -55,7 +55,7 @@ class WaitState:
         If we're in the wait state for a few frames, reset the frame to the default
         :return:
         """
-        if self.entity.start_frame == self.entity.definition.start_frame:
+        if self.entity.frame == self.entity.definition.start_frame:
             return
         if self.next_frame_timer.has_elapsed():
             self.entity.set_frame(self.entity.definition.start_frame)
