@@ -6,9 +6,8 @@ from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
 from globals import DISPLAY_SIZE
-from map_definitions import MapDefinition
+from map_definitions import MapDefinition, Trigger, create_map_triggers
 from sprite_objects import Tile, Circle, Rectangle
-from trigger import Trigger, ActionDef
 
 
 class Game:
@@ -68,24 +67,7 @@ class Game:
                 action(self, **v.params)(None, None)
 
         # Create the Trigger types from the map_def
-        self.triggers: Dict[str, Trigger] = {}
-        def set_trigger_action(self, key: str, action_type: str, action_params):
-            if action_params:
-                self.triggers[key].__setattr__(
-                    action_type, ACTIONS[action_params.id](self, **action_params.params)
-                )
-
-        for trigger_data in map_def.triggers_at_tile:
-            trigger_type_id = trigger_data.trigger
-            x, y = trigger_data.x, trigger_data.y
-            key = f"{x},{y}"
-            self.triggers[key] = Trigger()
-            trigger_type = map_def.triggers_type.get(trigger_type_id)
-
-            action_types = ['on_enter', 'on_exit', 'on_use']
-            for action_type in action_types:
-                action_params = map_def.actions.get(trigger_type.get(action_type))  # ActionsParams
-                set_trigger_action(self, key, action_type, action_params)
+        self.triggers: Dict[str, Trigger] = create_map_triggers(map_def, ACTIONS, self)
 
         layer_map = {
             'Floor': self.map_group,

@@ -2,12 +2,12 @@ import sys
 
 import pygame
 
-from actions import teleport, ACTIONS
+from actions import ACTIONS
 from character import Character
 from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
-from map_definitions import map_definitions
+from map_definitions import small_room_map_def
 from utils.get_faced_tile import get_faced_tile
 
 if __name__ == '__main__':
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         clock = pygame.time.Clock()
 
         game = Game(display=display)
-        game.setup(map_definitions, ACTIONS)
+        game.setup(small_room_map_def, ACTIONS)
 
         hero = Character(characters["hero"], game)
 
