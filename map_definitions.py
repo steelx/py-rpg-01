@@ -69,6 +69,9 @@ def create_map_triggers(map_def: MapDefinition, actions, game) -> Dict[str, Trig
     # Create the Trigger types from the map_def
     triggers: Dict[str, Trigger] = {}
 
+    if map_def.triggers_at_tile is None:
+        return triggers
+
     def set_trigger_action(key: str, action_type: str, action_params):
         if action_params:
             triggers[key].__setattr__(

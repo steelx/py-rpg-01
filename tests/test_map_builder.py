@@ -4,6 +4,7 @@ import unittest
 import pygame
 
 from game import Game
+from map_definitions import MapDefinition
 
 PATH = os.path.abspath('.') + '/assets/'
 
@@ -26,7 +27,8 @@ class TestMapBuilder(unittest.TestCase):
         pygame.display.set_mode((320, 240))
 
     def test_point_to_tile(self):
-        test_map = Game(PATH + 'small_room.tmx')
+        test_map = Game()
+        test_map.setup(MapDefinition(path=PATH + 'small_room.tmx'), None)
         self.assertEqual(
             test_map.point_to_tile(16, 16),
             (1, 1)
