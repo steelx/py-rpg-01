@@ -85,8 +85,8 @@ def create_map_triggers(map_def: MapDefinition, actions, game) -> Dict[str, Trig
         triggers[key] = Trigger()
         trigger_type = map_def.triggers_type.get(trigger_type_id)
 
-        for field in fields(trigger_type):
-            action_type = field.name
+        for key in fields(trigger_type):
+            action_type = key.name
             action_name = getattr(trigger_type, action_type)
             action_params = map_def.actions.get(action_name)
             set_trigger_action(key, action_type, action_params)
