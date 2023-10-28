@@ -1,4 +1,3 @@
-import os
 import sys
 
 import pygame
@@ -8,18 +7,8 @@ from character import Character
 from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
-from map_definitions import MapDefinition, ActionsParams
-from trigger import Trigger, ActionDef
+from map_definitions import map_definitions
 from utils.get_faced_tile import get_faced_tile
-
-PATH = os.path.abspath('.') + '/assets/'
-map_definitions = MapDefinition(
-    path=PATH + 'small_room.tmx',
-    on_wake=[
-        ActionsParams(id='add_npc', params={'def': 'strolling_npc', 'x': '11', 'y': '5'}),
-        ActionsParams(id='add_npc', params={'def': 'standing_npc', 'x': '2', 'y': '5'}),
-    ]
-)
 
 if __name__ == '__main__':
     if __name__ == '__main__':
@@ -34,19 +23,6 @@ if __name__ == '__main__':
         game.setup(map_definitions, ACTIONS)
 
         hero = Character(characters["hero"], game)
-
-        teleport_to_bottom_door = teleport(game, 10, 12)
-        trigger_at_up_door = Trigger(ActionDef(
-            on_enter=teleport_to_bottom_door
-        ))
-        trigger_at_snake = Trigger(ActionDef(
-            on_use=teleport_to_bottom_door
-        ))
-
-        game.triggers = {
-            '11,3': trigger_at_up_door,
-            '11,6': trigger_at_snake,
-        }
 
         game.follow = hero.entity
 
