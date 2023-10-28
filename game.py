@@ -8,6 +8,7 @@ from pytmx.util_pygame import load_pygame
 from globals import DISPLAY_SIZE
 from map_definitions import MapDefinition
 from sprite_objects import Tile, Circle, Rectangle
+from trigger import Trigger, ActionDef
 
 
 class Game:
@@ -30,7 +31,6 @@ class Game:
         :param debug: bool
         """
         self.tmx_map = None
-        self.triggers = None
         # Top left corner of the Camera in pixels
         self.cam_x = 0
         self.cam_y = 0
@@ -46,6 +46,7 @@ class Game:
         self.show_shapes = debug
         self.offset = pygame.math.Vector2()
         self.triggers = None
+        self.triggers_type = None
         from character import Character
         self.npcs: list[Character] = []
 
@@ -60,10 +61,30 @@ class Game:
         self.width_pixel = self.tmx_map.width * self.tmx_map.tilewidth
         self.height_pixel = self.tmx_map.height * self.tmx_map.tileheight
 
-        for v in map_def.on_wake:
-            assert v.id in ACTIONS, f"Action {v.id} not found in ACTIONS"
-            action = ACTIONS[v.id]
-            action(self, **v.params)(None, None)
+        if map_def.on_wake is not None:
+            for v in map_def.on_wake:
+                assert v.id in ACTIONS, f"Action {v.id} not found in ACTIONS"
+                action = ACTIONS[v.id]
+                action(self, **v.params)(None, None)
+
+        # Create the Trigger types from the map_def
+        self.triggers: Dict[str, Trigger] = {}
+        for trigger_data in map_def.triggers_at_tile:
+            trigger_type_id = trigger_data.trigger
+            x, y = trigger_data.x, trigger_data.y
+            key = f"{x},{y}"
+            self.triggers[key] = Trigger()
+            trigger_type = map_def.triggers_type.get(trigger_type_id)
+            if trigger_type:
+                on_enter_params = map_def.actions.get(trigger_type.get('on_enter')) # ActionsParams
+                if on_enter_params:
+                    self.triggers[key].on_enter = ACTIONS[on_enter_params.id](self, **on_enter_params.params)
+                on_exit_params = map_def.actions.get(trigger_type.get('on_exit'))  # ActionsParams
+                if on_exit_params:
+                    self.triggers[key].on_exit = ACTIONS[on_exit_params.id](self, **on_exit_params.params)
+                on_use_params = map_def.actions.get(trigger_type.get('on_use'))  # ActionsParams
+                if on_use_params:
+                    self.triggers[key].on_use = ACTIONS[on_use_params.id](self, **on_use_params.params)
 
         layer_map = {
             'Floor': self.map_group,
@@ -203,8 +224,8 @@ class Game:
         """
         if self.triggers is None:
             return None
-        key = f"{tile_x},{tile_y}"
-        return self.triggers.get(key)
+        tile_pos = f"{tile_x},{tile_y}"
+        return self.triggers.get(tile_pos)
 
     def get_tile_foot(self, tile_x: int, tile_y: int, height_modifier: int = 0):
         x, y = self._get_tile_pixel_cords(tile_x, tile_y)

@@ -15,7 +15,7 @@ class Trigger:
         """Default empty function."""
         pass
 
-    def __init__(self, definition: ActionDef):
+    def __init__(self, definition: ActionDef = ActionDef()):
         self.on_enter = definition.on_enter or self.empty_function
         self.on_exit = definition.on_exit or self.empty_function
         self.on_use = definition.on_use or self.empty_function
