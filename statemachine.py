@@ -19,8 +19,8 @@ class StateMachine:
         self.current = self.states[state_name]
         self.current.enter(**kwargs)
 
-    def update(self):
-        self.current.update()
+    def update(self, dt):
+        self.current.update(dt)
 
     def render(self, **kwargs):
         self.current.render(**kwargs)

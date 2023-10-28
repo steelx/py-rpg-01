@@ -22,5 +22,5 @@ class NPCStandState:
     def render(self, **kwargs) -> None:
         pass
 
-    def update(self) -> None:
+    def update(self, dt: float) -> None:
         pass

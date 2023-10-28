@@ -22,6 +22,7 @@ class Game:
     cam_x: float
     cam_y: float
     follow: Sprite = None
+    dt: float = 0
 
     def __init__(self, display: pygame.Surface = None, debug=False):
         """
@@ -100,7 +101,7 @@ class Game:
         self.entity_group.update(game=self)
         self.foreground_group.update()
         for npc in self.npcs:
-            npc.controller.update()
+            npc.controller.update(self.dt)
 
     def render(self):
         # Note that the order of rendering is important

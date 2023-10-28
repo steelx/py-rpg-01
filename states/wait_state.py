@@ -5,7 +5,7 @@ from game import Game
 from statemachine import StateMachine
 from utils.count_down_timer import CountdownTimer
 
-WAIT_TIME_SECONDS = 0.3
+WAIT_TIME_MS = 200
 
 
 class WaitState:
@@ -21,10 +21,10 @@ class WaitState:
         self.game = game
         self.entity = character.entity
         self.controller = character.controller
-        self.next_frame_timer = CountdownTimer(WAIT_TIME_SECONDS)
+        self.next_frame_timer = CountdownTimer(WAIT_TIME_MS)
 
     def enter(self, **kwargs):
-        self.next_frame_timer = CountdownTimer(WAIT_TIME_SECONDS)
+        self.next_frame_timer.reset()
         self.entity.set_frame(self.entity.frame)
 
     def exit(self):
@@ -33,7 +33,7 @@ class WaitState:
     def render(self, **kwargs):
         pass
 
-    def update(self):
+    def update(self, dt: float):
         self.reset_frame()
 
         keys = pygame.key.get_pressed()

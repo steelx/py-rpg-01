@@ -41,12 +41,12 @@ if __name__ == '__main__':
             # Game Render
             screen.fill((0, 0, 0))
             display.fill((0, 0, 0))
-            game.render()
+            hero.controller.update(game.dt)
             game.update()
-            hero.controller.update()
+            game.render()
 
             # Scale and draw the game_surface onto the screen
             surf = pygame.transform.scale(display, WINDOW_SIZE)
             screen.blit(surf, (0, 0))
             pygame.display.update()
-            clock.tick(FPS)
+            game.dt = clock.tick(FPS)

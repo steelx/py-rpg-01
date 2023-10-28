@@ -11,5 +11,5 @@ class State(Protocol):
     def render(self, **kwargs) -> None:
         ...
 
-    def update(self) -> None:
+    def update(self, **kwargs) -> None:
         ...

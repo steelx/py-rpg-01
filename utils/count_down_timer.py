@@ -2,15 +2,15 @@ import pygame
 
 
 class CountdownTimer:
-    def __init__(self, duration: float):
+    def __init__(self, duration: int):
         self.start_time = pygame.time.get_ticks()
-        self.duration = duration * 1000  # Convert seconds to milliseconds
+        self.duration = duration
 
     def has_elapsed(self) -> bool:
         current_time = pygame.time.get_ticks()
         return (current_time - self.start_time) >= self.duration
 
-    def reset(self, duration: float = None):
+    def reset(self, duration: int = None):
         if duration:
-            self.duration = duration * 1000
+            self.duration = duration
         self.start_time = pygame.time.get_ticks()

@@ -26,7 +26,7 @@ class MoveState:
         self.move_y = 0
         self.pixel_x = 0
         self.pixel_y = 0
-        self.move_speed = 800  # 800ms to move 1 tile
+        self.move_speed = 400  # 400ms to move 1 tile
         self.tween = None
         self.anim = Animation(frames=[self.entity.frame], ms=int(self.move_speed / 4))
 
@@ -77,8 +77,8 @@ class MoveState:
     def render(self, **kwargs):
         pass
 
-    def update(self):
-        self.anim.update()
+    def update(self, dt: float):
+        self.anim.update(dt)
         self.tween.update()
         self.entity.set_frame(self.anim.frame())
         value = self.tween.value
