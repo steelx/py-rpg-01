@@ -8,6 +8,7 @@ from game import Game
 def teleport(game: Game, tile_x: int, tile_y: int):
     return lambda trigger, entity: entity.set_tile_pos(tile_x, tile_y, game)
 
+
 def add_npc(game: Game, **params):
     def insert_npc(trigger, entity):
         assert params['def'] in characters, f"Missing 'character name' {params['def']}"
@@ -19,7 +20,6 @@ def add_npc(game: Game, **params):
         game.npcs.append(character)
 
     return insert_npc
-
 
 
 ACTIONS: Dict[str, Callable] = {

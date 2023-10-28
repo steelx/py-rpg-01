@@ -24,7 +24,7 @@ class TestCharacter(unittest.TestCase):
 
     @patch('states.state_factory.create_state')
     @patch('character_definitions.entities')
-    @patch('entity.Entity.create')
+    @patch('entity.Entity')
     def test_character_initialization(self, mock_entity_create, mock_create_state, mock_entities):
         mock_entities.return_value = {'hero': Mock()}
         mock_create_state.return_value = Mock()

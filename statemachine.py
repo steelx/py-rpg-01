@@ -2,30 +2,21 @@ from state import State
 
 
 class StateMachine:
-    states_initiated: dict[str, State]
-    states: dict[str, callable]
+    states: dict[str, State]
     current: State | None
 
-    def __init__(self, states: dict[str, callable]):
+    def __init__(self, states: dict[str, State]):
         self.states = states
         self.current = None
-        self.states_initiated = {}
-
-    @staticmethod
-    def create(states: dict[str, State]):
-        return StateMachine(states)
 
     def add(self, state_name, state: State):
-        self.states_initiated[state_name] = state
+        self.states[state_name] = state
 
     def change(self, state_name, **kwargs):
         if self.current is not None:
             self.current.exit()
 
-        if state_name not in self.states_initiated:
-            self.states_initiated[state_name] = self.states[state_name]()
-
-        self.current = self.states_initiated[state_name]
+        self.current = self.states[state_name]
         self.current.enter(**kwargs)
 
     def update(self):

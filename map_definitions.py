@@ -2,16 +2,19 @@ import os
 from dataclasses import dataclass, field, fields
 from typing import List, Union, Any, Optional, Dict, Callable
 
+
 @dataclass
 class ActionsParams:
     id: str
-    params: dict[str, Union[int, str, Any]] # def = "strolling_npc", x = 11, y = 5
+    params: dict[str, Union[int, str, Any]]  # def = "strolling_npc", x = 11, y = 5
+
 
 @dataclass
 class TriggerDef:
-    on_enter: Optional[Callable] = field(default=None, repr=False)
-    on_exit: Optional[Callable] = field(default=None, repr=False)
-    on_use: Optional[Callable] = field(default=None, repr=False)
+    on_enter: Optional[str] = field(default=None, repr=False)
+    on_exit: Optional[str] = field(default=None, repr=False)
+    on_use: Optional[str] = field(default=None, repr=False)
+
 
 class Trigger:
     @staticmethod
@@ -30,6 +33,7 @@ class TriggerData:
     trigger: str
     x: int
     y: int
+
 
 @dataclass
 class MapDefinition:

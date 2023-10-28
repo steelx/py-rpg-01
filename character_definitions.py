@@ -31,7 +31,19 @@ entities = {
     "hero": EntityDefinition(
         tile_x=9,
         tile_y=5,
+        rows=9,
+        columns=16,
         start_frame=8,
+        height=24,
+        width=16,
+        texture_path=PATH + 'walk_cycle.png'
+    ),
+    "girl": EntityDefinition(
+        tile_x=9,
+        tile_y=5,
+        rows=9,
+        columns=16,
+        start_frame=24,
         height=24,
         width=16,
         texture_path=PATH + 'walk_cycle.png'
@@ -53,13 +65,13 @@ characters: Dict[str, CharacterDefData] = {
         state="wait"
     ),
     "strolling_npc": CharacterDefData(
-        entity="hero",
+        entity="girl",
         facing="down",
         anim=AnimationData(
-            up=(0, 1, 2, 3),
-            right=(4, 5, 6, 7),
-            down=(8, 9, 10, 11),
-            left=(12, 13, 14, 15)
+            up=(16, 17, 18, 19),
+            right=(20, 21, 22, 23),
+            down=(24, 25, 26, 27),
+            left=(28, 29, 30, 31)
         ),
         controller=("plan_stroll", "move"),
         state="plan_stroll"

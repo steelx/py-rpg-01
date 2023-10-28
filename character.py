@@ -11,9 +11,10 @@ from statemachine import StateMachine
 class Character:
     def __init__(self, character_def: CharacterDefData, game: Game):
         self.game = game
-        entity_def = entities[character_def.entity]
+        self.definition = character_def
+        entity_def = entities.get(character_def.entity)
         assert entity_def is not None, f"Entity definition {character_def.entity} not found"
-        self.entity = Entity.create(entity_def, game)
+        self.entity = Entity(entity_def, game)
         self.anim = character_def.anim
         self.facing = character_def.facing
         self.default_state = character_def.state
@@ -25,7 +26,7 @@ class Character:
             assert state_name not in state_classes, f"State {state_name} already exists"
             state_classes[state_name] = state_class
 
-        self.controller = StateMachine.create({})
+        self.controller = StateMachine({})
 
         # Now that self.controller is initialized, create instances of states
         for state_name, state_class in state_classes.items():

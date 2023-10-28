@@ -14,6 +14,8 @@ class EntityDefinition:
     height: int
     width: int
     texture_path: str
+    rows: int
+    columns: int
     height_mod: int = 4
 
 
@@ -25,24 +27,19 @@ class Entity(pygame.sprite.Sprite):
     spritesheet: list[pygame.Surface]
     frame: int
 
-    @classmethod
-    def create(cls, character_def: EntityDefinition, game: Game):
-        cls.definition = character_def
-        cls.tile_x = character_def.tile_x
-        cls.tile_y = character_def.tile_y
-        cls.frame = character_def.start_frame
-        cls.height_mod = character_def.height_mod
+    def __init__(self, entity_def: EntityDefinition, game: Game):
+        super().__init__(game.entity_group)
+        self.definition = entity_def
+        self.tile_x = entity_def.tile_x
+        self.tile_y = entity_def.tile_y
+        self.frame = entity_def.start_frame
+        self.height_mod = entity_def.height_mod
         pos = game.get_tile_foot(
-            cls.tile_x, cls.tile_y, character_def.height_mod)
-        # TODO: fix sprite rows columns
+            self.tile_x, self.tile_y, entity_def.height_mod)
         sprite_sheet = load_sprite_sheet(
-            character_def.texture_path, character_def.width, character_def.height, 9, 16)
-        return cls(pos, sprite_sheet, game.entity_group)
-
-    def __init__(self, pos: tuple[float, float], spritesheet: list[pygame.Surface], group: pygame.sprite.Group):
-        super().__init__(group)
-        self.spritesheet = spritesheet
-        self.image = spritesheet[self.frame]
+            entity_def.texture_path, entity_def.width, entity_def.height, entity_def.rows, entity_def.columns)
+        self.spritesheet = sprite_sheet
+        self.image = sprite_sheet[self.frame]
         self.rect = self.image.get_rect(center=pos)
 
     def update(self, game: Game):
@@ -52,7 +49,6 @@ class Entity(pygame.sprite.Sprite):
 
     def render(self, *args, **kwargs):
         pass
-
 
     def set_tile_pos(self, tile_x: int, tile_y: int, game: Game):
         self.tile_x = tile_x
