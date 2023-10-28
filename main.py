@@ -23,7 +23,6 @@ if __name__ == '__main__':
         game.setup(small_room_map_def, ACTIONS)
 
         hero = Character(characters["hero"], game)
-
         game.follow = hero.entity
 
         while True:
