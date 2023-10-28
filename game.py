@@ -69,22 +69,23 @@ class Game:
 
         # Create the Trigger types from the map_def
         self.triggers: Dict[str, Trigger] = {}
+        def set_trigger_action(self, key: str, action_type: str, action_params):
+            if action_params:
+                self.triggers[key].__setattr__(
+                    action_type, ACTIONS[action_params.id](self, **action_params.params)
+                )
+
         for trigger_data in map_def.triggers_at_tile:
             trigger_type_id = trigger_data.trigger
             x, y = trigger_data.x, trigger_data.y
             key = f"{x},{y}"
             self.triggers[key] = Trigger()
             trigger_type = map_def.triggers_type.get(trigger_type_id)
-            if trigger_type:
-                on_enter_params = map_def.actions.get(trigger_type.get('on_enter')) # ActionsParams
-                if on_enter_params:
-                    self.triggers[key].on_enter = ACTIONS[on_enter_params.id](self, **on_enter_params.params)
-                on_exit_params = map_def.actions.get(trigger_type.get('on_exit'))  # ActionsParams
-                if on_exit_params:
-                    self.triggers[key].on_exit = ACTIONS[on_exit_params.id](self, **on_exit_params.params)
-                on_use_params = map_def.actions.get(trigger_type.get('on_use'))  # ActionsParams
-                if on_use_params:
-                    self.triggers[key].on_use = ACTIONS[on_use_params.id](self, **on_use_params.params)
+
+            action_types = ['on_enter', 'on_exit', 'on_use']
+            for action_type in action_types:
+                action_params = map_def.actions.get(trigger_type.get(action_type))  # ActionsParams
+                set_trigger_action(self, key, action_type, action_params)
 
         layer_map = {
             'Floor': self.map_group,
