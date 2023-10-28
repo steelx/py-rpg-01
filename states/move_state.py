@@ -28,7 +28,7 @@ class MoveState:
         self.pixel_y = 0
         self.move_speed = 0.5 * 1000  # 0.3 seconds
         self.tween = None
-        self.anim = Animation([self.entity.start_frame])
+        self.anim = Animation([self.entity.frame])
 
     def enter(self, **kwargs):
         self.move_x = kwargs.get("dx", 0)
@@ -73,6 +73,7 @@ class MoveState:
             self.entity.tile_x, self.entity.tile_y)
         if trigger is not None:
             trigger.on_enter(None, self.entity)
+
 
     def render(self, **kwargs):
         pass

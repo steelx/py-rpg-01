@@ -1,17 +1,14 @@
-import os
 import sys
 
 import pygame
 
-from actions import teleport
+from actions import ACTIONS
 from character import Character
 from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
-from trigger import Trigger, ActionDef
-from utils import get_faced_tile
-
-PATH = os.path.abspath('.') + '/assets/'
+from map_definitions import small_room_map_def
+from utils.get_faced_tile import get_faced_tile
 
 if __name__ == '__main__':
     if __name__ == '__main__':
@@ -22,27 +19,10 @@ if __name__ == '__main__':
         display = pygame.surface.Surface(DISPLAY_SIZE)
         clock = pygame.time.Clock()
 
-        game = Game(PATH + 'small_room.tmx', display=display)
-        game.build_map()
+        game = Game(display=display)
+        game.setup(small_room_map_def, ACTIONS)
 
         hero = Character(characters["hero"], game)
-        standing_npc = Character(characters["standing_npc"], game)
-        teleport(game, 2, 6)(None, standing_npc.entity)
-
-        strolling_npc = Character(characters["strolling_npc"], game)
-
-        teleport_to_bottom_door = teleport(game, 10, 12)
-        trigger_at_up_door = Trigger(ActionDef(
-            on_enter=teleport_to_bottom_door
-        ))
-        trigger_at_snake = Trigger(ActionDef(
-            on_use=teleport_to_bottom_door
-        ))
-
-        game.triggers = {
-            '11,3': trigger_at_up_door,
-            '11,6': trigger_at_snake,
-        }
 
         game.follow = hero.entity
 
@@ -65,8 +45,6 @@ if __name__ == '__main__':
             game.render()
             game.update()
             hero.controller.update()
-            standing_npc.controller.update()
-            strolling_npc.controller.update()
 
             # Scale and draw the game_surface onto the screen
             surf = pygame.transform.scale(display, WINDOW_SIZE)
