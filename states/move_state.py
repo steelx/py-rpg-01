@@ -21,7 +21,7 @@ class MoveState:
         self.game = game
         self.entity = character.entity
         self.controller = character.controller
-        self.tile_width = game.tmx_map.tilewidth
+        self.tile_width = game.tmx_map.tiledmap.tilewidth
         self.move_x = 0
         self.move_y = 0
         self.pixel_x = 0
@@ -60,7 +60,7 @@ class MoveState:
                 trigger.on_exit(None, self.entity)
                 return
         target_x, target_y = (self.entity.tile_x + self.move_x, self.entity.tile_y + self.move_y)
-        if self.game.get_blocking_tile(target_x, target_y) or self.game.get_blocking_entity_tile(target_x, target_y):
+        if self.game.tmx_map.get_blocking_tile(target_x, target_y) or self.game.get_blocking_entity_tile(target_x, target_y):
             self.move_x = 0
             self.move_y = 0
             self.controller.change(self.character.default_state)

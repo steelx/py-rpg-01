@@ -34,7 +34,7 @@ class Entity(pygame.sprite.Sprite):
         self.tile_y = entity_def.tile_y
         self.frame = entity_def.start_frame
         self.height_mod = entity_def.height_mod
-        pos = game.get_tile_foot(
+        pos = game.tmx_map.get_tile_foot(
             self.tile_x, self.tile_y, entity_def.height_mod)
         sprite_sheet = load_sprite_sheet(
             entity_def.texture_path, entity_def.width, entity_def.height, entity_def.rows, entity_def.columns)
@@ -43,7 +43,7 @@ class Entity(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
 
     def update(self, game: Game):
-        self.tile_x, self.tile_y = game.pixel_to_tile(
+        self.tile_x, self.tile_y = game.tmx_map.pixel_to_tile(
             self.rect.midbottom[0], self.rect.midbottom[1])
         self.image = self.spritesheet[self.frame]
 
@@ -53,7 +53,7 @@ class Entity(pygame.sprite.Sprite):
     def set_tile_pos(self, tile_x: int, tile_y: int, game: Game):
         self.tile_x = tile_x
         self.tile_y = tile_y
-        self.rect.center = game.get_tile_foot(
+        self.rect.center = game.tmx_map.get_tile_foot(
             self.tile_x, self.tile_y, self.height_mod)
 
     def set_frame(self, start_frame: int):

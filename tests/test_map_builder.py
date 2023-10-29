@@ -30,7 +30,7 @@ class TestMapBuilder(unittest.TestCase):
         test_map = Game()
         test_map.setup(MapDefinition(path=PATH + 'small_room.tmx'), None)
         self.assertEqual(
-            test_map.point_to_tile(16, 16),
+            test_map.tmx_map.point_to_tile(16, 16, (0, 0)),
             (1, 1)
         )
 
