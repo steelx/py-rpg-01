@@ -5,8 +5,9 @@ from pygame.sprite import Group, Sprite
 from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
-from globals import DISPLAY_SIZE
+
 from map_definitions import MapDefinition, Trigger, create_map_triggers
+from map_utils import Camera, CameraGroup
 from sprite_objects import Tile, Circle, Rectangle
 
 
@@ -30,11 +31,7 @@ class Game:
         :param display: pygame.Surface
         :param debug: bool
         """
-        self.width_pixel = 0
-        self.height_pixel = 0
-        # Top left corner of the Camera in pixels
-        self.cam_x = 0
-        self.cam_y = 0
+        self.camera: Camera = None
 
         self.display_surface = display if display is not None else pygame.display.get_surface()
         self.map_group = CameraGroup(self.display_surface)
@@ -53,8 +50,9 @@ class Game:
 
     def setup(self, map_def: MapDefinition, actions: Dict[str, Callable] = None):
         self.tmx_map = load_pygame(map_def.path)
-        self.width_pixel = self.tmx_map.width * self.tmx_map.tilewidth
-        self.height_pixel = self.tmx_map.height * self.tmx_map.tileheight
+        width_pixel = self.tmx_map.width * self.tmx_map.tilewidth
+        height_pixel = self.tmx_map.height * self.tmx_map.tileheight
+        self.camera = Camera(self, width_pixel, height_pixel)
 
         if map_def.on_wake is not None:
             for v in map_def.on_wake:
@@ -95,8 +93,8 @@ class Game:
                           obj.height, 'red', self.map_group)
 
     def update(self):
-        if self.follow is not None:
-            self.follow_entity()
+        if self.camera.follow is not None:
+            self.camera.follow_entity()
         self.map_group.update()
         self.entity_group.update(game=self)
         self.foreground_group.update()
@@ -104,38 +102,22 @@ class Game:
             npc.controller.update(self.dt)
 
     def render(self):
+        cam_x, cam_y = self.camera.get_position()
         # Note that the order of rendering is important
         if hasattr(self.map_group, 'custom_draw'):
-            self.map_group.custom_draw(self.cam_x, self.cam_y)
+            self.map_group.custom_draw(cam_x, cam_y)
         if hasattr(self.floor_objects, 'custom_draw'):
-            self.floor_objects.custom_draw(self.cam_x, self.cam_y)
+            self.floor_objects.custom_draw(cam_x, cam_y)
         if hasattr(self.background_group, 'custom_draw'):
-            self.background_group.custom_draw(self.cam_x, self.cam_y)
+            self.background_group.custom_draw(cam_x, cam_y)
         if hasattr(self.entity_group, 'custom_draw'):
-            self.entity_group.custom_draw(self.cam_x, self.cam_y, sort=True)
+            self.entity_group.custom_draw(cam_x, cam_y, sort=True)
         if hasattr(self.foreground_group, 'custom_draw'):
-            self.foreground_group.custom_draw(self.cam_x, self.cam_y)
+            self.foreground_group.custom_draw(cam_x, cam_y)
         if hasattr(self.foreground_objects, 'custom_draw'):
-            self.foreground_objects.custom_draw(self.cam_x, self.cam_y)
+            self.foreground_objects.custom_draw(cam_x, cam_y)
         if hasattr(self.collision_group, 'custom_draw'):
-            self.collision_group.custom_draw(self.cam_x, self.cam_y)
-
-    @classmethod
-    def get_follow_position(cls):
-        return cls.follow.rect.center
-
-    def go_to(self, x: int, y: int):
-        self.cam_x = x - DISPLAY_SIZE[0] // 2
-        self.cam_y = y - DISPLAY_SIZE[1] // 2
-        self._clamp_camera()
-        # print(f"Top left corner of the map in pixels x, y: {self.cam_x}, {self.cam_y}")
-
-    def _clamp_camera(self):
-        # Ensure the camera doesn't move beyond the map edges
-        self.cam_x = max(self.cam_x, 0)
-        self.cam_y = max(self.cam_y, 0)
-        self.cam_x = min(self.cam_x, self.width_pixel - DISPLAY_SIZE[0])
-        self.cam_y = min(self.cam_y, self.height_pixel - DISPLAY_SIZE[1])
+            self.collision_group.custom_draw(cam_x, cam_y)
 
     def _get_tile_pixel_cords(self, tile_x: int, tile_y: int):
         return (
@@ -145,7 +127,7 @@ class Game:
 
     def go_to_tile(self, tile_x: int, tile_y: int):
         x, y = self._get_tile_pixel_cords(tile_x, tile_y)
-        self.go_to(x, y)
+        self.camera.go_to(x, y)
 
     def pixel_to_tile(self, x: float, y: float) -> tuple[int, int]:
         """
@@ -189,10 +171,6 @@ class Game:
 
         return tile_x, tile_y
 
-    def follow_entity(self):
-        target_x, target_y = self.follow.rect.center
-        self.go_to(target_x, target_y)
-
     def get_trigger_at_tile(self, tile_x: int, tile_y: int, layer="Floor"):
         """
         Get the Trigger at the given tile coordinates.
@@ -235,22 +213,3 @@ class Game:
                 return entity
         return None
 
-
-class CameraGroup(pygame.sprite.Group):
-    def __init__(self, display: pygame.Surface = None):
-        super().__init__()
-        self.display_surface = display if display is not None else pygame.display.get_surface()
-        self.offset = pygame.math.Vector2()
-
-    def custom_draw(self, cam_x, cam_y, sort=False):
-        self.offset.x = cam_x
-        self.offset.y = cam_y
-
-        # no sorted for now since it's causing a bug with the player in tweening
-        # Sort sprites by their bottom position
-        sorted_sprites = sorted(self.sprites(), key=lambda s: s.rect.bottomright[1])
-
-        for sprite in sorted_sprites if sort else self.sprites():
-            offset_rect = sprite.rect.copy()
-            offset_rect.center -= self.offset
-            self.display_surface.blit(sprite.image, offset_rect)

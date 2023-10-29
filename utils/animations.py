@@ -1,13 +1,11 @@
 from typing import List
 
-import pygame
-
 
 class Animation:
     def __init__(self, frames: List[int], ms: int = 80, loop=False):
         """
         :param frames: animation frames
-        :param ms: gap between next frame in milliseconds higher number means slower animation
+        :param ms: time per frame in milliseconds higher number means slower animation
         :param loop: run animation in loop
         """
         self.frames = frames

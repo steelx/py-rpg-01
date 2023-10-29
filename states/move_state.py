@@ -2,7 +2,7 @@ import math
 
 from tweener import Tween
 
-from animations import Animation
+from utils.animations import Animation
 from entity import Entity
 from game import Game
 from statemachine import StateMachine
