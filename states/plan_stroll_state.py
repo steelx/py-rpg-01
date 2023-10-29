@@ -1,7 +1,7 @@
 import random
 
 from game import Game
-from utils.count_down_timer import CountdownTimer
+from utils import CountdownTimer
 
 WAIT_TIME_MS = 400
 

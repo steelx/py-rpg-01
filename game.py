@@ -2,8 +2,6 @@ from typing import Optional, Dict, Callable
 
 import pygame.display
 from pygame.sprite import Group, Sprite
-from pytmx import TiledMap
-from pytmx.util_pygame import load_pygame
 
 from map_definitions import MapDefinition, Trigger, create_map_triggers
 from map_utils import Camera, CameraGroup, TmxMap

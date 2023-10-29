@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pygame
 
 from game import Game
-from spritesheet import load_sprite_sheet
+from sprite_utils import load_sprite_sheet
 
 
 @dataclass

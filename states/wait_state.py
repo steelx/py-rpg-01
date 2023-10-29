@@ -3,7 +3,7 @@ import pygame
 from entity import Entity
 from game import Game
 from statemachine import StateMachine
-from utils.count_down_timer import CountdownTimer
+from utils import CountdownTimer
 
 WAIT_TIME_MS = 200
 

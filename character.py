@@ -1,11 +1,8 @@
-# This class
-# creates characters based on the definition files in character_definitions.py
-
-from entity import Entity
 from character_definitions import CharacterDefData, entities
+from entity import Entity
 from game import Game
-from states.state_factory import create_state
 from statemachine import StateMachine
+from states.state_factory import create_state
 
 
 class Character:

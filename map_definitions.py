@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass, field, fields
-from typing import List, Union, Any, Optional, Dict, Callable
+from typing import List, Union, Any, Optional, Dict
 
 
 @dataclass

@@ -8,7 +8,7 @@ from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
 from map_definitions import small_room_map_def
-from utils.get_faced_tile import get_faced_tile
+from utils import get_faced_tile
 
 if __name__ == '__main__':
     if __name__ == '__main__':
