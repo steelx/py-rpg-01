@@ -9,6 +9,7 @@ from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
 from map_definitions import small_room_map_def
+from ui import Panel
 from utils import get_faced_tile
 
 if __name__ == '__main__':
@@ -25,26 +26,21 @@ if __name__ == '__main__':
     game.follow = hero.entity
 
     # UI Setup
-    ui_manager = pygame_gui.UIManager(WINDOW_SIZE, 'gui_theme.json')
+    ui_manager = pygame_gui.UIManager(WINDOW_SIZE, 'data/themes/theme.json')
 
-    panel_layout_rect = pygame.display.get_surface().get_rect().inflate(-50, -50)
-    panel = pygame_gui.elements.UIPanel(relative_rect=panel_layout_rect, manager=ui_manager)
+    root_panel = Panel(50, 50, 400, 300, manager=ui_manager, window_display_title="Root Panel")
+    # Add a child panel to the root panel
+    child_panel = root_panel.add_panel(50, 50, 150, 100)
 
-    pygame_gui.elements.UIButton(
-        relative_rect=pygame.Rect(30, 20, 100, 50),
-        text='Hello 1',
-        manager=ui_manager,
-        container=panel)
-    button_rect = pygame.Rect(100, 100, 100, 50)
-    hello_button = pygame_gui.elements.UIButton(
-        relative_rect=button_rect,
-        text='Say Hello',
-        manager=ui_manager, container=panel,
-        anchors={'left': 'left',
-                 'right': 'right',
-                 'top': 'top',
-                 'bottom': 'bottom'}
-    )
+    # Add text and a button to the child panel
+    child_panel.add_text(10, 10, 100, 20, "Hello")
+    child_panel.add_button(10, 40, 100, 20, "Click Me")
+
+    # Add avatar, hero name, text and action buttons
+    bottom_panel_height = int(0.25 * 600)
+    bottom_panel = Panel(0, 600 - bottom_panel_height, 800, bottom_panel_height, manager=ui_manager)
+    bottom_panel.add_image('assets/hero_portrait.png')
+    bottom_panel.add_title_and_message('Hero Name', 'This is a text message.')
 
     clock = pygame.time.Clock()
     while True:
@@ -62,9 +58,9 @@ if __name__ == '__main__':
                         trigger.on_use(None, hero.entity)
 
             # Handle UI events
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == hello_button:
-                    print('Hello World!')
+            # if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            #     if event.ui_element == hello_button:
+            #         print('Hello World!')
             ui_manager.process_events(event)
 
         # Game Render
