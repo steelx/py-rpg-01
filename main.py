@@ -9,7 +9,7 @@ from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
 from map_definitions import small_room_map_def
-from ui import Panel
+from ui import Panel, DialoguePanel
 from utils import get_faced_tile
 
 if __name__ == '__main__':
@@ -28,19 +28,11 @@ if __name__ == '__main__':
     # UI Setup
     ui_manager = pygame_gui.UIManager(WINDOW_SIZE, 'data/themes/theme.json')
 
-    root_panel = Panel(50, 50, 400, 300, manager=ui_manager, window_display_title="Root Panel")
-    # Add a child panel to the root panel
-    child_panel = root_panel.add_panel(50, 50, 150, 100)
-
-    # Add text and a button to the child panel
-    child_panel.add_text(10, 10, 100, 20, "Hello")
-    child_panel.add_button(10, 40, 100, 20, "Click Me")
-
     # Add avatar, hero name, text and action buttons
-    bottom_panel_height = int(0.25 * 600)
-    bottom_panel = Panel(0, 600 - bottom_panel_height, 800, bottom_panel_height, manager=ui_manager)
-    bottom_panel.add_image('assets/hero_portrait.png')
-    bottom_panel.add_title_and_message('Hero Name', 'This is a text message.')
+    hero_image_path = 'assets/hero_portrait.png'
+    message = 'This is a text message. Should be multi line, I also want this panel code to be scrollable if more text is there, but hitting space bar key.'
+    bottom_panel = DialoguePanel(ui_manager, WINDOW_SIZE)
+    bottom_panel.setup_dialogue(hero_image_path, "Hero", message)
 
     clock = pygame.time.Clock()
     while True:

@@ -40,37 +40,6 @@ class Panel(UIWindow):
         )
         return button
 
-    def add_image(self, image_path: str, pos: Tuple[int, int] = (5, 5), size: Tuple[int, int] = (100, 100)):
-        image_surface = pygame.image.load(image_path).convert_alpha()
-        # size = (size[0], self.rect.height - 10)
-        image_surface = pygame.transform.scale(image_surface, size)
-        avatar = pygame_gui.elements.UIImage(
-            pygame.Rect(pos, size),
-            image_surface,
-            manager=self.ui_manager,
-            container=self
-        )
-        return avatar
-
-    def add_title_and_message(self, title: str, message: str, pos: Tuple[int, int] = (110, 10), size: Tuple[int, int] = (200, 30)):
-        title_label = pygame_gui.elements.UILabel(
-            pygame.Rect(pos, size),
-            title,
-            manager=self.ui_manager,
-            container=self,
-            object_id='@text_title'
-        )
-
-        text_box = pygame_gui.elements.UITextBox(
-            message,
-            pygame.Rect((110, 50), (300, 50)),
-            manager=self.ui_manager,
-            container=self,
-            object_id='@text_message'
-        )
-
-        return title_label, text_box
-
     def add_action_buttons(self, icons: list):
         x_offset = self.rect.width - 100
         y_offset = 10

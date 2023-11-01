@@ -31,21 +31,22 @@
   },
   "@text_message": {
     "colours": {
-      "hovered_bg": "rgb(30, 40, 60),#f3f,rgb(50, 60, 70),90deg"
+      "dark_text": "rgb(255,255,255)",
+      "normal_text": "rgb(255,200,255)"
     },
     "misc": {
-      "text_shadow": "1px 0px 0px #ff0000",
-      "border": "none"
+      "shape": "rectangle",
+      "border_width": "0"
+    }
+  },
+  "@text_title": {
+    "colours": {
+      "dark_text": "rgb(255,200,255)",
+      "normal_text": "rgb(255,255,255)"
     },
-    "text": {
-      "normal_text": "#c5cbd8",
-      "hovered_text": "#FFFFFF",
-      "selected_text": "#FFFFFF",
-      "disabled_text": "#6d736f",
-      "link_text": "#0000EE",
-      "link_hover": "#2020FF",
-      "link_selected": "#551A8B",
-      "text_shadow": "#777777"
+    "misc": {
+      "shape": "rectangle",
+      "border_width": "0"
     }
   }
 }
