@@ -29,8 +29,7 @@ def main():
 
     # Add avatar, hero name, text and action buttons
     hero_image_path = 'assets/hero_portrait.png'
-    message = '''
-A nation can survive its fools, and even the ambitious.
+    message = '''A nation can survive its fools, and even the ambitious.
 But it cannot survive treason from within. An enemy at the gates is less formidable, for he is
 known and carries his banner openly. But the traitor moves amongst those
 within the gate freely, his sly whispers rustling through all the alleys, heard
