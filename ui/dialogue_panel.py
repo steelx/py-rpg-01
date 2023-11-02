@@ -23,11 +23,31 @@ class DialoguePanel(Panel):
         self.add_image(hero_image)
         self.add_title_and_message(hero_name, self.message_chunks[self.current_chunk])
 
-    def _chunk_message(self, message: str, lines_per_chunk: int = 3) -> List[str]:
-        """Break the message into chunks with specified lines."""
-        lines = message.split("\n")
-        # lines = [line.strip() for line in lines]
-        return ["\n".join(lines[i:i+lines_per_chunk]) for i in range(0, len(lines), lines_per_chunk)]
+    def _chunk_message(self, message: str, chars_per_line: int = 75, lines_per_chunk: int = 3) -> List[str]:
+        """Break the message into chunks based on characters per line and lines per chunk."""
+        def split_line(s: str, chars: int) -> List[str]:
+            """Helper function to split a string respecting word boundaries."""
+            lines = []
+            while len(s) > chars:
+                idx = s.rfind(' ', 0, chars)
+                if idx == -1:  # If no spaces found, just split the word.
+                    idx = chars
+                line = s[:idx].strip()
+                if line:  # Only add non-empty lines
+                    lines.append(line)
+                s = s[idx:].strip()
+            if s:
+                lines.append(s)
+            return lines
+
+        # Remove all newline characters and create a continuous string
+        message = message.replace('\n', ' ').replace('\r', '').strip()
+
+        # Split the message respecting word boundaries
+        lines = split_line(message, chars_per_line)
+
+        # Group lines into chunks
+        return ["\n".join(lines[i:i + lines_per_chunk]) for i in range(0, len(lines), lines_per_chunk)]
 
     def show_next_chunk(self):
         """Show the next chunk of the message."""
