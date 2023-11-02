@@ -12,8 +12,7 @@ from map_definitions import small_room_map_def
 from ui import Panel, DialoguePanel
 from utils import get_faced_tile
 
-if __name__ == '__main__':
-
+def main():
     pygame.init()
     pygame.display.set_caption("jRPG Game")
     screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -30,7 +29,18 @@ if __name__ == '__main__':
 
     # Add avatar, hero name, text and action buttons
     hero_image_path = 'assets/hero_portrait.png'
-    message = 'This is a text message. Should be multi line, I also want this panel code to be scrollable if more text is there, but hitting space bar key.'
+    message = '''
+A nation can survive its fools, and even the ambitious.
+But it cannot survive treason from within. An enemy at the gates is less formidable, for he is
+known and carries his banner openly. But the traitor moves amongst those
+within the gate freely, his sly whispers rustling through all the alleys, heard
+in the very halls of government itself. For the traitor appears not a traitor;
+he speaks in accents familiar to his victims, and he wears their face and
+their arguments, he appeals to the baseness that lies deep in the hearts
+of all men. He rots the soul of a nation, he works secretly and unknown in
+the night to undermine the pillars of the city, he infects the body politic so
+that it can no longer resist. A murderer is less to fear. The traitor is the
+plague.'''
     bottom_panel = DialoguePanel(ui_manager, WINDOW_SIZE)
     bottom_panel.setup_dialogue(hero_image_path, "Hero", message)
 
@@ -44,6 +54,7 @@ if __name__ == '__main__':
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    bottom_panel.show_next_chunk()
                     tile_x, tile_y = get_faced_tile(hero)
                     trigger = game.get_trigger_at_tile(tile_x, tile_y)
                     if trigger is not None:
@@ -68,3 +79,6 @@ if __name__ == '__main__':
         screen.blit(surf, (0, 0))
         ui_manager.draw_ui(screen)
         pygame.display.flip()
+
+if __name__ == '__main__':
+    main()
