@@ -27,9 +27,19 @@
     "colours": {
       "dark_bg": "rgb(0,0,200)",
       "hovered_bg": "rgb(30, 40, 60),#f3f,rgb(50, 60, 70),90deg"
+    },
+    "font": {
+      "name": "BigBlueTerm437NerdFont",
+      "size": "18",
+      "regular_path": "assets/fonts/BigBlueTerm437NerdFont-Regular.ttf"
     }
   },
   "@text_message": {
+    "font": {
+      "name": "BigBlueTerm437NerdFont",
+      "size": "14",
+      "regular_path": "assets/fonts/BigBlueTerm437NerdFont-Regular.ttf"
+    },
     "colours": {
       "dark_text": "rgb(255,255,255)",
       "normal_text": "rgb(255,200,255)"
@@ -40,6 +50,11 @@
     }
   },
   "@text_title": {
+    "font": {
+      "name": "BigBlueTerm437NerdFont",
+      "size": "15",
+      "regular_path": "assets/fonts/BigBlueTerm437NerdFont-Regular.ttf"
+    },
     "colours": {
       "dark_text": "rgb(255,200,255)",
       "normal_text": "rgb(255,255,255)"

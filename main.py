@@ -7,10 +7,18 @@ from actions import ACTIONS
 from character import Character
 from character_definitions import characters
 from game import Game
-from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE
+from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def
 from ui import DialoguePanel
 from utils import get_faced_tile
+
+FONTS = [
+    {"name": "BigBlueTerm437NerdFont", "point_size": 12, "style": "regular"},
+    {"name": "BigBlueTerm437NerdFont", "point_size": 14, "style": "regular"},
+    {"name": "BigBlueTerm437NerdFont", "point_size": 18, "style": "regular"},
+    {"name": "BigBlueTerm437NerdFont", "point_size": 24, "style": "regular"},
+]
+
 
 def main():
     pygame.init()
@@ -25,10 +33,11 @@ def main():
     game.follow = hero.entity
 
     # UI Setup
-    ui_manager = pygame_gui.UIManager(WINDOW_SIZE, 'data/themes/theme.json')
+    ui_manager = pygame_gui.UIManager(WINDOW_SIZE, DATA_PATH + "themes/theme.json")
+    ui_manager.add_font_paths("BigBlueTerm437NerdFont", str(ASSETS_PATH + "fonts/BigBlueTerm437NerdFont-Regular.ttf"))
 
     # Add avatar, hero name, text and action buttons
-    hero_image_path = 'assets/hero_portrait.png'
+    hero_image_path = ASSETS_PATH + "hero_portrait.png"
     message = '''A nation can survive its fools, and even the ambitious.
 But it cannot survive treason from within. An enemy at the gates is less formidable, for he is
 known and carries his banner openly. But the traitor moves amongst those
@@ -78,6 +87,7 @@ plague.'''
         screen.blit(surf, (0, 0))
         ui_manager.draw_ui(screen)
         pygame.display.flip()
+
 
 if __name__ == '__main__':
     main()
