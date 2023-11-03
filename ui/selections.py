@@ -3,7 +3,7 @@ from typing import List, Tuple
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UIWindow, UIButton
+from pygame_gui.elements import UIWindow
 
 from .panel import Panel
 from .select_item import SelectItem
