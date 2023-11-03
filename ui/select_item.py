@@ -35,7 +35,7 @@ class SelectItem(UILabel):
         self.is_highlighted = False
         self.update_colors()
 
-    def activate(self):
+    def set_active(self):
         self.is_active = True
         self.update_colors()
 
@@ -56,10 +56,6 @@ class SelectItem(UILabel):
             if self.rect.collidepoint(event.pos):
                 self.on_select()
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                self.on_select()
 
     def on_select(self):
-        # Override this method for click functionality
-        print(f"Selected {self.text}")
+        self.set_active()

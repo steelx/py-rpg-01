@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
@@ -20,14 +22,16 @@ class Panel(UIWindow):
         self.grid.append(child_panel)
         return child_panel
 
-    def add_text(self, x: int, y: int, width: int, height: int, text: str):
-        label = pygame_gui.elements.UILabel(
-            pygame.Rect((x, y), (width, height)),
-            text,
+    def add_text(self, text: str, pos: Tuple[int, int], size: Tuple[int, int], **kwargs):
+        pygame_gui.elements.UITextBox(
+            html_text=text,
+            relative_rect=pygame.Rect(pos, size),
+            starting_height=2,
             manager=self.ui_manager,
-            container=self
+            container=self,
+            object_id='@text_message',
+            **kwargs
         )
-        return label
 
     def add_button(self, x: int, y: int, width: int, height: int, text: str):
         button = pygame_gui.elements.UIButton(

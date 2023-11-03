@@ -52,7 +52,11 @@ plague.'''
     bottom_panel = DialoguePanel(ui_manager, WINDOW_SIZE)
     bottom_panel.setup_dialogue(hero_image_path, "Hero", message)
 
-    selections = Selections("Yes or no", ["YES", "NO", "Maybe", "Hmmm", "Boom", "Google", "Bharat"], 2, (100, 200), manager=ui_manager)
+    selections = Selections(
+        "Yes or no",
+        ["YES", "NO"],
+        2, (100, 200), 150,
+        manager=ui_manager, show_info_popup=True)
 
     clock = pygame.time.Clock()
     while True:
