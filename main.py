@@ -9,7 +9,7 @@ from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def
-from ui import DialoguePanel
+from ui import DialoguePanel, Selections
 from utils import get_faced_tile
 
 FONTS = [
@@ -52,6 +52,8 @@ plague.'''
     bottom_panel = DialoguePanel(ui_manager, WINDOW_SIZE)
     bottom_panel.setup_dialogue(hero_image_path, "Hero", message)
 
+    selections = Selections("Yes or no", ["YES", "NO", "Maybe", "Hmmm", "Boom", "Google", "Bharat"], 2, (100, 200), manager=ui_manager)
+
     clock = pygame.time.Clock()
     while True:
         game.dt = clock.tick(FPS)
@@ -69,6 +71,7 @@ plague.'''
                         trigger.on_use(None, hero.entity)
 
             # Handle UI events
+            selections.process_events(event)
             # if event.type == pygame_gui.UI_BUTTON_PRESSED:
             #     if event.ui_element == hello_button:
             #         print('Hello World!')
