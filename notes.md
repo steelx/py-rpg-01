@@ -34,3 +34,10 @@ for obj in tmx_map.objects:
         print("type Tree: " + obj.name)
     if obj.type == 'Marker':
         print("type Marker: " + obj.name)
+
+
+## fonts
+since I'm loading fonts via theme regular_path key not loading fonts via ui_manager.add_font_paths
+```python
+ui_manager.add_font_paths("BigBlueTerm437NerdFontMono", str(ASSETS_PATH + "fonts/BigBlueTerm437NerdFontMono-Regular.ttf"))
+```

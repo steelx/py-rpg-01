@@ -1,5 +1,6 @@
 from typing import Optional
 
+import pygame
 from pytmx import load_pygame
 
 from sprite_utils import Tile
@@ -69,8 +70,8 @@ class TmxMap:
         x, y = self.get_tile_pixel_cords(tile_x, tile_y)
         return x, y - height_modifier
 
-    def get_tile_pixel_cords(self, tile_x: int, tile_y: int):
-        return (
+    def get_tile_pixel_cords(self, tile_x: int, tile_y: int) -> pygame.Vector2:
+        return pygame.Vector2(
             tile_x * self.tiledmap.tilewidth + self.tiledmap.tilewidth / 2,
             tile_y * self.tiledmap.tileheight + self.tiledmap.tileheight / 2
         )

@@ -1,8 +1,9 @@
-from typing import Optional, Dict, Callable
+from typing import Optional, Dict, Callable, Tuple
 
 import pygame.display
 from pygame.sprite import Group, Sprite
 
+from globals import WINDOW_SIZE, DISPLAY_SIZE
 from map_definitions import MapDefinition, Trigger, create_map_triggers
 from map_utils import Camera, CameraGroup, TmxMap
 from sprite_utils import Tile, Circle, Rectangle
@@ -142,3 +143,25 @@ class Game:
             if entity.tile_x == tile_x and entity.tile_y == tile_y:
                 return entity
         return None
+
+    def get_scaled_rect_for_ui(self, tile_x: int, tile_y: int,
+                               size: Tuple[int, int] = (100, 25), offset: pygame.Vector2 = None) -> pygame.Rect:
+        """
+        Get the scaled pixel coordinates for the given x and y values.
+        :param tile_x: x position on the tiledmap
+        :param tile_y: y position on the tiledmap
+        :param size: The size of the Rect
+        :param offset: The offset from the top center of the tile
+        :return: The scaled pixel coordinates
+        """
+        # Calculate the top center of the hero, then move up by the height of the progress bar plus some padding
+        offset = offset if offset is not None else pygame.Vector2()
+        scale_x = WINDOW_SIZE[0] / DISPLAY_SIZE[0]
+        scale_y = WINDOW_SIZE[1] / DISPLAY_SIZE[1]
+        pos = self.tmx_map.get_tile_pixel_cords(tile_x, tile_y)
+        scaled_top_center_x = (pos[0] - self.camera.x) * scale_x
+        scaled_top_center_y = (pos[1] - self.camera.y) * scale_y
+        return pygame.Rect(
+            (scaled_top_center_x + offset.x, scaled_top_center_y + offset.y),
+            size
+        )

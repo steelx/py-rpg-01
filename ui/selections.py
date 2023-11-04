@@ -105,6 +105,7 @@ class Selections(pygame_gui.elements.UIPanel):
         # This method will be called when a selection is made
         # You can override this in a subclass or replace this method with another action
         print(f"Selected: {self.selection}")
+        self.kill()
 
     def get_selection(self):
         return self.selection

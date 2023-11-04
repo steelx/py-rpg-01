@@ -34,7 +34,6 @@ def main():
 
     # UI Setup
     ui_manager = pygame_gui.UIManager(WINDOW_SIZE, DATA_PATH + "themes/theme.json")
-    ui_manager.add_font_paths("BigBlueTerm437NerdFont", str(ASSETS_PATH + "fonts/BigBlueTerm437NerdFont-Regular.ttf"))
 
     # Add avatar, hero name, text and action buttons
     hero_image_path = ASSETS_PATH + "hero_portrait.png"
@@ -56,17 +55,17 @@ plague.'''
         "Yes or no",
         ["YES", "NO"],
         2, (100, 200), 150,
-        manager=ui_manager, show_info_popup=True)
+        manager=ui_manager, show_info_popup=False)
 
+    # Calculate the top center of the hero, then move up by the height of the progress bar plus some padding
+    hero_tile_rect = game.get_scaled_rect_for_ui(9, 5)
     health_bar = ProgressBar(
-        hero.entity.rect.topright,
-        (32, 8),
-        ASSETS_PATH+"ui/hpbackground.png",
-        ASSETS_PATH+"ui/hpforeground.png",
-        100,
-        surface=display
+        rect=hero_tile_rect,
+        manager=ui_manager,
+        start_progress=10,
+        object_id="@hp_progress_bar"
     )
-    health_bar.update(100)
+    health_bar.set_progress(20)
 
     clock = pygame.time.Clock()
     while True:
@@ -98,6 +97,7 @@ plague.'''
         hero.controller.update(game.dt)
         game.update()
         game.render()
+        health_bar.update_position(game.get_scaled_rect_for_ui(hero.entity.tile_x, hero.entity.tile_y).topleft)
         health_bar.draw()
 
         # Scale and draw the game_surface onto the screen
