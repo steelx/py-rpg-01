@@ -1,4 +1,9 @@
+import os
+
 from pygame.math import Vector2
+
+ASSETS_PATH = os.path.abspath('.') + '/assets/'
+DATA_PATH = os.path.abspath('.') + '/data/'
 
 # screen
 NATURAL_WIDTH = 320

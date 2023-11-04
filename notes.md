@@ -34,3 +34,19 @@ for obj in tmx_map.objects:
         print("type Tree: " + obj.name)
     if obj.type == 'Marker':
         print("type Marker: " + obj.name)
+
+
+## fonts
+since I'm loading fonts via theme regular_path key not loading fonts via ui_manager.add_font_paths
+ui_manager.add_font_paths("BigBlueTerm437NerdFontMono", str(ASSETS_PATH + "fonts/BigBlueTerm437NerdFontMono-Regular.ttf"))
+
+
+### GUI
+hero_tile_rect = game.get_scaled_rect_for_ui(9, 5)
+health_bar = ProgressBar(
+    rect=hero_tile_rect,
+    manager=ui_manager,
+    start_progress=10,
+    object_id="@hp_progress_bar"
+)
+health_bar.set_progress(20)
