@@ -49,7 +49,7 @@ def main():
         "Yes or no",
         ["YES", "NO"],
         2, (100, 200), 150,
-        manager=ui_manager, show_info_popup=False)
+        manager=ui_manager)
     text_box = Textbox("""A nation can survive its fools, and even the ambitious.
     But it cannot survive treason from within. An enemy at the gates is less formidable, for he is
     known and carries his banner openly.""", (0, 0), (150, 100), chars_per_line=15, lines_per_chunk=3, manager=ui_manager)

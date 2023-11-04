@@ -3,9 +3,8 @@ from typing import List, Tuple, Callable
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UIWindow
+from pygame_gui.elements import UIWindow, UITextBox
 
-from .panel import Panel
 from .select_item import SelectItem
 
 LINE_HEIGHT = 25
@@ -96,16 +95,18 @@ class Selections(pygame_gui.elements.UIPanel):
         return self.selection
 
     def show_info_popup(self):
-        popup_pos = (self.rect.x + self.rect.width, self.rect.y)
-        p = Panel(popup_pos[0], popup_pos[1], 220, 200, self.manager)
-        self.info_popup = p.create_textbox(
-            "Use UP DOWN arrow keys to navigate. or mouse click on the item.",
-            (10, 10),
-            (200, 100),
-            wrap_to_height=True,
-            visible=False
+        text = "Use UP DOWN arrow keys to navigate. or mouse click on the item."
+        print(text)
+        pos = (self.rect.x + self.rect.width, self.rect.y)
+        size = (220, 200)
+        self.info_popup = UITextBox(
+            html_text=text,
+            relative_rect=pygame.Rect(pos, size),
+            manager=self.manager,
+            container=self,
+            object_id='@text_message',
         )
-        self.select_items.append(self.info_popup)
+        self.elements.append(self.info_popup)
 
     def update(self, dt: float):
         pass
