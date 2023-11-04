@@ -16,6 +16,7 @@ class Textbox(pygame_gui.elements.UIPanel):
             starting_height=1,
             manager=manager
         )
+        self.should_exit = False
         self.elements = []
         self.manager = manager
         self.message_chunks = []
@@ -86,4 +87,6 @@ class Textbox(pygame_gui.elements.UIPanel):
         super().process_event(event)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                self.show_next_chunk()
+                def callback():
+                    self.should_exit = True
+                self.show_next_chunk(callback)

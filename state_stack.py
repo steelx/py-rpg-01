@@ -5,6 +5,8 @@ import pygame_gui
 
 
 class StackInterface(Protocol):
+    should_exit: bool
+
     def enter(self, **kwargs) -> None:
         ...
 

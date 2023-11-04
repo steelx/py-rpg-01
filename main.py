@@ -44,7 +44,7 @@ def main():
     within the gate freely, his sly whispers rustling through all the alleys, heard
     in the very halls of government itself.'''
 
-    # dialog_panel = DialoguePanel(hero_image_path, "Hero", message, ui_manager, WINDOW_SIZE)
+    dialog_panel = DialoguePanel(hero_image_path, "Hero", message, ui_manager, WINDOW_SIZE)
     # selections = Selections(
     #     "Yes or no",
     #     ["YES", "NO"],
@@ -55,9 +55,9 @@ def main():
     known and carries his banner openly.""", (0, 0), (150, 100), chars_per_line=15, lines_per_chunk=3, manager=ui_manager)
 
     state_stack = StateStack(ui_manager)
-    # state_stack.push(dialog_panel)
     # state_stack.push(selections)
     state_stack.push(text_box)
+    state_stack.push(dialog_panel)
 
     clock = pygame.time.Clock()
     while True:
@@ -88,6 +88,9 @@ def main():
         surf = pygame.transform.scale(display, WINDOW_SIZE)
         screen.blit(surf, (0, 0))
         state_stack.draw(screen)
+        if state_stack.states:
+            if state_stack.states[-1].should_exit:
+                state_stack.pop()
         pygame.display.flip()
 
 

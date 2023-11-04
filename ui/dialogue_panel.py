@@ -23,6 +23,7 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             manager=manager,
             container=container
         )
+        self.should_exit = False
         self.elements = []
         self.message_chunks = []
         self.current_chunk = 0
@@ -104,7 +105,7 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             arrow_pos = (pos[0] + size[0] - arrow_size, pos[1] + size[1] - arrow_size)
             self.arrow_indicator = pygame_gui.elements.UIImage(
                 pygame.Rect(arrow_pos, (arrow_size, arrow_size)),
-                pygame.image.load(ASSETS_PATH+"ui/continue_caret.png").convert_alpha(),
+                pygame.image.load(ASSETS_PATH + "ui/continue_caret.png").convert_alpha(),
                 manager=self.ui_manager,
                 container=self
             )
@@ -129,6 +130,8 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
     def process_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                # Show the next chunk of the message
-                self.show_next_chunk()
+                def callback():
+                    self.should_exit = True
+                self.show_next_chunk(callback)
+
         super().process_event(event)

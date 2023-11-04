@@ -22,7 +22,7 @@ class Selections(pygame_gui.elements.UIPanel):
             manager=manager,
             container=container
         )
-
+        self.should_exit = False
         self._on_selection = on_selection
         self.elements = []
         self.options = options
