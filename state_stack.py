@@ -24,6 +24,10 @@ class StackInterface(Protocol):
 
 
 class StateStack:
+    """
+    In StateStack each state is a UI element that is rendered on top of each other.
+    But only the top state is updated and process_event.
+    """
     def __init__(self, manager: pygame_gui.UIManager):
         self.states: List[StackInterface] = []
         self.manager = manager

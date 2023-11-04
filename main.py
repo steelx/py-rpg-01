@@ -13,13 +13,6 @@ from state_stack import StateStack
 from ui import DialoguePanel, Selections, Textbox
 from utils import get_faced_tile
 
-FONTS = [
-    {"name": "BigBlueTerm437NerdFont", "point_size": 12, "style": "regular"},
-    {"name": "BigBlueTerm437NerdFont", "point_size": 14, "style": "regular"},
-    {"name": "BigBlueTerm437NerdFont", "point_size": 18, "style": "regular"},
-    {"name": "BigBlueTerm437NerdFont", "point_size": 24, "style": "regular"},
-]
-
 
 def main():
     pygame.init()
@@ -50,9 +43,11 @@ def main():
         ["YES", "NO"],
         2, (100, 200), 150,
         manager=ui_manager)
-    text_box = Textbox("""A nation can survive its fools, and even the ambitious.
+    text_box = Textbox(
+        """A nation can survive its fools, and even the ambitious.
     But it cannot survive treason from within. An enemy at the gates is less formidable, for he is
-    known and carries his banner openly.""", (0, 0), (150, 100), chars_per_line=15, lines_per_chunk=3, manager=ui_manager)
+    known and carries his banner openly.""",
+        (0, 0), (150, 100), chars_per_line=15, lines_per_chunk=3, manager=ui_manager)
 
     state_stack = StateStack(ui_manager)
     state_stack.push(selections)
@@ -76,13 +71,15 @@ def main():
             # State Stack Event Handling
             state_stack.process_event(event)
 
+        # Update
+        hero.controller.update(game.dt)
+        game.update()
+        state_stack.update(game.dt)
+
         # Game Render
         screen.fill((0, 0, 0))
         display.fill((0, 0, 0))
-        hero.controller.update(game.dt)
-        game.update()
         game.render()
-        state_stack.update(game.dt)
 
         # Scale and draw the game_surface onto the screen
         surf = pygame.transform.scale(display, WINDOW_SIZE)
