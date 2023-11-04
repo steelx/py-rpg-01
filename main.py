@@ -9,7 +9,7 @@ from character_definitions import characters
 from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def
-from ui import DialoguePanel, Selections
+from ui import DialoguePanel, Selections, ProgressBar
 from utils import get_faced_tile
 
 FONTS = [
@@ -58,6 +58,16 @@ plague.'''
         2, (100, 200), 150,
         manager=ui_manager, show_info_popup=True)
 
+    health_bar = ProgressBar(
+        hero.entity.rect.topright,
+        (32, 8),
+        ASSETS_PATH+"ui/hpbackground.png",
+        ASSETS_PATH+"ui/hpforeground.png",
+        100,
+        surface=display
+    )
+    health_bar.update(100)
+
     clock = pygame.time.Clock()
     while True:
         game.dt = clock.tick(FPS)
@@ -88,6 +98,7 @@ plague.'''
         hero.controller.update(game.dt)
         game.update()
         game.render()
+        health_bar.draw()
 
         # Scale and draw the game_surface onto the screen
         surf = pygame.transform.scale(display, WINDOW_SIZE)

@@ -114,7 +114,7 @@ class DialoguePanel(Panel):
             arrow_pos = (pos[0] + size[0] - arrow_size, pos[1] + size[1] - arrow_size)
             self.arrow_indicator = pygame_gui.elements.UIImage(
                 pygame.Rect(arrow_pos, (arrow_size, arrow_size)),
-                pygame.image.load(ASSETS_PATH+"continue_caret.png").convert_alpha(),
+                pygame.image.load(ASSETS_PATH+"ui/continue_caret.png").convert_alpha(),
                 manager=self.ui_manager,
                 container=self
             )
