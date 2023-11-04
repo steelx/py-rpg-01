@@ -1,5 +1,6 @@
 # dialogue_panel.py
-from typing import Tuple, List, Callable
+from typing import Tuple, Callable
+
 import pygame
 import pygame_gui
 from pygame_gui.elements import UIWindow

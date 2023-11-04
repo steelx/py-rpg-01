@@ -1,7 +1,6 @@
 from typing import Tuple, List
 
 import pygame
-import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UIWindow, UIButton, UITextBox
 

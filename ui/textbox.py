@@ -1,11 +1,11 @@
-from typing import Tuple, Callable, List
+from typing import Tuple, Callable
 
 import pygame
 import pygame_gui
 from pygame_gui.elements import UITextBox
-from .chunk_message import chunk_message
 
 from globals import ASSETS_PATH
+from .chunk_message import chunk_message
 
 
 class Textbox(pygame_gui.elements.UIPanel):
