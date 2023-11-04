@@ -1,9 +1,9 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UIWindow
+from pygame_gui.elements import UIWindow, UIButton, UITextBox
 
 
 class Panel(UIWindow):
@@ -22,8 +22,8 @@ class Panel(UIWindow):
         self.grid.append(child_panel)
         return child_panel
 
-    def add_text(self, text: str, pos: Tuple[int, int], size: Tuple[int, int], **kwargs):
-        pygame_gui.elements.UITextBox(
+    def create_textbox(self, text: str, pos: Tuple[int, int], size: Tuple[int, int], **kwargs) -> UITextBox:
+        return UITextBox(
             html_text=text,
             relative_rect=pygame.Rect(pos, size),
             starting_height=2,
@@ -33,23 +33,22 @@ class Panel(UIWindow):
             **kwargs
         )
 
-    def add_button(self, x: int, y: int, width: int, height: int, text: str):
-        button = pygame_gui.elements.UIButton(
+    def create_button(self, x: int, y: int, width: int, height: int, text: str) -> UIButton:
+        return UIButton(
             pygame.Rect((x, y), (width, height)),
             text,
             manager=self.ui_manager,
             container=self
         )
-        return button
 
-    def add_action_buttons(self, icons: list):
+    def create_action_buttons(self, icons: List[str]) -> List[UIButton]:
         x_offset = self.rect.width - 100
         y_offset = 10
-        buttons = []
+        buttons: List[UIButton] = []
         for icon_path in icons:
             icon_surface = pygame.image.load(icon_path)
             icon_surface = pygame.transform.scale(icon_surface, (30, 30))
-            button = pygame_gui.elements.UIButton(
+            button = UIButton(
                 pygame.Rect((x_offset, y_offset), (30, 30)),
                 '',
                 manager=self.ui_manager,
