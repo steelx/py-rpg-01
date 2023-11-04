@@ -52,6 +52,8 @@ class StateStack:
         self.manager.update(dt)
         if self.states:
             self.states[-1].update(dt)
+            if self.states[-1].should_exit:
+                self.pop()
 
     def draw(self, screen: pygame.Surface):
         self.manager.draw_ui(screen)
