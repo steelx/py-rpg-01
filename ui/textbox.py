@@ -2,7 +2,7 @@ from typing import Tuple, Callable
 
 import pygame
 import pygame_gui
-from pygame_gui.elements import UITextBox
+from pygame_gui.elements import UIWindow
 
 from globals import ASSETS_PATH
 from .chunk_message import chunk_message
@@ -10,46 +10,43 @@ from .chunk_message import chunk_message
 
 class Textbox(pygame_gui.elements.UIPanel):
     def __init__(self, text: str, pos: Tuple[int, int], size: Tuple[int, int], chars_per_line: int,
-                 lines_per_chunk: int, manager: pygame_gui.UIManager):
+                 lines_per_chunk: int, manager: pygame_gui.UIManager, container: UIWindow = None):
         super().__init__(
-            relative_rect=pygame.Rect(pos, size),
+            relative_rect=pygame.Rect(*pos, *size),
             starting_height=1,
-            manager=manager
+            manager=manager,
+            container=container,
+            object_id='@text_panel'
         )
+
         self.should_exit = False
         self.elements = []
         self.manager = manager
-        self.message_chunks = []
         self.current_chunk = 0
         self.arrow_indicator = None
-        # Texbox scale size down a bit
-        # size = (size[0]*0.8, size[1]*0.8)
-        # pos = (pos[0] + size[0]*0.1, pos[1] + size[1]*0.1)
-        self._create_textbox(text, pos, size, chars_per_line, lines_per_chunk)
+        self.text_box = None
+        self.message_chunks = chunk_message(text, chars_per_line, lines_per_chunk)
+        self._create_textbox(self.message_chunks[self.current_chunk], pos, size)
 
-    def _create_textbox(self, message: str, pos: Tuple[int, int], size: Tuple[int, int], chars_per_line: int,
-                        lines_per_chunk: int, arrow_size=15) -> UITextBox:
-        self.message_chunks = chunk_message(message, chars_per_line, lines_per_chunk)
-        self.text_box = UITextBox(
-            html_text=self.message_chunks[self.current_chunk],
-            relative_rect=pygame.Rect(pos, size),
+    def _create_textbox(self, message: str, pos: Tuple[int, int], size: Tuple[int, int], arrow_size: int = 15):
+
+        self.text_box = pygame_gui.elements.UITextBox(
+            html_text=message,
+            relative_rect=pygame.Rect(*pos, *size),
             manager=self.manager,
-            container=self,
-            object_id='@text_message',
-            wrap_to_height=False
+            container=self.ui_container,
+            object_id='@text_message'
         )
         self.elements.append(self.text_box)
 
         if len(self.message_chunks) > 1:
             # If there are multiple chunks, add a down arrow indicator
-            arrow_size = 15
             pos = (pos[0] + size[0] * 0.9, pos[1] + size[1] * 0.9)
             arrow_pos = (pos[0] - arrow_size, pos[1] - arrow_size)
             self.arrow_indicator = pygame_gui.elements.UIImage(
                 pygame.Rect(arrow_pos, (arrow_size, arrow_size)),
                 pygame.image.load(ASSETS_PATH + "ui/continue_caret.png").convert_alpha(),
                 manager=self.manager,
-                container=self
             )
             self.elements.append(self.arrow_indicator)
 
@@ -74,14 +71,14 @@ class Textbox(pygame_gui.elements.UIPanel):
         pass
 
     def enter(self):
-        self.visible = True
+        self.visible = 1
         for element in self.elements:
-            element.visible = True
+            element.visible = 1
 
     def exit(self):
-        self.visible = False
+        self.visible = 0
         for element in self.elements:
-            element.visible = False
+            element.visible = 0
 
     def process_event(self, event: pygame.event.Event):
         super().process_event(event)
@@ -89,4 +86,5 @@ class Textbox(pygame_gui.elements.UIPanel):
             if event.key == pygame.K_SPACE:
                 def callback():
                     self.should_exit = True
+
                 self.show_next_chunk(callback)

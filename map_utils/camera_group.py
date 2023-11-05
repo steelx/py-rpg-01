@@ -7,7 +7,7 @@ class CameraGroup(pygame.sprite.Group):
         self.display_surface = display if display is not None else pygame.display.get_surface()
         self.offset = pygame.math.Vector2()
 
-    def custom_draw(self, cam_x, cam_y, sort=False):
+    def custom_draw(self, cam_x: float, cam_y: float, sort=False):
         self.offset.x = cam_x
         self.offset.y = cam_y
 

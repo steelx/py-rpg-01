@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Callable, Tuple
 
 import pygame.display
-from pygame.sprite import Group, Sprite
+from pygame.sprite import Sprite
 
 from globals import WINDOW_SIZE, DISPLAY_SIZE
 from map_definitions import MapDefinition, Trigger, create_map_triggers
@@ -11,13 +11,13 @@ from sprite_utils import Tile, Circle, Rectangle
 
 class Game:
     tmx_map: TmxMap = None
-    map_group: Group
-    entity_group: Group
-    collision_group: Group
-    foreground_group: Group
-    background_group: Group
-    foreground_objects: Group
-    floor_objects: Group
+    map_group: CameraGroup
+    entity_group: CameraGroup
+    collision_group: CameraGroup
+    foreground_group: CameraGroup
+    background_group: CameraGroup
+    foreground_objects: CameraGroup
+    floor_objects: CameraGroup
     cam_x: float
     cam_y: float
     follow: Sprite = None
@@ -88,14 +88,14 @@ class Game:
                 Rectangle((obj.x, obj.y), obj.width,
                           obj.height, 'red', self.map_group)
 
-    def update(self):
+    def update(self, dt: float = None):
+        dt = dt if dt is not None else self.dt
         if self.camera.follow is not None:
             self.camera.follow_entity()
         self.map_group.update()
         self.entity_group.update(game=self)
-        self.foreground_group.update()
         for npc in self.npcs:
-            npc.controller.update(self.dt)
+            npc.controller.update(dt)
 
     def render(self):
         cam_x, cam_y = self.camera.get_position()

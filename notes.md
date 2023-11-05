@@ -50,3 +50,28 @@ health_bar = ProgressBar(
     object_id="@hp_progress_bar"
 )
 health_bar.set_progress(20)
+
+stack.push(
+    Selections(
+        title="Select an action",
+        options=["YES", "NO"],
+        position=(50, 50),
+        width=100,
+        columns=1,
+        manager=stack.manager
+    )
+)
+
+stack.push(
+    DialoguePanel(
+        hero_image=hero_image_path,
+        hero_name="Hero",
+        message=message,
+        manager=stack.manager
+    )
+)
+
+stack.push(
+    Textbox(message, (50, 100), (150, 100), chars_per_line=12, lines_per_chunk=3,
+            manager=stack.manager)
+)

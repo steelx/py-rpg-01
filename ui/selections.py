@@ -89,7 +89,7 @@ class Selections(pygame_gui.elements.UIPanel):
         if self._on_selection:
             self._on_selection(user_data)
         print(f"Selected: {self.selection}")
-        self.kill()
+        self.should_exit = True
 
     def get_selection(self):
         return self.selection
@@ -115,14 +115,14 @@ class Selections(pygame_gui.elements.UIPanel):
         pass
 
     def enter(self):
-        self.visible = True
+        self.visible = 1
         for child in self.elements:
-            child.visible = True
+            child.visible = 1
 
     def exit(self):
-        self.visible = False
+        self.visible = 0
         for child in self.elements:
-            child.visible = False
+            child.visible = 0
 
     def process_event(self, event: pygame.event.Event):
         for item in self.select_items:

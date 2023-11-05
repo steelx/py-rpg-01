@@ -23,7 +23,7 @@
       "unfilled_bar": "#CCCCCC"
     }
   },
-  "#panel_main": {
+  "@text_panel": {
     "colours": {
       "dark_bg": "rgb(0,0,200)",
       "hovered_bg": "rgb(30, 40, 60),#f3f,rgb(50, 60, 70),90deg"

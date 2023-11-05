@@ -80,9 +80,8 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         size = (size[0] - 40, size[1])
         # title_label
         title = pygame_gui.elements.UITextBox(
-            title,
-            pygame.Rect(pos, size),
-            manager=self.ui_manager,
+            html_text=title,
+            relative_rect=pygame.Rect(pos, size),
             container=self,
             object_id='@text_title'
         )
@@ -119,14 +118,14 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         pass
 
     def enter(self):
-        self.visible = True
+        self.visible = 1
         for element in self.elements:
-            element.visible = True
+            element.visible = 1
 
     def exit(self):
-        self.visible = False
+        self.visible = 0
         for element in self.elements:
-            element.visible = False
+            element.visible = 0
 
     def process_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
