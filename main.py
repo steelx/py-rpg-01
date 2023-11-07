@@ -3,16 +3,11 @@ import sys
 import pygame
 import pygame_gui
 
-from actions import ACTIONS
-from character import Character
-from character_definitions import characters
 from explore_state import ExploreState
-from game import Game
 from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def
 from state_stack import StateStack
-from ui import DialoguePanel, Selections, Textbox
-from utils import get_faced_tile
+from ui import DialoguePanel, Textbox
 
 
 def main():
