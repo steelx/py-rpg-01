@@ -12,12 +12,13 @@ from character import Character
 from character_definitions import characters
 from game import Game
 from map_definitions import MapDefinition
+from state_stack import StateStack
 
 
 class ExploreState:
     should_exit = False
 
-    def __init__(self, stack, map_def: MapDefinition, start_tile_pos: Tuple[int, int], display: pygame.Surface = None):
+    def __init__(self, map_def: MapDefinition, start_tile_pos: Tuple[int, int], display: pygame.Surface = None, stack: StateStack = None):
         self.stack = stack
         self.map_def = map_def
         self.start_pos = start_tile_pos

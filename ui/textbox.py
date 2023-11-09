@@ -7,12 +7,20 @@ from pygame_gui.elements import UIWindow
 from globals import ASSETS_PATH
 from .chunk_message import chunk_message
 
+padding = 5
+
 
 class Textbox(pygame_gui.elements.UIPanel):
-    def __init__(self, text: str, pos: Tuple[int, int], size: Tuple[int, int], chars_per_line: int,
+    def __init__(self, text: str, pos: Tuple[int, int], chars_per_line: int,
                  lines_per_chunk: int, manager: pygame_gui.UIManager, container: UIWindow = None):
+
+        char_width = 10
+        char_height = 25
+        size = (chars_per_line * char_width, lines_per_chunk * char_height)
+        panel_size = (size[0] + padding * 2, size[1] + padding * 2)
+
         super().__init__(
-            relative_rect=pygame.Rect(*pos, *size),
+            relative_rect=pygame.Rect(*pos, *panel_size),
             starting_height=1,
             manager=manager,
             container=container,
@@ -26,22 +34,24 @@ class Textbox(pygame_gui.elements.UIPanel):
         self.arrow_indicator = None
         self.text_box = None
         self.message_chunks = chunk_message(text, chars_per_line, lines_per_chunk)
-        self._create_textbox(self.message_chunks[self.current_chunk], pos, size)
+        text_box_pos = (pos[0] + padding, pos[1] + padding)
+        self._create_textbox(self.message_chunks[self.current_chunk], text_box_pos, size)
 
-    def _create_textbox(self, message: str, pos: Tuple[int, int], size: Tuple[int, int], arrow_size: int = 15):
+    def _create_textbox(self, message: str, pos: Tuple[int, int], size: Tuple[int, int], arrow_size: int = 20):
 
         self.text_box = pygame_gui.elements.UITextBox(
             html_text=message,
             relative_rect=pygame.Rect(*pos, *size),
             manager=self.manager,
             container=self.ui_container,
-            object_id='@text_message'
+            object_id='@text_message',
+            wrap_to_height=True
         )
         self.elements.append(self.text_box)
 
         if len(self.message_chunks) > 1:
             # If there are multiple chunks, add a down arrow indicator
-            pos = (pos[0] + size[0] * 0.9, pos[1] + size[1] * 0.9)
+            pos = (pos[0] + padding + size[0] * 0.95, pos[1] + padding + size[1] * 0.9)
             arrow_pos = (pos[0] - arrow_size, pos[1] - arrow_size)
             self.arrow_indicator = pygame_gui.elements.UIImage(
                 pygame.Rect(arrow_pos, (arrow_size, arrow_size)),

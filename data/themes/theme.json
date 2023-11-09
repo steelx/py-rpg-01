@@ -30,19 +30,21 @@
     },
     "font": {
       "name": "BigBlueTerm437NerdFontMono",
-      "size": "18",
+      "size": "14",
       "regular_path": "assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
     }
   },
   "@text_message": {
     "font": {
       "name": "BigBlueTerm437NerdFontMono",
-      "size": "14",
+      "size": "12",
       "regular_path": "assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
     },
     "colours": {
-      "dark_text": "rgb(255,255,255)",
-      "normal_text": "rgb(255,200,255)"
+      "normal_bg": "rgba(255,255,255, 0)",
+      "dark_bg": "rgba(255,255,255, 0)",
+      "dark_text": "rgb(0,255,255)",
+      "normal_text": "rgb(255,255,255)"
     },
     "misc": {
       "shape": "rectangle",

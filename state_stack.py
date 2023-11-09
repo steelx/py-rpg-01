@@ -61,16 +61,16 @@ class StateStack:
                 self.pop()
         self.manager.update(dt)
 
-    def render(self, screen: pygame.Surface, display: pygame.Surface):
+    def render(self, screen: pygame.Surface):
         # Clear
         screen.fill((0, 0, 0))
-        display.fill((0, 0, 0))
+        # display.fill((0, 0, 0))
         # Render
         for state in self.states:
             state.render()
         # Scale and draw the game_surface onto the screen
-        surf = pygame.transform.scale(display, WINDOW_SIZE)
-        screen.blit(surf, (0, 0))
+        # surf = pygame.transform.scale(display, WINDOW_SIZE)
+        # screen.blit(screen, (0, 0))
         self.manager.draw_ui(screen)
 
     def process_event(self, event: pygame.event.Event):

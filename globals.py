@@ -5,11 +5,11 @@ from pygame.math import Vector2
 ASSETS_PATH = os.path.abspath('.') + '/assets/'
 DATA_PATH = os.path.abspath('.') + '/data/'
 
-# screen
+# screen 16:9 ratio
 NATURAL_WIDTH = 320
-NATURAL_HEIGHT = 240
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+NATURAL_HEIGHT = 180
+SCREEN_WIDTH = 720
+SCREEN_HEIGHT = 480
 WINDOW_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 DISPLAY_SIZE = (NATURAL_WIDTH, NATURAL_HEIGHT)
 TILE_SIZE = 16
