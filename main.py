@@ -33,15 +33,16 @@ def main():
         display=screen
     )
     hero_pos = explore_state.hero.entity.rect.topright
+    hero_pos = (hero_pos[0], hero_pos[1] - 32)
 
     stack.push(explore_state)
     stack.push(
-        Textbox(message, hero_pos, manager=stack.manager, chars_per_line=18, lines_per_chunk=3)
+        Textbox("where am I", hero_pos, manager=stack.manager, chars_per_line=10, lines_per_chunk=1)
     )
+    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, screen))
     stack.push(
         Textbox("ah my head hurts", hero_pos, manager=stack.manager, chars_per_line=16, lines_per_chunk=1)
     )
-    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, screen))
 
     clock = pygame.time.Clock()
     while True:

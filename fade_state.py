@@ -15,7 +15,7 @@ class FadeState:
         self.duration = params.get("duration", 1.0)
         self.alpha_start = params.get("alpha_start", 255)
         self.alpha_finish = params.get("alpha_finish", 0)
-        self.color = pygame.Color(params.get("color", (0, 0, 0)))
+        self.color = pygame.Color(params.get("color", (100, 10, 10, 0)))
         self.color.a = self.alpha_start
         self.tween = TweenTo(self.color.a, self.alpha_finish, self.duration)
 

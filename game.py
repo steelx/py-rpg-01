@@ -20,7 +20,6 @@ class Game:
     floor_objects: CameraGroup
     cam_x: float
     cam_y: float
-    follow: Sprite = None
     dt: float = 0
 
     def __init__(self, display: pygame.Surface = None, debug=False):
@@ -91,7 +90,7 @@ class Game:
     def update(self, dt: float = None):
         dt = dt if dt is not None else self.dt
         if self.camera.follow is not None:
-            self.camera.follow_entity()
+            self.go_to_tile(self.camera.follow.tile_x, self.camera.follow.tile_y)
         self.map_group.update()
         self.entity_group.update(game=self)
         for npc in self.npcs:
@@ -144,13 +143,11 @@ class Game:
                 return entity
         return None
 
-    def get_scaled_rect_for_ui(self, tile_x: int, tile_y: int,
-                               size: Tuple[int, int] = (100, 25), offset: pygame.Vector2 = None) -> pygame.Rect:
+    def get_scaled_pos_for_ui(self, tile_x: int, tile_y: int, offset: pygame.Vector2 = None) -> Tuple[float, float]:
         """
         Get the scaled pixel coordinates for the given x and y values.
         :param tile_x: x position on the tiledmap
         :param tile_y: y position on the tiledmap
-        :param size: The size of the Rect
         :param offset: The offset from the top center of the tile
         :return: The scaled pixel coordinates
         """
@@ -161,7 +158,4 @@ class Game:
         pos = self.tmx_map.get_tile_pixel_cords(tile_x, tile_y)
         scaled_top_center_x = (pos[0] - self.camera.x) * scale_x
         scaled_top_center_y = (pos[1] - self.camera.y) * scale_y
-        return pygame.Rect(
-            (scaled_top_center_x + offset.x, scaled_top_center_y + offset.y),
-            size
-        )
+        return scaled_top_center_x + offset.x, scaled_top_center_y + offset.y

@@ -26,7 +26,7 @@ class ExploreState:
         self.game.setup(map_def, ACTIONS)
         self.hero = Character(characters["hero"], self.game)
         self.hero.entity.set_tile_pos(*start_tile_pos, self.game)
-        self.game.follow = self.hero.entity
+        self.game.camera.set_follow(self.hero.entity)
         self.ui_manager = None
 
     def enter(self, **kwargs) -> None:
