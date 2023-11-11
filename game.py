@@ -89,7 +89,7 @@ class Game:
     def update(self, dt: float = None):
         dt = dt if dt is not None else self.dt
         if self.camera.follow is not None:
-            self.go_to_tile(self.camera.follow.tile_x, self.camera.follow.tile_y)
+            self.camera.follow_entity()
         self.map_group.update()
         self.entity_group.update(game=self)
         for npc in self.npcs:

@@ -32,7 +32,7 @@ class Camera:
         # Apply lerp to smoothly transition the camera to the target position
         self.x += (target_x - self.x) * lerp_factor
         self.y += (target_y - self.y) * lerp_factor
-        # self._clamp_camera(display_size)
+        # self._clamp_camera(display_size) # not needed for now
 
     def _clamp_camera(self, display_size: Tuple[float, float]):
         # Ensure the camera doesn't move beyond the map edges
