@@ -66,6 +66,40 @@
       "border_width": "0"
     }
   },
+  "@dialog_message": {
+    "font": {
+      "name": "BigBlueTerm437NerdFontMono",
+      "size": "14",
+      "regular_path": "assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
+    },
+    "colours": {
+      "normal_bg": "rgba(255,255,255, 0)",
+      "dark_bg": "rgba(255,255,255, 0)",
+      "dark_text": "rgb(0,255,255)",
+      "normal_text": "rgb(255,255,255)"
+    },
+    "misc": {
+      "shape": "rectangle",
+      "border_width": "0"
+    }
+  },
+  "@dialog_title": {
+    "font": {
+      "name": "BigBlueTerm437NerdFontMono",
+      "size": "16",
+      "regular_path": "assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
+    },
+    "colours": {
+      "normal_bg": "rgba(255,255,255, 0)",
+      "dark_bg": "rgba(255,255,255, 0)",
+      "dark_text": "rgb(0,255,255)",
+      "normal_text": "rgb(255,255,255)"
+    },
+    "misc": {
+      "shape": "rectangle",
+      "border_width": "0"
+    }
+  },
   "@progress_bar": {
     "colours": {
       "filled_bar": "rgb(255,255,255)",

@@ -3,8 +3,6 @@ from typing import Protocol, List, Optional
 import pygame
 import pygame_gui
 
-from globals import WINDOW_SIZE
-
 
 class StackInterface(Protocol):
     should_exit: bool
@@ -61,16 +59,17 @@ class StateStack:
                 self.pop()
         self.manager.update(dt)
 
-    def render(self, screen: pygame.Surface):
+    def render(self, screen: pygame.Surface, display: pygame.Surface):
         # Clear
         screen.fill((0, 0, 0))
-        # display.fill((0, 0, 0))
+        display.fill((0, 0, 0))
         # Render
         for state in self.states:
             state.render()
         # Scale and draw the game_surface onto the screen
-        # surf = pygame.transform.scale(display, WINDOW_SIZE)
-        # screen.blit(screen, (0, 0))
+        window_size = screen.get_size()
+        surf = pygame.transform.scale(display, window_size)
+        screen.blit(surf, (0, 0))
         self.manager.draw_ui(screen)
 
     def process_event(self, event: pygame.event.Event):
