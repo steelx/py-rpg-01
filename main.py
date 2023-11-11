@@ -32,7 +32,8 @@ def main():
         stack=None,
         map_def=small_room_map_def,
         start_tile_pos=(9, 9),
-        display=display
+        display=display,
+        manager=stack.manager
     )
     hero_pos = explore_state.game.get_hero_pos_for_ui()
     hero_pos = (hero_pos[0], hero_pos[1] - 32)
@@ -41,10 +42,10 @@ def main():
     stack.push(
         Textbox("where am I", hero_pos, manager=stack.manager, chars_per_line=10, lines_per_chunk=1)
     )
-    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
-    stack.push(
-        Textbox("ah my head hurts", hero_pos, manager=stack.manager, chars_per_line=16, lines_per_chunk=1)
-    )
+    # stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
+    # stack.push(
+    #     Textbox("ah my head hurts", hero_pos, manager=stack.manager, chars_per_line=16, lines_per_chunk=1)
+    # )
 
     clock = pygame.time.Clock()
     while True:

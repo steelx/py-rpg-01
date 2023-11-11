@@ -6,6 +6,7 @@ StateStack, and want to restrict the input, we’ll need a HandleInput function 
 from typing import Optional, Tuple, List, Dict, Any
 
 import pygame
+import pygame_gui
 
 from actions import ACTIONS
 from character import Character
@@ -13,12 +14,13 @@ from character_definitions import characters
 from game import Game
 from map_definitions import MapDefinition
 from state_stack import StateStack
+from ui.layout import Layout
 
 
 class ExploreState:
     should_exit = False
 
-    def __init__(self, map_def: MapDefinition, start_tile_pos: Tuple[int, int], display: pygame.Surface = None, stack: StateStack = None):
+    def __init__(self, map_def: MapDefinition, start_tile_pos: Tuple[int, int], display: pygame.Surface, manager: pygame_gui.UIManager, stack: StateStack = None):
         self.stack = stack
         self.map_def = map_def
         self.start_pos = start_tile_pos
@@ -27,7 +29,12 @@ class ExploreState:
         self.hero = Character(characters["hero"], self.game)
         self.hero.entity.set_tile_pos(*start_tile_pos, self.game)
         self.game.camera.set_follow(self.hero.entity)
-        self.ui_manager = None
+        self.ui_manager = manager
+        self.layout = Layout(self.ui_manager)
+        self.layout.contract("screen", 120, 60)
+        self.layout.split_horz("screen", "top", "bottom", 0.2)
+        self.layout.split_vert("bottom", "left", "party", 0.8)
+        self.layout.split_horz("left", "menu", "gold", 0.7)
 
     def enter(self, **kwargs) -> None:
         pass
@@ -39,6 +46,7 @@ class ExploreState:
         self.game.dt = dt
         self.hero.controller.update(dt)
         self.game.update(dt)
+        self.layout.debug_render()
 
     def render(self) -> None:
         self.game.render()
