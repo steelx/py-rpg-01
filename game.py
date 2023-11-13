@@ -2,7 +2,7 @@ from typing import Optional, Dict, Callable, Tuple
 
 import pygame.display
 
-from globals import DISPLAY_SIZE
+from globals import NATURAL_SIZE
 from map_definitions import MapDefinition, Trigger, create_map_triggers
 from map_utils import Camera, CameraGroup, TmxMap
 from sprite_utils import Tile, Circle, Rectangle
@@ -146,8 +146,8 @@ class Game:
         # Calculate the top center of the hero, then move up by the height of the progress bar plus some padding
         offset = offset if offset is not None else pygame.Vector2()
         window_size = pygame.display.get_surface().get_size()
-        scale_x = window_size[0] / DISPLAY_SIZE[0]
-        scale_y = window_size[1] / DISPLAY_SIZE[1]
+        scale_x = window_size[0] / NATURAL_SIZE[0]
+        scale_y = window_size[1] / NATURAL_SIZE[1]
         pos = self.tmx_map.get_tile_pixel_cords(tile_x, tile_y)
         scaled_top_center_x = (pos[0] - self.camera.x) * scale_x
         scaled_top_center_y = (pos[1] - self.camera.y) * scale_y
@@ -157,8 +157,8 @@ class Game:
         # Calculate the top center of the hero, then move up by the height of the progress bar plus some padding
         offset = offset if offset is not None else pygame.Vector2()
         window_size = pygame.display.get_surface().get_size()
-        scale_x = window_size[0] / DISPLAY_SIZE[0]
-        scale_y = window_size[1] / DISPLAY_SIZE[1]
+        scale_x = window_size[0] / NATURAL_SIZE[0]
+        scale_y = window_size[1] / NATURAL_SIZE[1]
         tile_x, tile_y = self.camera.follow.tile_x, self.camera.follow.tile_y
         pos = self.tmx_map.get_tile_pixel_cords(tile_x, tile_y)
         scaled_top_center_x = (pos[0] - self.camera.x) * scale_x

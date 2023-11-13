@@ -5,7 +5,7 @@ import pygame_gui
 
 from explore_state import ExploreState
 from fade_state import FadeState
-from globals import FPS, DISPLAY_SIZE, ASSETS_PATH, DATA_PATH
+from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
 from ingame_menu_state import InGameMenuState
 from map_definitions import small_room_map_def
 from state_stack import StateStack
@@ -18,7 +18,7 @@ def main():
     # screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
     screen_size = (1200, 800)
     screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
-    display = pygame.surface.Surface(DISPLAY_SIZE)
+    display = pygame.surface.Surface(NATURAL_SIZE)
 
     # Add avatar, hero name, text and action buttons
     hero_image_path = ASSETS_PATH + "hero_portrait.png"
@@ -28,7 +28,7 @@ def main():
     within the gate freely, his sly whispers rustling through all the alleys, heard
     in the very halls of government itself.'''
 
-    stack = StateStack(pygame_gui.UIManager(screen_size, DATA_PATH + "themes/theme.json"))
+    stack = StateStack(pygame_gui.UIManager(screen.get_size(), DATA_PATH + "themes/theme.json"))
     explore_state = ExploreState(
         stack=None,
         map_def=small_room_map_def,
@@ -43,13 +43,14 @@ def main():
     stack.push(
         Textbox("where am I", hero_pos, manager=stack.manager, chars_per_line=10, lines_per_chunk=1)
     )
-    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
+
     # stack.push(
     #     Textbox("ah my head hurts", hero_pos, manager=stack.manager, chars_per_line=16, lines_per_chunk=1)
     # )
     stack.push(
         InGameMenuState(display, stack.manager, stack)
     )
+    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
 
     clock = pygame.time.Clock()
     while True:
