@@ -44,12 +44,6 @@ def main():
         Textbox("where am I", hero_pos, manager=stack.manager, chars_per_line=10, lines_per_chunk=1)
     )
 
-    # stack.push(
-    #     Textbox("ah my head hurts", hero_pos, manager=stack.manager, chars_per_line=16, lines_per_chunk=1)
-    # )
-    stack.push(
-        InGameMenuState(display, stack.manager, stack)
-    )
     stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
 
     clock = pygame.time.Clock()
@@ -65,7 +59,8 @@ def main():
                             hero_image=hero_image_path,
                             hero_name="Hero",
                             message=message,
-                            manager=stack.manager
+                            manager=stack.manager,
+                            end_callback=lambda: print("Dialogue ended")
                         )
                     )
                 if event.key == pygame.K_q:

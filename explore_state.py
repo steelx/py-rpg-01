@@ -54,6 +54,8 @@ class ExploreState:
                     trigger.on_use(None, self.hero.entity)
             if event.key == pygame.K_ESCAPE:
                 from ingame_menu_state import InGameMenuState
+                if isinstance(self.stack.top(), InGameMenuState):
+                    return
                 self.stack.push(
                     InGameMenuState(self.display, self.manager, self.stack)
                 )

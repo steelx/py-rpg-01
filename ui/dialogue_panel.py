@@ -13,8 +13,7 @@ AVATAR_WIDTH_RATIO = 0.15
 
 class DialoguePanel(pygame_gui.elements.UIPanel):
     def __init__(self, hero_image: str, hero_name: str, message: str,
-                 manager: pygame_gui.UIManager,
-                 container: IContainerLikeInterface = None):
+                 manager: pygame_gui.UIManager, end_callback: Callable = None):
         window_size: Tuple[int, int] = manager.window_resolution
         bottom_panel_height = int(0.30 * window_size[1])
         pos = (0, window_size[1] - bottom_panel_height)
@@ -22,9 +21,9 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         super().__init__(
             relative_rect=pygame.Rect(pos, size),
             manager=manager,
-            container=container,
             object_id='@text_panel'
         )
+        self.end_callback = end_callback
         self.should_exit = False
         self.elements = []
         self.message_chunks = []
@@ -38,7 +37,7 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         self.add_image(hero_image)
         self.add_title_and_message(hero_name, self.message_chunks[self.current_chunk])
 
-    def show_next_chunk(self, end_callback: Callable = None):
+    def show_next_chunk(self):
         """Show the next chunk of the message."""
         if self.current_chunk < len(self.message_chunks) - 1:
             self.current_chunk += 1
@@ -47,10 +46,13 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             if self.current_chunk == len(self.message_chunks) - 1:
                 self.arrow_indicator.kill()  # Remove the arrow when on the last chunk
         else:
-            if end_callback:
-                end_callback()
-            else:
-                self.kill()
+            if self.end_callback is not None and callable(self.end_callback):
+                self.end_callback()
+            self.close_dialogue()
+
+    def close_dialogue(self):
+        self.kill()
+        self.should_exit = True
 
     def add_image(self, image_path: str, pos: Tuple[int, int] = (5, 5)):
         avatar_size = (self.rect.width * AVATAR_WIDTH_RATIO, self.rect.height * 0.75)
@@ -132,8 +134,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
     def process_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                def callback():
-                    self.should_exit = True
-                self.show_next_chunk(callback)
+                self.show_next_chunk()
 
         super().process_event(event)

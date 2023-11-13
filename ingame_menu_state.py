@@ -51,6 +51,3 @@ class InGameMenuState:
 
     def process_event(self, event: pygame.event.Event):
         self.state_machine.process_event(event)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                self.should_exit = True

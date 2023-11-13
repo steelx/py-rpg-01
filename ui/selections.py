@@ -14,7 +14,7 @@ LINE_HEIGHT = 25
 class Selections(pygame_gui.elements.UIPanel):
     def __init__(self, title: str, options: List[str], columns: int, position: Tuple[float, float], width: float,
                  manager: UIManager,
-                 container: IContainerLikeInterface = None, show_info_popup: bool = False, on_selection: Callable = None):
+                 container: IContainerLikeInterface = None, show_info_popup: bool = False, end_callback: Callable = None):
         # Call the parent class' init method
         super().__init__(
             relative_rect=pygame.Rect(position, (width, len(options) * LINE_HEIGHT + 50)),
@@ -24,7 +24,7 @@ class Selections(pygame_gui.elements.UIPanel):
             object_id='@text_panel_bg'
         )
         self.should_exit = False
-        self._on_selection = on_selection
+        self._on_selection = end_callback
         self.elements = []
         self.options = options
         self.selection = None
