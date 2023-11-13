@@ -88,12 +88,12 @@ class Game:
 
     def update(self, dt: float = None):
         dt = dt if dt is not None else self.dt
-        if self.camera.follow is not None:
-            self.camera.follow_entity()
         self.map_group.update()
         self.entity_group.update(game=self)
         for npc in self.npcs:
             npc.controller.update(dt)
+        if self.camera.follow is not None:
+            self.camera.follow_entity()
 
     def render(self):
         cam_x, cam_y = self.camera.get_position()
