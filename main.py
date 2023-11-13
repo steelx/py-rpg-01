@@ -30,7 +30,7 @@ def main():
 
     stack = StateStack(pygame_gui.UIManager(screen.get_size(), DATA_PATH + "themes/theme.json"))
     explore_state = ExploreState(
-        stack=None,
+        stack=stack,
         map_def=small_room_map_def,
         start_tile_pos=(9, 9),
         display=display,
@@ -68,7 +68,7 @@ def main():
                             manager=stack.manager
                         )
                     )
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit()
 

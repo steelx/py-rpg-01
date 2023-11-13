@@ -17,6 +17,13 @@ class InGameMenuState:
 
         # create state machine for in game menu
         # controller = ("frontmenu", "items", "magic", "equip", "status")
+        self.menu_options = [
+            "Item",
+            "Magic",
+            "Equip",
+            "Status",
+            "Exit"
+        ]
         controller = ("frontmenu",)
         state_classes = {}  # This will store state classes, not instances.
         for state_name in controller:

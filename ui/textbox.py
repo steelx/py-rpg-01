@@ -2,7 +2,7 @@ from typing import Tuple, Callable
 
 import pygame
 import pygame_gui
-from pygame_gui.elements import UIWindow
+from pygame_gui.core import IContainerLikeInterface
 
 from globals import ASSETS_PATH
 from .chunk_message import chunk_message
@@ -11,8 +11,8 @@ padding = 5
 
 
 class Textbox(pygame_gui.elements.UIPanel):
-    def __init__(self, text: str, pos: Tuple[int, int], chars_per_line: int,
-                 lines_per_chunk: int, manager: pygame_gui.UIManager, container: UIWindow = None):
+    def __init__(self, text: str, pos: Tuple[float, float], chars_per_line: int,
+                 lines_per_chunk: int, manager: pygame_gui.UIManager, container: IContainerLikeInterface = None):
 
         char_width = 10
         char_height = 25
@@ -37,10 +37,11 @@ class Textbox(pygame_gui.elements.UIPanel):
         text_box_pos = (pos[0] + padding, pos[1] + padding)
         self._create_textbox(self.message_chunks[self.current_chunk], text_box_pos, size)
 
-    def _create_textbox(self, message: str, pos: Tuple[int, int], size: Tuple[int, int], arrow_size: int = 20):
+    def _create_textbox(self, message: str, pos: Tuple[float, float], size: Tuple[float, float], arrow_size: int = 20):
 
         self.text_box = pygame_gui.elements.UITextBox(
             html_text=message,
+            starting_height=2,
             relative_rect=pygame.Rect(*pos, *size),
             manager=self.manager,
             container=self.ui_container,

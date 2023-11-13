@@ -16,7 +16,6 @@ class Selections(pygame_gui.elements.UIPanel):
                  manager: UIManager,
                  container: IContainerLikeInterface = None, show_info_popup: bool = False, on_selection: Callable = None):
         # Call the parent class' init method
-        print(f"Selections: {position}")
         super().__init__(
             relative_rect=pygame.Rect(position, (width, len(options) * LINE_HEIGHT + 50)),
             starting_height=10,

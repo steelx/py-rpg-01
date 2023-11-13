@@ -29,6 +29,7 @@ class ExploreState:
         self.hero.entity.set_tile_pos(*start_tile_pos, self.game)
         self.game.camera.set_follow(self.hero.entity)
         self.manager = manager
+        self.display = display
 
     def enter(self, **kwargs) -> None:
         pass
@@ -51,4 +52,9 @@ class ExploreState:
                 trigger = self.game.get_trigger_at_tile(tile_x, tile_y)
                 if trigger is not None:
                     trigger.on_use(None, self.hero.entity)
+            if event.key == pygame.K_ESCAPE:
+                from ingame_menu_state import InGameMenuState
+                self.stack.push(
+                    InGameMenuState(self.display, self.manager, self.stack)
+                )
 

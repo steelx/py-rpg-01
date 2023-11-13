@@ -31,7 +31,8 @@
     },
     "misc": {
       "shape": "rectangle",
-      "border_width": "0"
+      "border_width": "0",
+      "border_colour": "rgba(255,255,255, 0)"
     }
   },
   "@text_panel": {
@@ -69,12 +70,34 @@
       "regular_path": "assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
     },
     "colours": {
+      "dark_bg": "rgba(0,0,0,0)",
+      "normal_bg": "rgba(0,0,0,0)",
       "dark_text": "rgb(255,200,255)",
       "normal_text": "rgb(255,255,255)"
     },
     "misc": {
       "shape": "rectangle",
-      "border_width": "0"
+      "border_width": "0",
+      "border_colour": "rgba(255,255,255, 0)"
+    }
+  },
+  "@text_title_big": {
+    "font": {
+      "name": "BigBlueTerm437NerdFontMono",
+      "size": "18",
+      "regular_path": "assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
+    },
+    "colours": {
+      "dark_bg": "rgba(0,0,0,0)",
+      "normal_bg": "rgba(0,0,0,0)",
+      "dark_text": "rgb(255,200,255)",
+      "normal_text": "rgb(255,255,255)"
+    },
+    "misc": {
+      "text_shadow": "#000000",
+      "shape": "rectangle",
+      "border_width": "0",
+      "border_colour": "rgba(255,255,255, 0)"
     }
   },
   "@dialog_message": {
