@@ -6,6 +6,7 @@ import pygame_gui
 from explore_state import ExploreState
 from fade_state import FadeState
 from globals import FPS, DISPLAY_SIZE, ASSETS_PATH, DATA_PATH
+from ingame_menu_state import InGameMenuState
 from map_definitions import small_room_map_def
 from state_stack import StateStack
 from ui import DialoguePanel, Textbox
@@ -42,10 +43,13 @@ def main():
     stack.push(
         Textbox("where am I", hero_pos, manager=stack.manager, chars_per_line=10, lines_per_chunk=1)
     )
-    # stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
+    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
     # stack.push(
     #     Textbox("ah my head hurts", hero_pos, manager=stack.manager, chars_per_line=16, lines_per_chunk=1)
     # )
+    stack.push(
+        InGameMenuState(display, stack.manager, stack)
+    )
 
     clock = pygame.time.Clock()
     while True:

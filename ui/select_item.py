@@ -6,7 +6,7 @@ from pygame_gui.elements import UILabel
 
 class SelectItem(UILabel):
     def __init__(self, relative_rect: Rect, text: str, manager: UIManager, container=None,
-                 base_color=(100, 100, 255), highlight_color=(204, 255, 0), active_color=(255, 0, 0)):
+                 base_color=(255, 255, 255), highlight_color=(204, 255, 0), active_color=(255, 0, 0)):
 
         # Initialize the UILabel parent class
         super().__init__(relative_rect, text, manager, container)

@@ -71,8 +71,7 @@ class Textbox(pygame_gui.elements.UIPanel):
         else:
             if end_callback:
                 end_callback()
-            else:
-                self.kill()
+            self.kill()
 
     def update(self, dt: float):
         pass

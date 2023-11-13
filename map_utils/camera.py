@@ -22,7 +22,7 @@ class Camera:
         target_x, target_y = self.follow.rect.center
         self.go_to(target_x, target_y)
 
-    def go_to(self, x: int, y: int, lerp_factor: float = 0.1):
+    def go_to(self, x: int, y: int, lerp_factor: float = 0.2):
         display_size = self.game.display_surface.get_size()
 
         # Calculate the target camera position centered on the target coordinates

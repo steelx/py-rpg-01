@@ -3,7 +3,7 @@ The ExploreState displays a map and lets us wander around it. The
 state requires Enter, Exit, Render and Update functions. Since we’re using it with a
 StateStack, and want to restrict the input, we’ll need a HandleInput function too.
 """
-from typing import Optional, Tuple, List, Dict, Any
+from typing import Tuple
 
 import pygame
 import pygame_gui
@@ -14,7 +14,6 @@ from character_definitions import characters
 from game import Game
 from map_definitions import MapDefinition
 from state_stack import StateStack
-from ui.layout import Layout
 
 
 class ExploreState:
@@ -29,12 +28,7 @@ class ExploreState:
         self.hero = Character(characters["hero"], self.game)
         self.hero.entity.set_tile_pos(*start_tile_pos, self.game)
         self.game.camera.set_follow(self.hero.entity)
-        self.ui_manager = manager
-        self.layout = Layout(self.ui_manager)
-        self.layout.contract("screen", 120, 60)
-        self.layout.split_horz("screen", "top", "bottom", 0.2)
-        self.layout.split_vert("bottom", "left", "party", 0.8)
-        self.layout.split_horz("left", "menu", "gold", 0.7)
+        self.manager = manager
 
     def enter(self, **kwargs) -> None:
         pass
@@ -46,7 +40,6 @@ class ExploreState:
         self.game.dt = dt
         self.hero.controller.update(dt)
         self.game.update(dt)
-        self.layout.debug_render()
 
     def render(self) -> None:
         self.game.render()

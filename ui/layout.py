@@ -13,7 +13,7 @@ class PanelType:
     height: float
 
 
-class Layout:
+class Layout(pygame_gui.elements.UIPanel):
     """
     the operations starting with a panel the size of the display area:
     1. Contract the panel.
@@ -35,8 +35,14 @@ class Layout:
 
     def __init__(self, manager: pygame_gui.UIManager):
         self.manager = manager
-        self.panels = {}
         w, h = manager.window_resolution
+        super().__init__(
+            relative_rect=pygame.Rect(0, 0, w, h),
+            starting_height=1,
+            manager=self.manager,
+            object_id='@text_panel_bg'
+        )
+        self.panels = {}
         self.x = 0
         self.y = 0
 
@@ -49,10 +55,14 @@ class Layout:
             relative_rect=pygame.Rect(p.x, p.y, p.width, p.height),
             starting_height=1,
             manager=self.manager,
+            container=self,
             object_id='@text_panel'
         )
 
-    def debug_render(self):
+    def kill_layout(self) -> None:
+        self.kill()
+
+    def render(self):
         for p in self.panels.keys():
             panel = self.panels[p]
             if panel is not None:

@@ -1,9 +1,10 @@
-from typing import Protocol, List, Optional
+from typing import Protocol, List, Optional, runtime_checkable
 
 import pygame
 import pygame_gui
 
 
+@runtime_checkable
 class StackInterface(Protocol):
     should_exit: bool
 

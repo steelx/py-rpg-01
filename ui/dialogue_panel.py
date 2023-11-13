@@ -3,7 +3,7 @@ from typing import Tuple, Callable
 
 import pygame
 import pygame_gui
-from pygame_gui.elements import UIWindow
+from pygame_gui.core import IContainerLikeInterface
 
 from globals import ASSETS_PATH
 from .chunk_message import chunk_message
@@ -14,7 +14,7 @@ AVATAR_WIDTH_RATIO = 0.15
 class DialoguePanel(pygame_gui.elements.UIPanel):
     def __init__(self, hero_image: str, hero_name: str, message: str,
                  manager: pygame_gui.UIManager,
-                 container: UIWindow = None):
+                 container: IContainerLikeInterface = None):
         window_size: Tuple[int, int] = manager.window_resolution
         bottom_panel_height = int(0.30 * window_size[1])
         pos = (0, window_size[1] - bottom_panel_height)

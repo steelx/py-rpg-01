@@ -23,6 +23,17 @@
       "unfilled_bar": "#CCCCCC"
     }
   },
+  "@text_panel_bg": {
+    "colours": {
+      "dark_bg": "rgba(0,0,0,0)",
+      "normal_bg": "rgba(0,0,0,0)",
+      "hovered_bg": "rgb(30, 40, 60),#f3f,rgb(50, 60, 70),90deg"
+    },
+    "misc": {
+      "shape": "rectangle",
+      "border_width": "0"
+    }
+  },
   "@text_panel": {
     "colours": {
       "dark_bg": "rgb(0,0,200)",
