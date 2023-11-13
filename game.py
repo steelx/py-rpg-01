@@ -1,9 +1,8 @@
 from typing import Optional, Dict, Callable, Tuple
 
 import pygame.display
-from pygame.sprite import Group, Sprite
 
-from globals import WINDOW_SIZE, DISPLAY_SIZE
+from globals import NATURAL_SIZE
 from map_definitions import MapDefinition, Trigger, create_map_triggers
 from map_utils import Camera, CameraGroup, TmxMap
 from sprite_utils import Tile, Circle, Rectangle
@@ -11,16 +10,15 @@ from sprite_utils import Tile, Circle, Rectangle
 
 class Game:
     tmx_map: TmxMap = None
-    map_group: Group
-    entity_group: Group
-    collision_group: Group
-    foreground_group: Group
-    background_group: Group
-    foreground_objects: Group
-    floor_objects: Group
+    map_group: CameraGroup
+    entity_group: CameraGroup
+    collision_group: CameraGroup
+    foreground_group: CameraGroup
+    background_group: CameraGroup
+    foreground_objects: CameraGroup
+    floor_objects: CameraGroup
     cam_x: float
     cam_y: float
-    follow: Sprite = None
     dt: float = 0
 
     def __init__(self, display: pygame.Surface = None, debug=False):
@@ -88,14 +86,14 @@ class Game:
                 Rectangle((obj.x, obj.y), obj.width,
                           obj.height, 'red', self.map_group)
 
-    def update(self):
+    def update(self, dt: float = None):
+        dt = dt if dt is not None else self.dt
         if self.camera.follow is not None:
             self.camera.follow_entity()
         self.map_group.update()
         self.entity_group.update(game=self)
-        self.foreground_group.update()
         for npc in self.npcs:
-            npc.controller.update(self.dt)
+            npc.controller.update(dt)
 
     def render(self):
         cam_x, cam_y = self.camera.get_position()
@@ -144,24 +142,25 @@ class Game:
                 return entity
         return None
 
-    def get_scaled_rect_for_ui(self, tile_x: int, tile_y: int,
-                               size: Tuple[int, int] = (100, 25), offset: pygame.Vector2 = None) -> pygame.Rect:
-        """
-        Get the scaled pixel coordinates for the given x and y values.
-        :param tile_x: x position on the tiledmap
-        :param tile_y: y position on the tiledmap
-        :param size: The size of the Rect
-        :param offset: The offset from the top center of the tile
-        :return: The scaled pixel coordinates
-        """
+    def get_tile_pos_for_ui(self, tile_x: int, tile_y: int, offset: pygame.Vector2 = None) -> Tuple[float, float]:
         # Calculate the top center of the hero, then move up by the height of the progress bar plus some padding
         offset = offset if offset is not None else pygame.Vector2()
-        scale_x = WINDOW_SIZE[0] / DISPLAY_SIZE[0]
-        scale_y = WINDOW_SIZE[1] / DISPLAY_SIZE[1]
+        window_size = pygame.display.get_surface().get_size()
+        scale_x = window_size[0] / NATURAL_SIZE[0]
+        scale_y = window_size[1] / NATURAL_SIZE[1]
         pos = self.tmx_map.get_tile_pixel_cords(tile_x, tile_y)
         scaled_top_center_x = (pos[0] - self.camera.x) * scale_x
         scaled_top_center_y = (pos[1] - self.camera.y) * scale_y
-        return pygame.Rect(
-            (scaled_top_center_x + offset.x, scaled_top_center_y + offset.y),
-            size
-        )
+        return scaled_top_center_x + offset.x, scaled_top_center_y + offset.y
+
+    def get_hero_pos_for_ui(self, offset: pygame.Vector2 = None) -> Tuple[float, float]:
+        # Calculate the top center of the hero, then move up by the height of the progress bar plus some padding
+        offset = offset if offset is not None else pygame.Vector2()
+        window_size = pygame.display.get_surface().get_size()
+        scale_x = window_size[0] / NATURAL_SIZE[0]
+        scale_y = window_size[1] / NATURAL_SIZE[1]
+        tile_x, tile_y = self.camera.follow.tile_x, self.camera.follow.tile_y
+        pos = self.tmx_map.get_tile_pixel_cords(tile_x, tile_y)
+        scaled_top_center_x = (pos[0] - self.camera.x) * scale_x
+        scaled_top_center_y = (pos[1] - self.camera.y) * scale_y
+        return scaled_top_center_x + offset.x, scaled_top_center_y + offset.y

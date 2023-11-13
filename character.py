@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from character_definitions import CharacterDefData, entities
 from entity import Entity
 from game import Game
@@ -30,3 +32,19 @@ class Character:
             self.controller.add(state_name, state_class(self, game))
 
         self.controller.change(character_def.state)
+
+    def get_faced_tile(self) -> Tuple[int, int]:
+        """
+        Get the tile that the character is facing
+        """
+        tile_x = self.entity.tile_x
+        tile_y = self.entity.tile_y
+        if self.facing == "left":
+            tile_x -= 1
+        elif self.facing == "right":
+            tile_x += 1
+        elif self.facing == "up":
+            tile_y -= 1
+        elif self.facing == "down":
+            tile_y += 1
+        return tile_x, tile_y

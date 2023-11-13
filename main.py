@@ -3,31 +3,22 @@ import sys
 import pygame
 import pygame_gui
 
-from actions import ACTIONS
-from character import Character
-from character_definitions import characters
-from game import Game
-from globals import FPS, WINDOW_SIZE, DISPLAY_SIZE, ASSETS_PATH, DATA_PATH
+from explore_state import ExploreState
+from fade_state import FadeState
+from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
+from ingame_menu_state import InGameMenuState
 from map_definitions import small_room_map_def
 from state_stack import StateStack
-from ui import DialoguePanel, Selections, Textbox
-from utils import get_faced_tile
+from ui import DialoguePanel, Textbox
 
 
 def main():
     pygame.init()
     pygame.display.set_caption("jRPG Game")
-    screen = pygame.display.set_mode(WINDOW_SIZE)
-    display = pygame.surface.Surface(DISPLAY_SIZE)
-
-    game = Game(display=display)
-    game.setup(small_room_map_def, ACTIONS)
-
-    hero = Character(characters["hero"], game)
-    game.follow = hero.entity
-
-    # UI Setup
-    ui_manager = pygame_gui.UIManager(WINDOW_SIZE, DATA_PATH + "themes/theme.json")
+    # screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+    screen_size = (1200, 800)
+    screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
+    display = pygame.surface.Surface(NATURAL_SIZE)
 
     # Add avatar, hero name, text and action buttons
     hero_image_path = ASSETS_PATH + "hero_portrait.png"
@@ -37,54 +28,59 @@ def main():
     within the gate freely, his sly whispers rustling through all the alleys, heard
     in the very halls of government itself.'''
 
-    dialog_panel = DialoguePanel(hero_image_path, "Hero", message, ui_manager, WINDOW_SIZE)
-    selections = Selections(
-        "Yes or no",
-        ["YES", "NO"],
-        2, (100, 200), 150,
-        manager=ui_manager)
-    text_box = Textbox(
-        """A nation can survive its fools, and even the ambitious.
-    But it cannot survive treason from within. An enemy at the gates is less formidable, for he is
-    known and carries his banner openly.""",
-        (0, 0), (150, 100), chars_per_line=15, lines_per_chunk=3, manager=ui_manager)
+    stack = StateStack(pygame_gui.UIManager(screen.get_size(), DATA_PATH + "themes/theme.json"))
+    explore_state = ExploreState(
+        stack=stack,
+        map_def=small_room_map_def,
+        start_tile_pos=(9, 9),
+        display=display,
+        manager=stack.manager
+    )
+    hero_pos = explore_state.game.get_hero_pos_for_ui()
+    hero_pos = (hero_pos[0], hero_pos[1] - 32)
 
-    state_stack = StateStack(ui_manager)
-    state_stack.push(selections)
-    state_stack.push(text_box)
-    state_stack.push(dialog_panel)
+    stack.push(explore_state)
+    stack.push(
+        Textbox("where am I", hero_pos, manager=stack.manager, chars_per_line=10, lines_per_chunk=1)
+    )
+
+    # stack.push(
+    #     Textbox("ah my head hurts", hero_pos, manager=stack.manager, chars_per_line=16, lines_per_chunk=1)
+    # )
+    stack.push(
+        InGameMenuState(display, stack.manager, stack)
+    )
+    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
 
     clock = pygame.time.Clock()
     while True:
-        game.dt = clock.tick(FPS)
+        dt = clock.tick(FPS)
         for event in pygame.event.get():
+            stack.process_event(event)
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_0:
+                    stack.push(
+                        DialoguePanel(
+                            hero_image=hero_image_path,
+                            hero_name="Hero",
+                            message=message,
+                            manager=stack.manager
+                        )
+                    )
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    tile_x, tile_y = get_faced_tile(hero)
-                    trigger = game.get_trigger_at_tile(tile_x, tile_y)
-                    if trigger is not None:
-                        trigger.on_use(None, hero.entity)
-            # State Stack Event Handling
-            state_stack.process_event(event)
-
         # Update
-        hero.controller.update(game.dt)
-        game.update()
-        state_stack.update(game.dt)
+        stack.update(dt)
 
-        # Game Render
-        screen.fill((0, 0, 0))
-        display.fill((0, 0, 0))
-        game.render()
-
-        # Scale and draw the game_surface onto the screen
-        surf = pygame.transform.scale(display, WINDOW_SIZE)
-        screen.blit(surf, (0, 0))
-        state_stack.draw(screen)
+        # Render
+        stack.render(screen, display)
         pygame.display.flip()
 
 

@@ -3,9 +3,9 @@ from typing import Tuple, Callable
 
 import pygame
 import pygame_gui
-from pygame_gui.elements import UIWindow
+from pygame_gui.core import IContainerLikeInterface
 
-from globals import WINDOW_SIZE, ASSETS_PATH
+from globals import ASSETS_PATH
 from .chunk_message import chunk_message
 
 AVATAR_WIDTH_RATIO = 0.15
@@ -14,15 +14,16 @@ AVATAR_WIDTH_RATIO = 0.15
 class DialoguePanel(pygame_gui.elements.UIPanel):
     def __init__(self, hero_image: str, hero_name: str, message: str,
                  manager: pygame_gui.UIManager,
-                 window_size: Tuple[int, int] = WINDOW_SIZE,
-                 container: UIWindow = None):
+                 container: IContainerLikeInterface = None):
+        window_size: Tuple[int, int] = manager.window_resolution
         bottom_panel_height = int(0.30 * window_size[1])
         pos = (0, window_size[1] - bottom_panel_height)
         size = (window_size[0], bottom_panel_height)
         super().__init__(
             relative_rect=pygame.Rect(pos, size),
             manager=manager,
-            container=container
+            container=container,
+            object_id='@text_panel'
         )
         self.should_exit = False
         self.elements = []
@@ -74,17 +75,17 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         )
         self.elements.append(avatar)
 
-    def add_title_and_message(self, title: str, message: str, pos: Tuple[int, int] = (125, 5)):
+    def add_title_and_message(self, title: str, message: str):
+        pos: Tuple[int, int] = (self.rect.width * AVATAR_WIDTH_RATIO + 10, 5)
         line_height = 25
         size = (self.rect.width * (1 - AVATAR_WIDTH_RATIO), line_height)
         size = (size[0] - 40, size[1])
         # title_label
         title = pygame_gui.elements.UITextBox(
-            title,
-            pygame.Rect(pos, size),
-            manager=self.ui_manager,
+            html_text=title,
+            relative_rect=pygame.Rect(pos, size),
             container=self,
-            object_id='@text_title'
+            object_id='@dialog_title'
         )
         self.elements.append(title)
 
@@ -95,7 +96,7 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             pygame.Rect(pos, size),
             manager=self.ui_manager,
             container=self,
-            object_id='@text_message',
+            object_id='@dialog_message',
             wrap_to_height=False,
         )
         self.elements.append(self.text_box)
@@ -119,14 +120,14 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         pass
 
     def enter(self):
-        self.visible = True
+        self.visible = 1
         for element in self.elements:
-            element.visible = True
+            element.visible = 1
 
     def exit(self):
-        self.visible = False
+        self.visible = 0
         for element in self.elements:
-            element.visible = False
+            element.visible = 0
 
     def process_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:

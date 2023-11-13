@@ -1,4 +1,6 @@
-from globals import DISPLAY_SIZE
+from typing import Tuple
+
+import pygame
 
 
 class Camera:
@@ -10,6 +12,9 @@ class Camera:
         self.height_pixel = height_pixel
         self.follow = None
 
+    def set_follow(self, entity: pygame.sprite.Sprite):
+        self.follow = entity
+
     def get_position(self):
         return self.x, self.y
 
@@ -17,14 +22,21 @@ class Camera:
         target_x, target_y = self.follow.rect.center
         self.go_to(target_x, target_y)
 
-    def go_to(self, x: int, y: int):
-        self.x = x - DISPLAY_SIZE[0] // 2
-        self.y = y - DISPLAY_SIZE[1] // 2
-        self._clamp_camera()
+    def go_to(self, x: int, y: int, lerp_factor: float = 0.2):
+        display_size = self.game.display_surface.get_size()
 
-    def _clamp_camera(self):
+        # Calculate the target camera position centered on the target coordinates
+        target_x = x - display_size[0] // 2
+        target_y = y - display_size[1] // 2
+
+        # Apply lerp to smoothly transition the camera to the target position
+        self.x += (target_x - self.x) * lerp_factor
+        self.y += (target_y - self.y) * lerp_factor
+        # self._clamp_camera(display_size) # not needed for now
+
+    def _clamp_camera(self, display_size: Tuple[float, float]):
         # Ensure the camera doesn't move beyond the map edges
         self.x = max(self.x, 0)
         self.y = max(self.y, 0)
-        self.x = min(self.x, self.width_pixel - DISPLAY_SIZE[0])
-        self.y = min(self.y, self.height_pixel - DISPLAY_SIZE[1])
+        self.x = min(self.x, self.width_pixel + display_size[0])
+        self.y = min(self.y, self.height_pixel + display_size[1])

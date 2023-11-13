@@ -24,3 +24,6 @@ class StateMachine:
 
     def render(self, **kwargs):
         self.current.render(**kwargs)
+
+    def process_event(self, event):
+        self.current.process_event(event)
