@@ -95,6 +95,10 @@ class ItemMenuState:
         assert selection in self.category_menu_options, f"Invalid selection {selection}"
         if selection == "Exit":
             self.close_menu()
+        elif selection == "Use":
+            self._create_use_item_menu()
+        elif selection == "Key Items":
+            self._create_key_item_menu()
         else:
             self.category_menu.kill()
             self.category_menu = None

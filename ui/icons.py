@@ -29,7 +29,8 @@ class Icons:
             "weapon": 3,
             "armor": 4,
             "up_arrow": 5,
-            "down_arrow": 6
+            "down_arrow": 6,
+            "key": 6,
         }
         self.icons: Dict[str, pygame.Surface] = {}
         self.create_icons()
