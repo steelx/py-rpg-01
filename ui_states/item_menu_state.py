@@ -53,31 +53,51 @@ class ItemMenuState:
             container=self.layout,
         )
 
-    def _create_use_item_menu(self):
-        def _render_data_item(
-                item: Dict[str, Any], x: float, y: float, manager: UIManager, container: IContainerLikeInterface
-        ) -> SelectItem:
-            return self.parent.world.draw_item(item, x, y, manager, container)
+    def _render_data_item(
+            self, item: Dict[str, Any], x: float, y: float, manager: UIManager, container: IContainerLikeInterface
+    ) -> SelectItem:
+        return self.parent.world.draw_item(item, x, y, manager, container)
 
+    def _create_use_item_menu(self):
         inv_pos = (self.layout.left("inv"), self.layout.top("inv"))
         self.item_menus = Selections(
-            container=self.layout,
-            title="Select an use item",
+            title="Activated Items",
             data=self.parent.world.items,
-            render_data_item=_render_data_item,
+            render_data_item=self._render_data_item,
             position=inv_pos,
             width=self.layout.panels["inv"].width,
             columns=1,
             manager=self.manager,
-            end_callback=self._on_category_selection
+            container=self.layout,
+            end_callback=self._on_item_selection
         )
+
+    def _create_key_item_menu(self):
+        inv_pos = (self.layout.left("inv"), self.layout.top("inv"))
+        self.item_menus = Selections(
+            title="Key's in pocket",
+            data=self.parent.world.key_items,
+            render_data_item=self._render_data_item,
+            position=inv_pos,
+            width=self.layout.panels["inv"].width,
+            columns=1,
+            manager=self.manager,
+            container=self.layout,
+            end_callback=self._on_item_selection
+        )
+
+    def _on_item_selection(self, selection: str) -> None:
+        if selection == "Exit":
+            self.close_menu()
+        print(f"Selected Item {selection}")
 
     def _on_category_selection(self, selection: str) -> None:
         assert selection in self.category_menu_options, f"Invalid selection {selection}"
         if selection == "Exit":
             self.close_menu()
         else:
-            self.category_menu.hide()
+            self.category_menu.kill()
+            self.category_menu = None
             self._create_use_item_menu()
 
     def close_menu(self) -> None:
@@ -97,7 +117,11 @@ class ItemMenuState:
         pass
 
     def process_event(self, event: pygame.event.Event):
-        self.category_menu.process_event(event)
+        if self.category_menu is not None:
+            self.category_menu.process_event(event)
+        if self.item_menus is not None:
+            self.item_menus.process_event(event)
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.close_menu()

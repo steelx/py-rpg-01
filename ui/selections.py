@@ -80,17 +80,18 @@ class Selections(pygame_gui.elements.UIPanel):
             self.select_items[self.current_selection_idx].highlight()
 
     def change_selection(self, change):
+        options = self.options or self.data
         if self.selection is None:
             idx = 0
         else:
-            idx = self.options.index(self.selection)
+            idx = options.index(self.selection)
 
         # Unhighlight current selection and deactivate it
         self.select_items[idx].unhighlight()
         self.select_items[idx].is_active = False
 
-        idx = (idx + change) % len(self.options)
-        self.selection = self.options[idx]
+        idx = (idx + change) % len(options)
+        self.selection = options[idx]
 
         # Highlight new selection
         self.select_items[idx].highlight()
@@ -99,7 +100,6 @@ class Selections(pygame_gui.elements.UIPanel):
         self.selection = user_data
         if self._on_selection:
             self._on_selection(user_data)
-        print(f"selections.py sel: {self.selection}")
         self.should_exit = True
 
     def get_selection(self):
