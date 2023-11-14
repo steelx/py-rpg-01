@@ -99,10 +99,9 @@ class ItemMenuState:
             self._create_use_item_menu()
         elif selection == "Key Items":
             self._create_key_item_menu()
-        else:
-            self.category_menu.kill()
-            self.category_menu = None
-            self._create_use_item_menu()
+
+        self.category_menu.kill()
+        self.category_menu = None
 
     def close_menu(self) -> None:
         self.layout.kill_layout()
@@ -128,4 +127,9 @@ class ItemMenuState:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.close_menu()
+                if self.category_menu is not None:
+                    self.close_menu()
+                else:
+                    self._create_category_menu()
+                    self.item_menus.kill()
+                    self.item_menus = None
