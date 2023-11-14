@@ -50,6 +50,8 @@ class FrontMenuState:
 
     def _on_selection(self, selection: str) -> None:
         assert selection in self.parent.menu_options, f"Invalid selection {selection}"
+        assert selection.lower() in self.parent.class_names, \
+            f"Make sure -{selection.lower()}- exists in ingame_menu_state.class_names"
         if selection == "Exit":
             self.close_menu()
         else:
@@ -60,10 +62,10 @@ class FrontMenuState:
         self.parent.should_exit = True
 
     def enter(self) -> None:
-        pass
+        self.layout.show_layout()
 
     def exit(self) -> None:
-        pass
+        self.layout.hide_layout()
 
     def render(self) -> None:
         self.layout.render()

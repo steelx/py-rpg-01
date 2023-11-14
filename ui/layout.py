@@ -62,6 +62,12 @@ class Layout(pygame_gui.elements.UIPanel):
     def kill_layout(self) -> None:
         self.kill()
 
+    def hide_layout(self) -> None:
+        self.hide()
+
+    def show_layout(self) -> None:
+        self.show()
+
     def render(self):
         for p in self.panels.keys():
             panel = self.panels[p]

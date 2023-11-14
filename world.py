@@ -3,9 +3,16 @@ World object tracks all the items the party picks up, the amount of gold they ha
 and the amount of time that has passed. Later on it will also track quests and current
 party members, and be involved with loading and saving.
 """
-from typing import TypedDict, List
+from typing import TypedDict, List, Any, Dict
 
+import pygame
+import pygame_gui
+from pygame_gui import UIManager
+from pygame_gui.core import IContainerLikeInterface
+
+from globals import ASSETS_PATH
 from items import item_db
+from ui import Icons, SelectItem
 
 
 class InventoryItem(TypedDict):
@@ -18,13 +25,22 @@ class World:
     items: List[InventoryItem]
     key_items: List[InventoryItem]
 
-    def __init__(self):
+    def __init__(self, renderer: pygame.Surface):
+        self.renderer = renderer
         self.time = 0
         self.gold = 0
         self.items = [
-            {"id": 1, "count": 2}
+            {"id": 1, "count": 2},
+            {"id": 0, "count": 1},
+            {"id": 2, "count": 1},
         ]
-        self.key_items = []
+        self.key_items = [
+            {"id": 3, "count": 1},
+        ]
+        self.icons = Icons(ASSETS_PATH + "ui/inventory_icons.png")
+
+    def update(self, dt: float) -> None:
+        self.time += dt
 
     def add_item(self, item_id: int, count: int = 1) -> None:
         """
@@ -87,17 +103,22 @@ class World:
         seconds = int(self.time % 60)
         return f"{hours}::{minutes}:{seconds:02}"
 
-    def enter(self) -> None:
-        pass
+    def draw_item(self, item: Dict[str, Any], x: float, y: float, manager: UIManager,  container: IContainerLikeInterface) -> SelectItem:
+        assert "id" in item, f"Item {item} does not have an id"
+        assert "count" in item, f"Item {item} does not have a count"
+        item_id = item["id"]
+        count = item["count"]
+        item_def = item_db[item_id]
+        icon = self.icons.get_icon(item_def.category.name.lower())
+        icon_w = 18
+        text_w = len(item_def.name) * 10 + icon_w
+        return SelectItem(
+            relative_rect=pygame.Rect((x+icon_w+5, y), (text_w, 25)),
+            text=f"{item_def.name} x{count}",
+            manager=manager,
+            container=container,
+            icon_img=icon,
+            icon_size=(icon_w, icon_w)
+        )
 
-    def exit(self) -> None:
-        pass
 
-    def render(self) -> None:
-        pass
-
-    def update(self, dt: float) -> None:
-        self.time += dt
-
-    def process_event(self, event):
-        pass

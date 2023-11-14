@@ -3,7 +3,6 @@ from typing import Tuple, Callable
 
 import pygame
 import pygame_gui
-from pygame_gui.core import IContainerLikeInterface
 
 from globals import ASSETS_PATH
 from .chunk_message import chunk_message
@@ -25,7 +24,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         )
         self.end_callback = end_callback
         self.should_exit = False
-        self.elements = []
         self.message_chunks = []
         self.current_chunk = 0
         self.text_box = None
@@ -69,13 +67,12 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
 
         image_surface = pygame.transform.scale(image_surface, (new_width, new_height))
 
-        avatar = pygame_gui.elements.UIImage(
+        _avatar = pygame_gui.elements.UIImage(
             pygame.Rect(pos, (new_width, new_height)),
             image_surface,
             manager=self.ui_manager,
             container=self
         )
-        self.elements.append(avatar)
 
     def add_title_and_message(self, title: str, message: str):
         pos: Tuple[int, int] = (self.rect.width * AVATAR_WIDTH_RATIO + 10, 5)
@@ -89,7 +86,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             container=self,
             object_id='@dialog_title'
         )
-        self.elements.append(title)
 
         pos = (pos[0], pos[1] + line_height)
         size = (size[0], self.rect.height * 0.50)
@@ -101,7 +97,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             object_id='@dialog_message',
             wrap_to_height=False,
         )
-        self.elements.append(self.text_box)
 
         if len(self.message_chunks) > 1:
             # If there are multiple chunks, add a down arrow indicator
@@ -113,7 +108,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
                 manager=self.ui_manager,
                 container=self
             )
-            self.elements.append(self.arrow_indicator)
 
     def update(self, dt: float):
         pass
@@ -122,14 +116,10 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         pass
 
     def enter(self):
-        self.visible = 1
-        for element in self.elements:
-            element.visible = 1
+        self.show()
 
     def exit(self):
-        self.visible = 0
-        for element in self.elements:
-            element.visible = 0
+        self.hide()
 
     def process_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
