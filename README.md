@@ -1,7 +1,7 @@
 # py-rpg-01
 jRPG Game in Pygame
 
-![image](./screenshots/Screenshot_2023-11-04.png)
+![image](./screenshots/Screenshot_2023-11-16.png)
 
 
 ## Install

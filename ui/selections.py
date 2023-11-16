@@ -80,6 +80,9 @@ class Selections(pygame_gui.elements.UIPanel):
             self.select_items[self.current_selection_idx].highlight()
 
     def change_selection(self, change):
+        """
+        called when user uses Arrow keys to change selection
+        """
         options = self.options or self.data
         if self.selection is None:
             idx = 0
@@ -97,6 +100,10 @@ class Selections(pygame_gui.elements.UIPanel):
         self.select_items[idx].highlight()
 
     def handle_on_selection(self, user_data):
+        if user_data is None:
+            options = self.options or self.data
+            user_data = options[self.current_selection_idx]
+
         self.selection = user_data
         if self._on_selection:
             self._on_selection(user_data)
@@ -135,5 +142,4 @@ class Selections(pygame_gui.elements.UIPanel):
                 self.change_selection(1)
             elif event.key == pygame.K_RETURN:
                 # Confirm selection with Enter key
-                if self.selection:
-                    self.handle_on_selection(self.selection)
+                self.handle_on_selection(self.selection)
