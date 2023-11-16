@@ -6,7 +6,6 @@ import pygame_gui
 from explore_state import ExploreState
 from fade_state import FadeState
 from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
-from ingame_menu_state import InGameMenuState
 from map_definitions import small_room_map_def
 from state_stack import StateStack
 from ui import DialoguePanel, Textbox
