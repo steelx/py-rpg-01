@@ -14,7 +14,7 @@ class Textbox(pygame_gui.elements.UIPanel):
     def __init__(self, text: str, pos: Tuple[float, float], chars_per_line: int,
                  lines_per_chunk: int, manager: pygame_gui.UIManager, container: IContainerLikeInterface = None):
 
-        char_width = 10
+        char_width = 9
         char_height = 25
         size = (chars_per_line * char_width, lines_per_chunk * char_height)
         panel_size = (size[0] + padding * 2, size[1] + padding * 2)

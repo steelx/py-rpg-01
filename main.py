@@ -4,15 +4,23 @@ import pygame
 import pygame_gui
 
 from explore_state import ExploreState
-from fade_state import FadeState
 from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def
 from state_stack import StateStack
+from storyboard import Storyboard, fade_screen
 from ui import DialoguePanel, Textbox
+
+
+def load_custom_font():
+    font_path = ASSETS_PATH + "fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
+    font_size = 12
+    return pygame.font.Font(font_path, font_size)
 
 
 def main():
     pygame.init()
+    big_blue_12 = load_custom_font()
+
     pygame.display.set_caption("jRPG Game")
     # screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
     screen_size = (1200, 800)
@@ -40,10 +48,15 @@ def main():
 
     stack.push(explore_state)
     stack.push(
-        Textbox("where am I", hero_pos, manager=stack.manager, chars_per_line=10, lines_per_chunk=1)
+        Textbox("what is this place!", hero_pos, manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
     )
 
-    stack.push(FadeState({"duration": 1, "alpha_start": 255, "alpha_finish": 0}, display))
+    storyboard = Storyboard(stack=stack, display=display, font=big_blue_12, events=[
+        # Wait(2),
+        # black_screen("black_screen", alpha=255),
+        fade_screen(0, 2.0, display),
+    ])
+    stack.push(storyboard)
 
     clock = pygame.time.Clock()
     while True:
