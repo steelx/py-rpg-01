@@ -24,6 +24,12 @@ class Storyboard:
         self._stacks[id] = state  # push a State on the stack but keep a reference here
         self.sub_stack.push(state)
 
+    def remove_state(self, id_: str):
+        state = self._stacks.pop(id_, None)  # Remove from the dictionary
+        if state in self.sub_stack.states:
+            # self.sub_stack.states.remove(state)  # Remove from the sub-stack
+            state.should_exit = True
+
     def enter(self) -> None:
         pass
 
@@ -47,21 +53,23 @@ class Storyboard:
         self.sub_stack.update(dt)
 
         delete_index: Optional[int, None] = None
-        for k, v in enumerate(self.events):
+        for idx, v in enumerate(self.events):
             # Check if event is a function and call it to get the Event instance
             if callable(v):
-                self.events[k] = v(self)
-                v = self.events[k]
+                self.events[idx] = v(self)
+                v = self.events[idx]
 
             v.update(dt)
             if v.is_finished():
-                delete_index = k
+                delete_index = idx
                 break
             if v.is_blocking():
                 break
 
         if delete_index is not None:
-            self.events.pop(delete_index)
+            event = self.events.pop(delete_index)
+            if hasattr(event, "id_"):
+                self.remove_state(event.id_)
 
     def process_event(self, event: pygame.event.Event):
         pass

@@ -7,7 +7,7 @@ from explore_state import ExploreState
 from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def
 from state_stack import StateStack
-from storyboard import Storyboard, fade_screen
+from storyboard import Storyboard, fade_screen, black_screen, Wait
 from ui import DialoguePanel, Textbox
 
 
@@ -52,9 +52,10 @@ def main():
     )
 
     storyboard = Storyboard(stack=stack, display=display, font=big_blue_12, events=[
-        # Wait(2),
-        # black_screen("black_screen", alpha=255),
-        fade_screen(0, 2.0, display),
+        black_screen("black_screen"),
+        fade_screen("fade_out", alpha_end=0, alpha_start=255, duration=2.0, renderer=display),
+        Wait(0.5),
+        fade_screen("fade_in", alpha_end=255, alpha_start=0, duration=2.0, renderer=display),
     ])
     stack.push(storyboard)
 

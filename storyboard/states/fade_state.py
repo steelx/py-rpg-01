@@ -13,12 +13,13 @@ class FadeState:
         self.stack = stack
         self.duration = params.get("duration", 1.0)
         self.alpha_start = params.get("alpha_start", 255)
-        self.alpha_finish = params.get("alpha_finish", 0)
-        self.color = pygame.Color(params.get("color", (0, 0, 0, 0)))
+        self.alpha_end = params.get("alpha_end", 0)
+        self.color = pygame.Color(params.get("color", (0, 0, 0)))
         self.color.a = self.alpha_start
         self.overlay = pygame.Surface(renderer.get_size(), pygame.SRCALPHA)
         self.overlay.fill(self.color)
-        self.tween = TweenTo(self.color, key="a", finish=self.alpha_finish, duration=self.duration)
+        print(f"{self.color}, finish={self.alpha_end}, duration={self.duration}")
+        self.tween = TweenTo(self.color, key="a", finish=self.alpha_end, duration=self.duration)
 
     def enter(self, **kwargs) -> None:
         pass
@@ -32,7 +33,7 @@ class FadeState:
             self.should_exit = True
 
     def render(self, renderer: pygame.Surface) -> None:
-        self.overlay.set_alpha(self.color.a)
+        self.overlay.fill(self.color)
         renderer.blit(self.overlay, (0, 0))
 
     def process_event(self, event: pygame.event.Event):
