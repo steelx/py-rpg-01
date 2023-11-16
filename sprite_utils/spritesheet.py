@@ -3,7 +3,7 @@ import pygame
 
 def load_sprite_sheet(sprite_sheet_path: str, frame_width: int, frame_height: int, rows: int, columns: int):
     # Load the sprite sheet
-    sprite_sheet = pygame.image.load(sprite_sheet_path)
+    sprite_sheet = pygame.image.load(sprite_sheet_path).convert_alpha()
     # Create a list of frames
     frames = []
     # Split the sprite sheet into frames

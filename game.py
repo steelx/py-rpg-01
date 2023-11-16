@@ -6,9 +6,11 @@ from globals import NATURAL_SIZE
 from map_definitions import MapDefinition, Trigger, create_map_triggers
 from map_utils import Camera, CameraGroup, TmxMap
 from sprite_utils import Tile, Circle, Rectangle
+from world import World
 
 
 class Game:
+    world: World
     tmx_map: TmxMap = None
     map_group: CameraGroup
     entity_group: CameraGroup
@@ -88,12 +90,13 @@ class Game:
 
     def update(self, dt: float = None):
         dt = dt if dt is not None else self.dt
-        if self.camera.follow is not None:
-            self.camera.follow_entity()
+        self.world.update(dt)
         self.map_group.update()
         self.entity_group.update(game=self)
         for npc in self.npcs:
             npc.controller.update(dt)
+        if self.camera.follow is not None:
+            self.camera.follow_entity()
 
     def render(self):
         cam_x, cam_y = self.camera.get_position()

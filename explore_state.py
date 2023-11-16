@@ -14,6 +14,7 @@ from character_definitions import characters
 from game import Game
 from map_definitions import MapDefinition
 from state_stack import StateStack
+from world import World
 
 
 class ExploreState:
@@ -25,6 +26,7 @@ class ExploreState:
         self.start_pos = start_tile_pos
         self.game = Game(display=display)
         self.game.setup(map_def, ACTIONS)
+        self.game.world = World(display)
         self.hero = Character(characters["hero"], self.game)
         self.hero.entity.set_tile_pos(*start_tile_pos, self.game)
         self.game.camera.set_follow(self.hero.entity)
@@ -54,7 +56,9 @@ class ExploreState:
                     trigger.on_use(None, self.hero.entity)
             if event.key == pygame.K_ESCAPE:
                 from ingame_menu_state import InGameMenuState
+                if isinstance(self.stack.top(), InGameMenuState):
+                    return
                 self.stack.push(
-                    InGameMenuState(self.display, self.manager, self.stack)
+                    InGameMenuState(self.game.world, self.display, self.manager, self.stack)
                 )
 

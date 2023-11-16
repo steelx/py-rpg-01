@@ -1,4 +1,30 @@
-from state import State
+"""
+A simple state machine implementation.
+example: A state machine for a game menu, characters, etc.
+A Main Menu can be in State Stack, while its submenus are in State Machine.
+in State machine current state is always active, while in State Stack, only the top state is active.
+in state machine, you can change state, while in state stack, you can push and pop state.
+"""
+
+from typing import Protocol, runtime_checkable
+
+
+@runtime_checkable
+class State(Protocol):
+    def enter(self, **kwargs) -> None:
+        ...
+
+    def exit(self) -> None:
+        ...
+
+    def render(self, **kwargs) -> None:
+        ...
+
+    def update(self, dt) -> None:
+        ...
+
+    def process_event(self, event) -> None:
+        ...
 
 
 class StateMachine:

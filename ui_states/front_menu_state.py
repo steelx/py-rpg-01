@@ -27,7 +27,7 @@ class FrontMenuState:
             width=self.layout.panels["menu"].width,
             columns=1,
             manager=manager,
-            on_selection=self._on_selection
+            end_callback=self._on_selection
         )
 
         gold_panel = self.layout.panels["gold"]
@@ -50,20 +50,22 @@ class FrontMenuState:
 
     def _on_selection(self, selection: str) -> None:
         assert selection in self.parent.menu_options, f"Invalid selection {selection}"
+        assert selection.lower() in self.parent.class_names, \
+            f"Make sure -{selection.lower()}- exists in ingame_menu_state.class_names"
         if selection == "Exit":
-            self.close_frontmenu()
+            self.close_menu()
         else:
             self.parent.state_machine.change(selection.lower())
 
-    def close_frontmenu(self) -> None:
+    def close_menu(self) -> None:
         self.layout.kill_layout()
         self.parent.should_exit = True
 
     def enter(self) -> None:
-        pass
+        self.layout.show_layout()
 
     def exit(self) -> None:
-        pass
+        self.layout.hide_layout()
 
     def render(self) -> None:
         self.layout.render()
@@ -74,5 +76,5 @@ class FrontMenuState:
     def process_event(self, event: pygame.event.Event):
         self.selections.process_event(event)
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE:
-                self.close_frontmenu()
+            if event.key == pygame.K_ESCAPE:
+                self.close_menu()

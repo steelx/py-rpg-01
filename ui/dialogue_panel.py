@@ -3,7 +3,6 @@ from typing import Tuple, Callable
 
 import pygame
 import pygame_gui
-from pygame_gui.core import IContainerLikeInterface
 
 from globals import ASSETS_PATH
 from .chunk_message import chunk_message
@@ -13,8 +12,7 @@ AVATAR_WIDTH_RATIO = 0.15
 
 class DialoguePanel(pygame_gui.elements.UIPanel):
     def __init__(self, hero_image: str, hero_name: str, message: str,
-                 manager: pygame_gui.UIManager,
-                 container: IContainerLikeInterface = None):
+                 manager: pygame_gui.UIManager, end_callback: Callable = None):
         window_size: Tuple[int, int] = manager.window_resolution
         bottom_panel_height = int(0.30 * window_size[1])
         pos = (0, window_size[1] - bottom_panel_height)
@@ -22,11 +20,10 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         super().__init__(
             relative_rect=pygame.Rect(pos, size),
             manager=manager,
-            container=container,
             object_id='@text_panel'
         )
+        self.end_callback = end_callback
         self.should_exit = False
-        self.elements = []
         self.message_chunks = []
         self.current_chunk = 0
         self.text_box = None
@@ -38,7 +35,7 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         self.add_image(hero_image)
         self.add_title_and_message(hero_name, self.message_chunks[self.current_chunk])
 
-    def show_next_chunk(self, end_callback: Callable = None):
+    def show_next_chunk(self):
         """Show the next chunk of the message."""
         if self.current_chunk < len(self.message_chunks) - 1:
             self.current_chunk += 1
@@ -47,10 +44,13 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             if self.current_chunk == len(self.message_chunks) - 1:
                 self.arrow_indicator.kill()  # Remove the arrow when on the last chunk
         else:
-            if end_callback:
-                end_callback()
-            else:
-                self.kill()
+            if self.end_callback is not None and callable(self.end_callback):
+                self.end_callback()
+            self.close_dialogue()
+
+    def close_dialogue(self):
+        self.kill()
+        self.should_exit = True
 
     def add_image(self, image_path: str, pos: Tuple[int, int] = (5, 5)):
         avatar_size = (self.rect.width * AVATAR_WIDTH_RATIO, self.rect.height * 0.75)
@@ -67,13 +67,12 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
 
         image_surface = pygame.transform.scale(image_surface, (new_width, new_height))
 
-        avatar = pygame_gui.elements.UIImage(
+        _avatar = pygame_gui.elements.UIImage(
             pygame.Rect(pos, (new_width, new_height)),
             image_surface,
             manager=self.ui_manager,
             container=self
         )
-        self.elements.append(avatar)
 
     def add_title_and_message(self, title: str, message: str):
         pos: Tuple[int, int] = (self.rect.width * AVATAR_WIDTH_RATIO + 10, 5)
@@ -87,7 +86,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             container=self,
             object_id='@dialog_title'
         )
-        self.elements.append(title)
 
         pos = (pos[0], pos[1] + line_height)
         size = (size[0], self.rect.height * 0.50)
@@ -99,7 +97,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             object_id='@dialog_message',
             wrap_to_height=False,
         )
-        self.elements.append(self.text_box)
 
         if len(self.message_chunks) > 1:
             # If there are multiple chunks, add a down arrow indicator
@@ -111,7 +108,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
                 manager=self.ui_manager,
                 container=self
             )
-            self.elements.append(self.arrow_indicator)
 
     def update(self, dt: float):
         pass
@@ -120,20 +116,14 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         pass
 
     def enter(self):
-        self.visible = 1
-        for element in self.elements:
-            element.visible = 1
+        self.show()
 
     def exit(self):
-        self.visible = 0
-        for element in self.elements:
-            element.visible = 0
+        self.hide()
 
     def process_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                def callback():
-                    self.should_exit = True
-                self.show_next_chunk(callback)
+                self.show_next_chunk()
 
         super().process_event(event)
