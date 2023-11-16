@@ -1,7 +1,3 @@
-import os
-
-ASSETS_PATH = os.path.abspath('.') + '/assets/'
-
 from .panel import *  # noqa: F403
 from .dialogue_panel import *  # noqa: F403
 from .selections import *  # noqa: F403

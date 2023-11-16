@@ -12,7 +12,6 @@ Icon Category:
     up_arrow = 5,
     down_arrow = 6
 """
-from enum import Enum, auto
 from typing import Dict
 
 import pygame
