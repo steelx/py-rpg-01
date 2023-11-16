@@ -18,7 +18,6 @@ class FadeState:
         self.color.a = self.alpha_start
         self.overlay = pygame.Surface(renderer.get_size(), pygame.SRCALPHA)
         self.overlay.fill(self.color)
-        print(f"{self.color}, finish={self.alpha_end}, duration={self.duration}")
         self.tween = TweenTo(self.color, key="a", finish=self.alpha_end, duration=self.duration)
 
     def enter(self, **kwargs) -> None:

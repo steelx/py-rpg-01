@@ -14,7 +14,7 @@ class StackInterface(Protocol):
     def exit(self) -> None:
         ...
 
-    def render(self) -> None:
+    def render(self, screen) -> None:
         ...
 
     def update(self, dt: float) -> None:

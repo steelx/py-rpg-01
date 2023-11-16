@@ -67,9 +67,7 @@ class Storyboard:
                 break
 
         if delete_index is not None:
-            event = self.events.pop(delete_index)
-            if hasattr(event, "id_"):
-                self.remove_state(event.id_)
+            self.events.pop(delete_index)
 
     def process_event(self, event: pygame.event.Event):
         pass
