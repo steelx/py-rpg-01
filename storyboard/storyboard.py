@@ -26,9 +26,10 @@ class Storyboard:
 
     def remove_state(self, id_: str):
         state = self._stacks.pop(id_, None)  # Remove from the dictionary
-        if state in self.sub_stack.states:
-            # self.sub_stack.states.remove(state)  # Remove from the sub-stack
-            state.should_exit = True
+        for v in self.sub_stack.states:
+            if v == state:
+                self.sub_stack.states.remove(v)
+                break
 
     def enter(self) -> None:
         pass

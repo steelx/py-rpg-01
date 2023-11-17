@@ -13,7 +13,7 @@ from storyboard.states import CaptionStylesType, CaptionStyle
 
 # Renderer function adapted for Pygame
 def default_renderer(style: CaptionStyle, text: str, screen: pygame.Surface):
-    font = style.font if isinstance(style.font, pygame.font.Font) else pygame.font.SysFont(style.font, style.scale * 10)
+    font = style.font if isinstance(style.font, pygame.font.Font) else pygame.font.SysFont(style.font, style.scale*10)
     text_surface = font.render(text, True, style.color)
     text_rect = text_surface.get_rect()
 
