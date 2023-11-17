@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from typing import TypedDict, Optional, Callable, Union, Any
 
 import pygame
@@ -6,22 +7,22 @@ import pygame
 ApplyFuncType = Callable[[Any, int], None]
 
 # Define a Callable type for the Render function that takes several parameters
-RenderFuncType = Callable[[str, pygame.Surface], None]
+RenderFuncType = Callable[[Any, str, pygame.Surface], None]
 
 
-# Define the type for individual caption styles
-class CaptionStyle(TypedDict, total=False):
-    font: Optional[Union[str, pygame.font.Font]]  # Can be a string or a preloaded pygame Font object
-    scale: Optional[float]
-    alignX: Optional[str]
-    alignY: Optional[str]
-    x: Optional[int]
-    y: Optional[int]
-    color: Optional[pygame.Color]
-    width: Optional[int]
-    Render: Optional[RenderFuncType]
-    ApplyFunc: Optional[ApplyFuncType]
-    duration: Optional[float]
+@dataclass
+class CaptionStyle:
+    font: Optional[Union[str, pygame.font.Font]] = 'Arial'
+    scale: int = 1
+    alignX: str = 'center'
+    alignY: str = 'center'
+    x: int = 0
+    y: int = 0
+    color: pygame.Color = field(default_factory=lambda: pygame.Color(255, 255, 255, 255))
+    width: int = -1
+    Render: Optional[RenderFuncType] = None
+    ApplyFunc: Optional[ApplyFuncType] = None
+    duration: float = 1.0
 
 
 # Define the type for the entire CaptionStyles dictionary
@@ -46,7 +47,7 @@ class CaptionState:
         pass
 
     def render(self, display: pygame.Surface) -> None:
-        self.style["Render"](self.style, self.text, display)
+        self.style.Render(self.style, self.text, display)
 
     def update(self, dt: float) -> None:
         pass

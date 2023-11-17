@@ -53,15 +53,23 @@ def main():
 
     storyboard = Storyboard(stack=stack, display=display, font=big_blue_12, events=[
         black_screen("black_screen"),
-        caption("title_text", "title", "Welcome to the game", font=big_blue_12),
+
+        caption("title_text", "title", "Village of Bavdhan", font=big_blue_12),
         fade_screen("fade_out", alpha_end=0, alpha_start=255, duration=2.0, renderer=display),
         Wait(2.0),
         remove_state("title_text"),
+
+        caption("subtitle_text", "subtitle", "Role playing game", font=big_blue_12),
+        fade_screen("fade_out", alpha_end=0, alpha_start=255, duration=2.0, renderer=display),
+        Wait(2.0),
+        remove_state("subtitle_text"),
+
         fade_screen("fade_in", alpha_end=255, alpha_start=0, duration=2.0, renderer=display),
         caption("mid_text", "default", "MIDNIGHT", font=big_blue_12),
         Wait(2),
-        remove_state("black_screen"),
         remove_state("mid_text"),
+
+        remove_state("black_screen"),
     ])
     stack.push(storyboard)
 
