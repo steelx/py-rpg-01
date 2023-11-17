@@ -19,6 +19,8 @@ class Storyboard:
         self.font = font
         self.sub_stack = SubStateStack()
         self._stacks: Dict[str, StackInterface] = {}
+        from storyboard import SoundEvent
+        self._playing_sounds: Dict[str, SoundEvent] = {}
 
     def push_state(self, id: str, state: StackInterface):
         self._stacks[id] = state  # push a State on the stack but keep a reference here
@@ -35,7 +37,9 @@ class Storyboard:
         pass
 
     def exit(self) -> None:
-        pass
+        # stop all sounds
+        for v in self._playing_sounds.values():
+            v.stop()
 
     def render(self) -> None:
         self.sub_stack.render(self.display)
@@ -75,3 +79,10 @@ class Storyboard:
 
     def cleanup(self):
         pass
+
+    def add_sound(self, sound_id, event):
+        self._playing_sounds[sound_id] = event
+
+    def stop_sound(self, sound_id):
+        self._playing_sounds[sound_id].stop()
+        self._playing_sounds.pop(sound_id)

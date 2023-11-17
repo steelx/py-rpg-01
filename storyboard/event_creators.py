@@ -24,7 +24,8 @@ def no_blocking(func: Callable[[Storyboard], Event]):
     return create_event
 
 
-def fade_screen(id_: str, alpha_end: int, duration: float, renderer: pygame.Surface, alpha_start: int = 255) -> Callable[[Storyboard], Event]:
+def fade_screen(id_: str, alpha_end: int, duration: float, renderer: pygame.Surface, alpha_start: int = 255) -> \
+        Callable[[Storyboard], Event]:
     def create_event(storyboard: Storyboard) -> Event:
         state = FadeState(
             params={"alpha_start": alpha_start, "alpha_end": alpha_end, "duration": duration},
@@ -59,5 +60,23 @@ def caption(id_: str, style_name: str, text: str, font: pygame.font.Font = None)
             target=state.style,
             apply_func=_style.ApplyFunc,
         )
+
+    return create_event
+
+
+def play_sound(sound_id: str, sound_file: str, volume=1) -> Callable[[Storyboard], Event]:
+    def create_event(storyboard: Storyboard) -> Event:
+        from storyboard.sound_event import SoundEvent
+        event = SoundEvent(sound_file, volume)
+        storyboard.add_sound(sound_id, event)
+        return event
+
+    return create_event
+
+
+def stop_sound(sound_id: str) -> Callable[[Storyboard], Event]:
+    def create_event(storyboard: Storyboard) -> Event:
+        storyboard.stop_sound(sound_id)
+        return Wait(0)
 
     return create_event

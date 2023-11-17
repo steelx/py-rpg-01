@@ -7,7 +7,8 @@ from explore_state import ExploreState
 from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def
 from state_stack import StateStack
-from storyboard import Storyboard, fade_screen, black_screen, Wait, caption, remove_state, no_blocking
+from storyboard import Storyboard, fade_screen, black_screen, Wait, caption, remove_state, no_blocking, play_sound, \
+    stop_sound
 from ui import DialoguePanel, Textbox
 
 
@@ -52,6 +53,7 @@ def main():
 
     storyboard = Storyboard(stack=stack, display=display, font=big_blue_12, events=[
         black_screen("black_screen"),
+        play_sound("rain", ASSETS_PATH + "sounds/rain.wav", volume=0.2),
 
         caption("place", "title", "Village of Bavdhan", font=load_custom_font(24)),
         fade_screen("fade_out_1", alpha_end=0, alpha_start=255, duration=2.0, renderer=display),
@@ -68,6 +70,7 @@ def main():
         fade_screen("fade_out_3", alpha_end=0, alpha_start=255, duration=2.0, renderer=display),
         Wait(2),
         remove_state("mid_text"),
+        stop_sound("rain"),
 
         remove_state("black_screen"),
     ])
