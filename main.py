@@ -5,7 +5,7 @@ import pygame_gui
 
 from explore_state import ExploreState
 from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
-from map_definitions import small_room_map_def
+from map_definitions import small_room_map_def, player_house_map_def
 from state_stack import StateStack
 from storyboard import Storyboard, fade_screen, black_screen, Wait, caption, remove_state, no_blocking, play_sound, \
     stop_sound
@@ -38,18 +38,18 @@ def main():
     stack = StateStack(pygame_gui.UIManager(screen.get_size(), DATA_PATH + "themes/theme.json"))
     explore_state = ExploreState(
         stack=stack,
-        map_def=small_room_map_def,
-        start_tile_pos=(9, 9),
+        map_def=player_house_map_def,
+        start_tile_pos=(24, 15),
         display=display,
         manager=stack.manager
     )
+    stack.push(explore_state)
+
     hero_pos = explore_state.game.get_hero_pos_for_ui()
     hero_pos = (hero_pos[0], hero_pos[1] - 32)
-
-    stack.push(explore_state)
-    stack.push(
-        Textbox("what is this place!", hero_pos, manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
-    )
+    # stack.push(
+    #     Textbox("what is this place!", hero_pos, manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
+    # )
 
     storyboard = Storyboard(stack=stack, display=display, font=big_blue_12, events=[
         black_screen("black_screen"),

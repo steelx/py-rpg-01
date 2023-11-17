@@ -12,11 +12,7 @@ from world import World
 class Game:
     world: World
     tmx_map: TmxMap = None
-    map_group: CameraGroup
     entity_group: CameraGroup
-    collision_group: CameraGroup
-    foreground_group: CameraGroup
-    background_group: CameraGroup
     foreground_objects: CameraGroup
     floor_objects: CameraGroup
     cam_x: float
@@ -31,11 +27,8 @@ class Game:
         self.camera: Camera = None
 
         self.display_surface = display if display is not None else pygame.display.get_surface()
-        self.map_group = CameraGroup(self.display_surface)
+        self.map_layer_groups: Dict[str, CameraGroup] = {}
         self.entity_group = CameraGroup(self.display_surface)
-        self.collision_group = CameraGroup(self.display_surface)
-        self.foreground_group = CameraGroup(self.display_surface)
-        self.background_group = CameraGroup(self.display_surface)
         self.foreground_objects = CameraGroup(self.display_surface)
         self.floor_objects = CameraGroup(self.display_surface)
         self.show_shapes = debug
@@ -46,6 +39,17 @@ class Game:
         self.npcs: list[Character] = []
 
     def setup(self, map_def: MapDefinition, actions: Dict[str, Callable] = None):
+        """
+        Tilemap must have only following Layer names in order to be rendered correctly:
+        - Background or layer name starting with 'Back'
+        - Foreground or layer name starting with 'Fore'
+        - Floor or layer name starting with 'Floor'
+        example:
+            - Collision
+            - Background_1
+            - Background_2
+            - Foreground_1
+        """
         self.tmx_map = TmxMap(map_def.path)
         width_pixel, height_pixel = self.tmx_map.get_wh_pixels()
         self.camera = Camera(self, width_pixel, height_pixel)
@@ -59,19 +63,18 @@ class Game:
         # Create the Trigger types from the map_def
         self.triggers: Dict[str, Trigger] = create_map_triggers(map_def, actions, self)
 
-        layer_map = {
-            'Floor': self.map_group,
-            'Foreground': self.foreground_group,
-            'Background': self.background_group,
-            'Collisions': self.collision_group
-        }
+        # Create a group for each layer in the map
+        for layer in self.tmx_map.tiledmap.layers:
+            self.map_layer_groups[layer.name] = CameraGroup(self.display_surface)
 
         # Iterate over layers and create tiles
-        for layer_name, group in layer_map.items():
-            layer = self.tmx_map.tiledmap.get_layer_by_name(layer_name)
-            for x, y, image in layer.tiles():
-                pos = (x * self.tmx_map.tiledmap.tilewidth, y * self.tmx_map.tiledmap.tileheight)
-                Tile(pos, image, group, 0 if layer_name == 'Collisions' else None)
+        for layer in self.tmx_map.tiledmap.layers:
+            group = self.map_layer_groups.get(layer.name)
+            if hasattr(layer, 'tiles'):
+                for x, y, image in layer.tiles():
+                    pos = (x * self.tmx_map.tiledmap.tilewidth, y * self.tmx_map.tiledmap.tileheight)
+                    blocking = 0 if layer.name == 'Collisions' else None
+                    Tile(pos, image, group, blocking)
 
         # Process objects
         for obj in self.tmx_map.tiledmap.objects:
@@ -83,15 +86,16 @@ class Game:
 
             if obj.type == 'Marker' and self.show_shapes:
                 spawn = (obj.x, obj.y)
-                Circle(spawn, 4, 'yellow', self.map_group)
+                Circle(spawn, 4, 'yellow', self.floor_objects)
             if obj.type == 'Shape' and self.show_shapes:
                 Rectangle((obj.x, obj.y), obj.width,
-                          obj.height, 'red', self.map_group)
+                          obj.height, 'red', self.floor_objects)
 
     def update(self, dt: float = None):
         dt = dt if dt is not None else self.dt
         self.world.update(dt)
-        self.map_group.update()
+        for group in self.map_layer_groups.values():
+            group.update()
         self.entity_group.update(game=self)
         for npc in self.npcs:
             npc.controller.update(dt)
@@ -101,20 +105,35 @@ class Game:
     def render(self):
         cam_x, cam_y = self.camera.get_position()
         # Note that the order of rendering is important
-        if hasattr(self.map_group, 'custom_draw'):
-            self.map_group.custom_draw(cam_x, cam_y)
+
+        # Render Map Floor groups
+        floor_groups = [group for layer_name, group in self.map_layer_groups.items() if layer_name.startswith('Floor')]
+        for group in floor_groups:
+            group.custom_draw(cam_x, cam_y)
+
         if hasattr(self.floor_objects, 'custom_draw'):
             self.floor_objects.custom_draw(cam_x, cam_y)
-        if hasattr(self.background_group, 'custom_draw'):
-            self.background_group.custom_draw(cam_x, cam_y)
+
+        # Render layers that start with 'Back'
+        # filter map_layer_groups by layer name starting with 'Back'
+        background_groups = [group for layer_name, group in self.map_layer_groups.items() if
+                             layer_name.startswith('Back')]
+        for group in background_groups:
+            group.custom_draw(cam_x, cam_y)
+
+        # Render the entity_group
         if hasattr(self.entity_group, 'custom_draw'):
             self.entity_group.custom_draw(cam_x, cam_y, sort=True)
-        if hasattr(self.foreground_group, 'custom_draw'):
-            self.foreground_group.custom_draw(cam_x, cam_y)
+
+        # filter map_layer_groups by layer name starting with 'Fore'
+        foreground_groups = [group for layer_name, group in self.map_layer_groups.items() if
+                             layer_name.startswith('Fore')]
+        for group in foreground_groups:
+            group.custom_draw(cam_x, cam_y)
+
+        # Render any additional objects or layers as needed
         if hasattr(self.foreground_objects, 'custom_draw'):
             self.foreground_objects.custom_draw(cam_x, cam_y)
-        if hasattr(self.collision_group, 'custom_draw'):
-            self.collision_group.custom_draw(cam_x, cam_y)
 
     def go_to_tile(self, tile_x: int, tile_y: int):
         x, y = self.tmx_map.get_tile_pixel_cords(tile_x, tile_y)

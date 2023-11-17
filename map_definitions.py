@@ -68,6 +68,13 @@ small_room_map_def = MapDefinition(
     ]
 )
 
+player_house_map_def = MapDefinition(
+    path=PATH + 'maps/player_house.tmx',
+    on_wake=[
+        ActionsParams(id='add_npc', params={'def': 'standing_npc', 'x': 27, 'y': 17}),
+    ]
+)
+
 
 def create_map_triggers(map_def: MapDefinition, actions, game) -> Dict[str, Trigger]:
     # Create the Trigger types from the map_def

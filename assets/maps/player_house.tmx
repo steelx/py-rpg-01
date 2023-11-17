@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="1">
+ <tileset firstgid="1" name="player_house_tilemap" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="tileset_sontos_house.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="257" name="collision_graphic" tilewidth="16" tileheight="16" tilecount="4" columns="2">
+  <image source="collision_graphic.png" width="32" height="32"/>
+ </tileset>
+ <layer id="6" name="Floor" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1EEKwCAMBED/6hP8P9RDhRxKST0FOwN7EQWXiK0BAABvxky/M0Iya5XE+2WzzlSy02OlktN67PSp5GuPuK+Sk97V09+amQsAAAAAAP92AYSxL+k=
+  </data>
+ </layer>
+ <layer id="4" name="Background" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztzrsJgEAUBdFtRcECFCxAwdQfmKoVqBWopXsrWHhs8BDmwOQTAgAAQAiFylVmLPeYjahVpUpjlcdsRKda1RhrPWYjFjWrydjsMYtf6tWgRu+RRKva1O78kepQp7q8RxLd6lGv8wcAAAAAAAAAALD7AHysEkk=
+  </data>
+ </layer>
+ <layer id="8" name="Background_1" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztz7ERAVEUhtGtgA6IpHRAIYgFVgW7ukAFqNMfPsGbMcyODc6Z+ZI7N7i3aQAA3m3TLu0/3F8MeMsvjqlNp2I2SdPK/mHwi77TpT6di9kszSv7Y/3jkq7pVsyWaVXZH+sf9/RIz2K2Tpv/nAMAAAAAAAAUXvflCgk=
+  </data>
+ </layer>
+ <layer id="5" name="Foreground" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztz70JAkEQhuGxBHuxAQ8b8LABTYw10PjEn67UCtSS/A42MPCW+1ncEd4H3mTZgRkzAAAAs1HuBRIZ514gkWXuBRLhDrN1si2G4w6/d1zVTd1bznq946Ge6tVy1usdXXm7Y9Vz1tMdG7XtMbdT+8S7DFGpgzp+qTYJ2cf7SZ3V5aebxk0jFWoWKhr+eDGPVKpFqGz4AwAAAAAAAOA/vAF6sxzy
+  </data>
+ </layer>
+ <layer id="9" name="Foreground_1" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztycEJgEAMRcG9awfagXaghakVqFWbwx7CVuDCDDw+IaUAAAAA9GGIxrS9OKIzuuo9RXPa9v9Xd/REb72XaE3b/nuxRXtaAAAAAKBfH2dzCEU=
+  </data>
+ </layer>
+ <layer id="7" name="Collisions" width="50" height="50" visible="0" locked="1" opacity="0.5">
+  <data encoding="base64" compression="zlib">
+   eJzt1UEKwCAQA0D9/6d78laEYsCtzsBel+SU1gAAIK/3zO2WyKBHzluGr7n0yDm5x44fFTJU6bGSo9J+zLLM9q7SDg5/3XEAAAAA4D4PLg0Afw==
+  </data>
+ </layer>
+</map>
