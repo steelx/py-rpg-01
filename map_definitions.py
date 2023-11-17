@@ -38,6 +38,7 @@ class TriggerData:
 @dataclass
 class MapDefinition:
     path: str
+    hero_start_tile: Optional[tuple[int, int]] = (1, 1)
     on_wake: List[ActionsParams] = None
     actions: Optional[Dict[str, ActionsParams]] = None
     triggers_type: Optional[Dict[str, TriggerDef]] = None
@@ -47,6 +48,7 @@ class MapDefinition:
 PATH = os.path.abspath('.') + '/assets/'
 small_room_map_def = MapDefinition(
     path=PATH + 'small_room.tmx',
+    hero_start_tile=(9, 9),
     on_wake=[
         ActionsParams(id='add_npc', params={'def': 'strolling_npc', 'x': 11, 'y': 5}),
         ActionsParams(id='add_npc', params={'def': 'standing_npc', 'x': 2, 'y': 5}),
@@ -70,6 +72,7 @@ small_room_map_def = MapDefinition(
 
 player_house_map_def = MapDefinition(
     path=PATH + 'maps/player_house.tmx',
+    hero_start_tile=(27, 15),
     on_wake=[
         ActionsParams(id='add_npc', params={'def': 'standing_npc', 'x': 27, 'y': 17}),
     ]

@@ -2,7 +2,7 @@ from typing import List, Optional, Callable, Union, Dict, Any
 
 import pygame
 
-from state_stack import StateStack, StackInterface, SubStateStack
+from state_stack import StateStack, StackInterface
 from storyboard import Event
 
 EventCreator = Callable[[Any], Event]
@@ -11,13 +11,14 @@ EventCreator = Callable[[Any], Event]
 class Storyboard:
     should_exit: bool = False
 
-    def __init__(self, stack: StateStack, events: List[Union[Event, EventCreator]], display: pygame.Surface,
+    def __init__(self, stack: StateStack, events: List[Union[Event, EventCreator]],
+                 display: pygame.Surface,
                  font: pygame.font.Font):
         self.stack = stack
         self.events = events
         self.display = display
         self.font = font
-        self.sub_stack = SubStateStack()
+        self.sub_stack = StateStack()
         self._stacks: Dict[str, StackInterface] = {}
         from storyboard import SoundEvent
         self._playing_sounds: Dict[str, SoundEvent] = {}
@@ -41,8 +42,8 @@ class Storyboard:
         for v in self._playing_sounds.values():
             v.stop()
 
-    def render(self) -> None:
-        self.sub_stack.render(self.display)
+    def render(self, display) -> None:
+        self.sub_stack.render(display)
         # debug info
         info = f"{self.events[-1].__class__.__name__} ({len(self.events)})" if len(self.events) > 0 else len(
             self.events)

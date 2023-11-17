@@ -33,6 +33,9 @@ class ExploreState:
         self.manager = manager
         self.display = display
 
+    def hide_hero(self, hide: bool):
+        self.hero.entity.visible = not hide
+
     def enter(self, **kwargs) -> None:
         pass
 
@@ -41,10 +44,11 @@ class ExploreState:
 
     def update(self, dt: float) -> None:
         self.game.dt = dt
-        self.hero.controller.update(dt)
+        if self.hero.entity.visible:
+            self.hero.controller.update(dt)
         self.game.update(dt)
 
-    def render(self) -> None:
+    def render(self, display) -> None:
         self.game.render()
 
     def process_event(self, event: pygame.event.Event):

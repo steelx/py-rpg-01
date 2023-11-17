@@ -71,7 +71,17 @@ stack.push(
     )
 )
 
+explore_state = ExploreState(
+    stack=stack,
+    map_def=player_house_map_def,
+    start_tile_pos=(24, 15),
+    display=display,
+    manager=stack.manager
+)
+stack.push(explore_state)
+
+hero_pos = explore_state.game.get_hero_pos_for_ui()
+hero_pos = (hero_pos[0], hero_pos[1] - 32)
 stack.push(
-    Textbox(message, (50, 100), (150, 100), chars_per_line=12, lines_per_chunk=3,
-            manager=stack.manager)
+    Textbox("what is this place!", hero_pos, manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
 )

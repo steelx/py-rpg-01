@@ -8,7 +8,7 @@ from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
 from map_definitions import small_room_map_def, player_house_map_def
 from state_stack import StateStack
 from storyboard import Storyboard, fade_screen, black_screen, Wait, caption, remove_state, no_blocking, play_sound, \
-    stop_sound
+    stop_sound, scene
 from ui import DialoguePanel, Textbox
 
 
@@ -35,21 +35,11 @@ def main():
     within the gate freely, his sly whispers rustling through all the alleys, heard
     in the very halls of government itself.'''
 
-    stack = StateStack(pygame_gui.UIManager(screen.get_size(), DATA_PATH + "themes/theme.json"))
-    explore_state = ExploreState(
-        stack=stack,
-        map_def=player_house_map_def,
-        start_tile_pos=(24, 15),
-        display=display,
-        manager=stack.manager
+    ui_manager = pygame_gui.UIManager(screen.get_size(), DATA_PATH + "themes/theme.json")
+    stack = StateStack(ui_manager)
+    stack.push(
+        Textbox("what is this place!", (200, 200), manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
     )
-    stack.push(explore_state)
-
-    hero_pos = explore_state.game.get_hero_pos_for_ui()
-    hero_pos = (hero_pos[0], hero_pos[1] - 32)
-    # stack.push(
-    #     Textbox("what is this place!", hero_pos, manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
-    # )
 
     storyboard = Storyboard(stack=stack, display=display, font=big_blue_12, events=[
         black_screen("black_screen"),
@@ -71,8 +61,9 @@ def main():
         Wait(2),
         remove_state("mid_text"),
         stop_sound("rain"),
-
         remove_state("black_screen"),
+
+        no_blocking(scene("player_house", 10)),
     ])
     stack.push(storyboard)
 
@@ -105,7 +96,15 @@ def main():
         stack.update(dt)
 
         # Render
-        stack.render(screen, display)
+        # Clear
+        screen.fill((0, 0, 0))
+        display.fill((0, 0, 0))
+        stack.render(display)
+        # Scale and draw the game_surface onto the screen
+        window_size = screen.get_size()
+        surf = pygame.transform.scale(display, window_size)
+        screen.blit(surf, (0, 0))
+        ui_manager.draw_ui(screen)
         pygame.display.flip()
 
 

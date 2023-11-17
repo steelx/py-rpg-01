@@ -77,7 +77,7 @@ class Textbox(pygame_gui.elements.UIPanel):
     def update(self, dt: float):
         pass
 
-    def render(self):
+    def render(self, display):
         pass
 
     def enter(self):

@@ -80,3 +80,24 @@ def stop_sound(sound_id: str) -> Callable[[Storyboard], Event]:
         return Wait(0)
 
     return create_event
+
+
+def scene(map_name: str, wait: int = 0, hide_hero=True) -> Callable[[Storyboard], Event]:
+    from map_db import MAP_DB
+    assert map_name in MAP_DB, f"Map {map_name} not found"
+    map_def = MAP_DB[map_name]
+
+    def create_event(storyboard: Storyboard) -> Event:
+        from explore_state import ExploreState
+        state = ExploreState(
+            stack=storyboard.stack,
+            map_def=map_def,
+            start_tile_pos=map_def.hero_start_tile,
+            display=storyboard.display,
+            manager=storyboard.stack.manager
+        )
+        state.hide_hero(hide_hero)
+        storyboard.push_state(map_name, state)
+        return Wait(wait)
+
+    return create_event

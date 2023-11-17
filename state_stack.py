@@ -14,7 +14,7 @@ class StackInterface(Protocol):
     def exit(self) -> None:
         ...
 
-    def render(self, screen) -> None:
+    def render(self, display) -> None:
         ...
 
     def update(self, dt: float) -> None:
@@ -62,18 +62,10 @@ class StateStack:
         if self.manager is not None:
             self.manager.update(dt)
 
-    def render(self, screen: pygame.Surface, display: pygame.Surface):
-        # Clear
-        screen.fill((0, 0, 0))
-        display.fill((0, 0, 0))
+    def render(self, display: pygame.Surface):
         # Render
         for state in self.states:
-            state.render()
-        # Scale and draw the game_surface onto the screen
-        window_size = screen.get_size()
-        surf = pygame.transform.scale(display, window_size)
-        screen.blit(surf, (0, 0))
-        self.manager.draw_ui(screen)
+            state.render(display)
 
     def process_event(self, event: pygame.event.Event):
         if self.states:
@@ -84,45 +76,3 @@ class StateStack:
 
     def __str__(self):
         return '\n'.join(str(state) for state in self.states)
-
-
-class SubStateStack:
-    def __init__(self):
-        self.states: List[StackInterface] = []
-
-    def push(self, state: StackInterface):
-        if self.states:
-            self.states[-1].exit()
-        self.states.append(state)
-        state.enter()
-
-    def pop(self) -> Optional[StackInterface]:
-        if self.states:
-            top_state = self.states.pop()
-            top_state.exit()
-            if self.states:
-                self.states[-1].enter()
-            return top_state
-        return None
-
-    def top(self) -> Optional[StackInterface]:
-        if self.states:
-            return self.states[-1]
-        return None
-
-    def update(self, dt: float):
-        if self.states:
-            self.states[-1].update(dt)
-            if self.states[-1].should_exit:
-                self.pop()
-
-    def render(self, screen: pygame.Surface = None):
-        for state in self.states:
-            state.render(screen)
-
-    def process_event(self, event: pygame.event.Event):
-        if self.states:
-            self.states[-1].process_event(event)
-
-    def is_empty(self) -> bool:
-        return len(self.states) == 0
