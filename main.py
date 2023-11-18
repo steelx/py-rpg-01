@@ -5,11 +5,11 @@ import pygame_gui
 
 from explore_state import ExploreState
 from globals import FPS, NATURAL_SIZE, ASSETS_PATH, DATA_PATH
-from map_definitions import small_room_map_def, player_house_map_def
+from map_definitions import small_room_map_def
 from state_stack import StateStack
 from storyboard import Storyboard, fade_screen, black_screen, Wait, caption, remove_state, no_blocking, play_sound, \
     stop_sound, scene
-from ui import DialoguePanel, Textbox
+from ui import DialoguePanel
 
 
 def load_custom_font(font_size=12) -> pygame.font.Font:
@@ -68,7 +68,7 @@ def main():
         stop_sound("rain"),
         remove_state("black_screen"),
 
-        no_blocking(scene("player_house", 3)),
+        no_blocking(scene("player_house", 5)),
     ])
     stack.push(storyboard)
 

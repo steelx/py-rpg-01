@@ -48,6 +48,16 @@ entities = {
         width=16,
         texture_path=PATH + 'walk_cycle.png'
     ),
+    "mage": EntityDefinition(
+        tile_x=9,
+        tile_y=5,
+        rows=9,
+        columns=16,
+        start_frame=48,
+        height=24,
+        width=16,
+        texture_path=PATH + 'walk_cycle.png'
+    ),
     # sleeping zzZ sprite
     "sleeping": EntityDefinition(
         tile_x=22,
@@ -98,8 +108,8 @@ characters: Dict[str, CharacterDefData] = {
         state="plan_stroll"
     ),
     "standing_npc": CharacterDefData(
-        entity="hero",
-        facing="down",
+        entity="mage",
+        facing="up",
         anim=None,
         controller=("npc_stand",),
         state="npc_stand"

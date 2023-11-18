@@ -18,13 +18,13 @@ class SleepState:
         self.character = character
         self.game = game
         self.entity = character.entity
+        self.entity.set_frame(self.character.definition.anim.left[0])
         self.controller = character.controller
         from character_definitions import entities
         self.sleep_entity = Entity(entities["sleeping"], self.game)
         self.anim = Animation(frames=[self.sleep_entity.frame], ms=ANIM_TIME_MS)
 
     def enter(self, **kwargs):
-        self.entity.set_frame(self.character.definition.anim.left[0])
         self.entity.add_child("sleeping", self.sleep_entity)
         self.anim.set_frames((0, 1, 2, 3))
 

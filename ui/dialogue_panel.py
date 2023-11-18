@@ -81,7 +81,7 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
         size = (self.rect.width * (1 - AVATAR_WIDTH_RATIO), line_height)
         size = (size[0] - 40, size[1])
         # title_label
-        title = pygame_gui.elements.UITextBox(
+        pygame_gui.elements.UITextBox(
             html_text=title,
             relative_rect=pygame.Rect(pos, size),
             container=self,

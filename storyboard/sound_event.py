@@ -1,9 +1,14 @@
 import pygame
 
+sound_cache = {}
+
 
 class SoundEvent:
     def __init__(self, sound_file: str, volume=1.0):
-        self.sound = pygame.mixer.Sound(sound_file)
+        if sound_file not in sound_cache:
+            sound_cache[sound_file] = pygame.mixer.Sound(sound_file)
+
+        self.sound = sound_cache[sound_file]
         self.sound.set_volume(volume)
         self.played = False
 
