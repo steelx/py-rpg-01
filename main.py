@@ -37,6 +37,14 @@ def main():
 
     ui_manager = pygame_gui.UIManager(screen.get_size(), DATA_PATH + "themes/theme.json")
     stack = StateStack(ui_manager)
+    explore_state = ExploreState(
+        stack=stack,
+        map_def=small_room_map_def,
+        start_tile_pos=(9, 9),
+        display=display,
+        manager=stack.manager
+    )
+    stack.push(explore_state)
     stack.push(
         Textbox("what is this place!", (200, 200), manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
     )
@@ -63,7 +71,7 @@ def main():
         stop_sound("rain"),
         remove_state("black_screen"),
 
-        no_blocking(scene("player_house", 10)),
+        no_blocking(scene("player_house", 3)),
     ])
     stack.push(storyboard)
 

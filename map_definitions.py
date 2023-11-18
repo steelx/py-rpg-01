@@ -72,9 +72,9 @@ small_room_map_def = MapDefinition(
 
 player_house_map_def = MapDefinition(
     path=PATH + 'maps/player_house.tmx',
-    hero_start_tile=(27, 15),
+    hero_start_tile=(21, 17),
     on_wake=[
-        ActionsParams(id='add_npc', params={'def': 'standing_npc', 'x': 27, 'y': 17}),
+        ActionsParams(id='add_npc', params={'def': 'sleeper', 'x': 21, 'y': 17}),
     ]
 )
 

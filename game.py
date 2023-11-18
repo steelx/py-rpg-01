@@ -12,7 +12,7 @@ from world import World
 class Game:
     world: World
     tmx_map: TmxMap = None
-    entity_group: CameraGroup
+    entity_group: CameraGroup  # group for all entities entity.py
     foreground_objects: CameraGroup
     floor_objects: CameraGroup
     cam_x: float
