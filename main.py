@@ -24,7 +24,7 @@ def main():
     pygame.display.set_caption("jRPG Game")
     # screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
     screen_size = (1200, 800)
-    screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
+    screen = pygame.display.set_mode(screen_size, pygame.DOUBLEBUF | pygame.HWSURFACE)
     display = pygame.surface.Surface(NATURAL_SIZE)
 
     # Add avatar, hero name, text and action buttons
@@ -45,11 +45,8 @@ def main():
         manager=stack.manager
     )
     stack.push(explore_state)
-    stack.push(
-        Textbox("what is this place!", (200, 200), manager=stack.manager, chars_per_line=19, lines_per_chunk=1)
-    )
 
-    storyboard = Storyboard(stack=stack, display=display, font=big_blue_12, events=[
+    storyboard = Storyboard(stack=stack, display=display, events=[
         black_screen("black_screen"),
         play_sound("rain", ASSETS_PATH + "sounds/rain.wav", volume=0.2),
 

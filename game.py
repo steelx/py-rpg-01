@@ -1,11 +1,13 @@
 from typing import Optional, Dict, Callable, Tuple
 
 import pygame.display
+import pygame_gui
 
 from globals import NATURAL_SIZE
 from map_definitions import MapDefinition, Trigger, create_map_triggers
 from map_utils import Camera, CameraGroup, TmxMap
 from sprite_utils import Tile, Circle, Rectangle
+from state_stack import StateStack
 from world import World
 
 
@@ -19,19 +21,20 @@ class Game:
     cam_y: float
     dt: float = 0
 
-    def __init__(self, display: pygame.Surface = None, debug=False):
+    def __init__(self, manager: pygame_gui.UIManager, display: pygame.Surface = None, stack: StateStack = None):
         """
         :param display: pygame.Surface
         :param debug: bool
         """
         self.camera: Camera = None
-
+        self.manager = manager
+        self.stack = stack
         self.display_surface = display if display is not None else pygame.display.get_surface()
         self.map_layer_groups: Dict[str, CameraGroup] = {}
         self.entity_group = CameraGroup(self.display_surface)
         self.foreground_objects = CameraGroup(self.display_surface)
         self.floor_objects = CameraGroup(self.display_surface)
-        self.show_shapes = debug
+        self.show_shapes = True
         self.offset = pygame.math.Vector2()
         self.triggers = None
         self.triggers_type = None

@@ -12,12 +12,10 @@ class Storyboard:
     should_exit: bool = False
 
     def __init__(self, stack: StateStack, events: List[Union[Event, EventCreator]],
-                 display: pygame.Surface,
-                 font: pygame.font.Font):
+                 display: pygame.Surface):
         self.stack = stack
         self.events = events
         self.display = display
-        self.font = font
         self.sub_stack = StateStack()
         self._stacks: Dict[str, StackInterface] = {}
         from storyboard import SoundEvent
@@ -45,11 +43,10 @@ class Storyboard:
     def render(self, display) -> None:
         self.sub_stack.render(display)
         # debug info
-        info = f"{self.events[-1].__class__.__name__} ({len(self.events)})" if len(self.events) > 0 else len(
-            self.events)
-        debug_text = f"Events Stack: {info}"
-        text = self.font.render(debug_text, True, (255, 255, 255))
-        self.display.blit(text, (0, 0))
+        # info = f"{self.events[-1].__class__.__name__} ({len(self.events)})" if len(self.events) > 0 else len(
+        #     self.events)
+        # debug_text = f"Events Stack: {info}"
+        # print(debug_text)
 
     def update(self, dt: float) -> None:
         if len(self.events) == 0:

@@ -11,6 +11,8 @@ AVATAR_WIDTH_RATIO = 0.15
 
 
 class DialoguePanel(pygame_gui.elements.UIPanel):
+    should_exit: bool = False
+
     def __init__(self, hero_image: str, hero_name: str, message: str,
                  manager: pygame_gui.UIManager, end_callback: Callable = None):
         window_size: Tuple[int, int] = manager.window_resolution
@@ -23,7 +25,6 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
             object_id='@text_panel'
         )
         self.end_callback = end_callback
-        self.should_exit = False
         self.message_chunks = []
         self.current_chunk = 0
         self.text_box = None
@@ -112,7 +113,7 @@ class DialoguePanel(pygame_gui.elements.UIPanel):
     def update(self, dt: float):
         pass
 
-    def render(self):
+    def render(self, display):
         pass
 
     def enter(self):

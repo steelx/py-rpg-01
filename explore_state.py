@@ -20,11 +20,12 @@ from world import World
 class ExploreState:
     should_exit = False
 
-    def __init__(self, map_def: MapDefinition, start_tile_pos: Tuple[int, int], display: pygame.Surface, manager: pygame_gui.UIManager, stack: StateStack = None):
+    def __init__(self, map_def: MapDefinition, start_tile_pos: Tuple[int, int], display: pygame.Surface,
+                 manager: pygame_gui.UIManager, stack: StateStack = None):
         self.stack = stack
         self.map_def = map_def
         self.start_pos = start_tile_pos
-        self.game = Game(display=display)
+        self.game = Game(display=display, manager=manager, stack=stack)
         self.game.setup(map_def, ACTIONS)
         self.game.world = World(display)
         self.hero = Character(characters["hero"], self.game)
