@@ -3,10 +3,21 @@ from typing import Dict, Callable
 from character import Character
 from character_definitions import characters
 from game import Game
+from ui import Textbox
 
 
 def teleport(game: Game, tile_x: int, tile_y: int):
     return lambda trigger, entity: entity.set_tile_pos(tile_x, tile_y, game)
+
+
+def show_textbox(game: Game, tile_x: int, tile_y: int, message: str, chars_per_line: int, lines: int):
+    def _show_textbox(trigger, entity):
+        pos = game.get_tile_pos_for_ui(tile_x, tile_y)
+        game.stack.push(
+            Textbox(message, pos=pos, manager=game.manager, chars_per_line=chars_per_line, lines_per_chunk=lines)
+        )
+
+    return _show_textbox
 
 
 def add_npc(game: Game, **params):
@@ -25,4 +36,5 @@ def add_npc(game: Game, **params):
 ACTIONS: Dict[str, Callable] = {
     "teleport": teleport,
     "add_npc": add_npc,
+    "show_textbox": show_textbox,
 }

@@ -9,6 +9,9 @@ def create_state(state_name) -> Callable:
     elif state_name == "wait":
         from states.wait_state import WaitState
         return WaitState
+    elif state_name == "sleep":
+        from states.sleep_state import SleepState
+        return SleepState
     elif state_name == "npc_stand":
         from states.npc_stand_state import NPCStandState
         return NPCStandState

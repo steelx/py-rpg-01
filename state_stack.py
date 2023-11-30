@@ -14,7 +14,7 @@ class StackInterface(Protocol):
     def exit(self) -> None:
         ...
 
-    def render(self) -> None:
+    def render(self, display) -> None:
         ...
 
     def update(self, dt: float) -> None:
@@ -29,7 +29,8 @@ class StateStack:
     In StateStack each state is a UI element that is rendered on top of each other.
     But only the top state is updated and process_event.
     """
-    def __init__(self, manager: pygame_gui.UIManager):
+
+    def __init__(self, manager: pygame_gui.UIManager = None):
         self.states: List[StackInterface] = []
         self.manager = manager
 
@@ -58,20 +59,13 @@ class StateStack:
             self.states[-1].update(dt)
             if self.states[-1].should_exit:
                 self.pop()
-        self.manager.update(dt)
+        if self.manager is not None:
+            self.manager.update(dt)
 
-    def render(self, screen: pygame.Surface, display: pygame.Surface):
-        # Clear
-        screen.fill((0, 0, 0))
-        display.fill((0, 0, 0))
+    def render(self, display: pygame.Surface):
         # Render
         for state in self.states:
-            state.render()
-        # Scale and draw the game_surface onto the screen
-        window_size = screen.get_size()
-        surf = pygame.transform.scale(display, window_size)
-        screen.blit(surf, (0, 0))
-        self.manager.draw_ui(screen)
+            state.render(display)
 
     def process_event(self, event: pygame.event.Event):
         if self.states:

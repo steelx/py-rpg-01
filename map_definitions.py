@@ -38,6 +38,7 @@ class TriggerData:
 @dataclass
 class MapDefinition:
     path: str
+    hero_start_tile: Optional[tuple[int, int]] = (1, 1)
     on_wake: List[ActionsParams] = None
     actions: Optional[Dict[str, ActionsParams]] = None
     triggers_type: Optional[Dict[str, TriggerDef]] = None
@@ -47,6 +48,7 @@ class MapDefinition:
 PATH = os.path.abspath('.') + '/assets/'
 small_room_map_def = MapDefinition(
     path=PATH + 'small_room.tmx',
+    hero_start_tile=(9, 9),
     on_wake=[
         ActionsParams(id='add_npc', params={'def': 'strolling_npc', 'x': 11, 'y': 5}),
         ActionsParams(id='add_npc', params={'def': 'standing_npc', 'x': 2, 'y': 5}),
@@ -54,17 +56,28 @@ small_room_map_def = MapDefinition(
     actions={
         'teleport_south': ActionsParams(id='teleport', params={'tile_x': 10, 'tile_y': 11}),
         'teleport_north': ActionsParams(id='teleport', params={'tile_x': 11, 'tile_y': 4}),
-        'teleport_inside_true': ActionsParams(id='teleport', params={'tile_x': 7, 'tile_y': 7}),
+        'show_textbox_at_snake': ActionsParams(id='show_textbox', params={
+            'tile_x': 11, 'tile_y': 6,
+            'message': "Opps snakes in my dream!", 'chars_per_line': 24, 'lines': 1
+        }),
     },
     triggers_type={
         'north_door_trigger': TriggerDef(on_enter='teleport_south'),
         'south_door_trigger': TriggerDef(on_enter='teleport_north'),
-        'snake': TriggerDef(on_use='teleport_inside_true'),
+        'snake': TriggerDef(on_enter='show_textbox_at_snake'),
     },
     triggers_at_tile=[
         TriggerData(trigger='north_door_trigger', x=11, y=3),
         TriggerData(trigger='south_door_trigger', x=10, y=12),
         TriggerData(trigger='snake', x=11, y=6),
+    ]
+)
+
+player_house_map_def = MapDefinition(
+    path=PATH + 'maps/player_house.tmx',
+    hero_start_tile=(21, 17),
+    on_wake=[
+        ActionsParams(id='add_npc', params={'def': 'sleeper', 'x': 21, 'y': 17}),
     ]
 )
 
@@ -79,6 +92,7 @@ def create_map_triggers(map_def: MapDefinition, actions, game) -> Dict[str, Trig
     def set_trigger_action(key: str, action_type: str, action_params):
         if action_params:
             triggers[key].__setattr__(
+                # on_enter, ACTIONS[teleport](game, tile_x=10, tile_y=11)
                 action_type, actions[action_params.id](game, **action_params.params)
             )
 

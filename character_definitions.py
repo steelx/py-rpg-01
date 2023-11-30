@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 
 from entity import EntityDefinition
 
@@ -9,10 +9,10 @@ PATH = os.path.abspath('.') + '/assets/'
 
 @dataclass
 class AnimationData:
-    up: Tuple[int, ...]
-    right: Tuple[int, ...]
-    down: Tuple[int, ...]
-    left: Tuple[int, ...]
+    up: Union[Tuple[int, ...], None] = None
+    right: Union[Tuple[int, ...], None] = None
+    down: Union[Tuple[int, ...], None] = None
+    left: Union[Tuple[int, ...], None] = None
 
 
 @dataclass
@@ -47,6 +47,27 @@ entities = {
         height=24,
         width=16,
         texture_path=PATH + 'walk_cycle.png'
+    ),
+    "mage": EntityDefinition(
+        tile_x=9,
+        tile_y=5,
+        rows=9,
+        columns=16,
+        start_frame=48,
+        height=24,
+        width=16,
+        texture_path=PATH + 'walk_cycle.png'
+    ),
+    # sleeping zzZ sprite
+    "sleeping": EntityDefinition(
+        tile_x=22,
+        tile_y=16,
+        rows=1,
+        columns=4,
+        start_frame=0,
+        height=32,
+        width=32,
+        texture_path=PATH + 'sleeping.png'
     )
 }
 
@@ -55,6 +76,7 @@ characters: Dict[str, CharacterDefData] = {
     "hero": CharacterDefData(
         entity="hero",
         facing="down",
+        # AnimationData for the Entity hero walk-cycle
         anim=AnimationData(
             up=(0, 1, 2, 3),
             right=(4, 5, 6, 7),
@@ -63,6 +85,15 @@ characters: Dict[str, CharacterDefData] = {
         ),
         controller=("wait", "move"),
         state="wait"
+    ),
+    "sleeper": CharacterDefData(
+        entity="hero",
+        facing="left",
+        anim=AnimationData(
+            left=(13,)
+        ),
+        controller=("sleep",),
+        state="sleep"
     ),
     "strolling_npc": CharacterDefData(
         entity="girl",
@@ -77,8 +108,8 @@ characters: Dict[str, CharacterDefData] = {
         state="plan_stroll"
     ),
     "standing_npc": CharacterDefData(
-        entity="hero",
-        facing="down",
+        entity="mage",
+        facing="up",
         anim=None,
         controller=("npc_stand",),
         state="npc_stand"

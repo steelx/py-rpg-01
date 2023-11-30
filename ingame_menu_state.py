@@ -48,7 +48,7 @@ class InGameMenuState:
         if self.stack.top() == self:
             self.state_machine.update(dt)
 
-    def render(self) -> None:
+    def render(self, display) -> None:
         self.state_machine.render()
 
     def process_event(self, event: pygame.event.Event):

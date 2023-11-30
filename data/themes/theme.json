@@ -49,7 +49,7 @@
   "@text_message": {
     "font": {
       "name": "BigBlueTerm437NerdFontMono",
-      "size": "12",
+      "size": "14",
       "regular_path": "assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf"
     },
     "colours": {
